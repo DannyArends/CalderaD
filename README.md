@@ -4,7 +4,7 @@ software (SDL, AndroidStudio, Android NDK). The software has been tested under x
 arm64-v8a (Android 10). 
 
 ## Compiling for windows
-Install the [DMD compiler](https://dlang.org/download.html) for your OS, and compile the project:
+Install the [DMD compiler](https://dlang.org/download.html), and compile the project:
 
 ```
     git clone https://github.com/DannyArends/VulcanoD.git
@@ -12,7 +12,7 @@ Install the [DMD compiler](https://dlang.org/download.html) for your OS, and com
     dub
 ```
 
-Make sure the glslc compiler is available and on your $PATH variable to build the vertex and fragment shaders in 
+Make sure the glslc compiler is installed and on your $PATH variable to build the vertex and fragment shaders in 
 the app/src/main/assets/data/shaders/ folder. The glslc compiler is included in the 
 [LunarG Vulkan SDK](https://vulkan.lunarg.com/), as well as in the SDK provided by [Android Studio](https://developer.android.com/studio):
 
@@ -24,8 +24,8 @@ the app/src/main/assets/data/shaders/ folder. The glslc compiler is included in 
 ```
 
 ## Compiling for linux
-For Linux a working [D compiler](https://dlang.org/download.html) (DMD, LDC2, GDC), and DUB package manager are required as well as the following 
-dependencies (and corresponding -dev packages):
+For Linux a working [D compiler](https://dlang.org/download.html) (DMD, LDC2, GDC) and DUB package manager are 
+required as well as the following dependencies (and corresponding -dev packages):
 
  * [SDL2](https://www.libsdl.org/)
  * [SDL2_image](https://www.libsdl.org/projects/SDL_image/)
@@ -117,4 +117,6 @@ This will produce a libmain.so in app/src/main/jniLibs/arm64-v8a
 
 ### Build APK, and run on Android
 
-Open up the VulcanoD project in Android Studio, and build the APK and install onto your Android mobile.
+Open up the VulcanoD project in Android Studio, and build the APK. Inspect the APK, to see if 
+libmain.so and several SDL .so files are included into the APK. If so, install the APK onto 
+your Android device.
