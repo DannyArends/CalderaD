@@ -1,0 +1,10 @@
+bin/
+*.so
+app/.cxx
+.dub
+.idea
+.gradle
+dub.selections.json
+app/build
+app/build.gradle
+CMakelist.txt
