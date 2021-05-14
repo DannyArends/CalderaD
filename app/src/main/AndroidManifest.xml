@@ -3,7 +3,7 @@
      com.gamemaker.game
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nl.dannyarends.vulcanod"
+    package="nl.dannyarends.calderad"
     android:versionCode="1"
     android:versionName="1.0"
     android:installLocation="auto">
@@ -25,14 +25,14 @@
     <!-- Allow access to the vibrator -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
-    <application android:label="VulcanoD"
+    <application android:label="CalderaD"
         android:icon="@android:drawable/ic_menu_gallery"
         android:allowBackup="true"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
         android:hardwareAccelerated="true" >
 
         <activity android:name="org.libsdl.app.SDLActivity"
-            android:label="VulcanoD"
+            android:label="CalderaD"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation">

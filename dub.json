@@ -1,10 +1,10 @@
 {
-	"name": "vulcanod",
-	"targetName": "vulcanoD",
+	"name": "calderad",
+	"targetName": "CalderaD",
 	"description": "SDL2 Vulkan renderer for windows/linux/android in the D Programming Language (based on vulkan-tutorial.com)",
 	"authors": ["Danny Arends"],
 	"copyright": "Copyright © 2021 - Danny Arends",
-	"license": "Unknown",
+	"license": "GPL-v3",
 	"homepage": "http://www.dannyarends.nl",
 	"importPaths": ["src"],
 	"sourcePaths": ["src"],

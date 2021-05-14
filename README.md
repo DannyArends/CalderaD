@@ -1,6 +1,7 @@
 Another SDL2 Vulkan renderer in the D Programming Language. However, this one will work on Windows, Linux, and even Android.
-The current 'engine' is based on the excellent vulkan-tutorial.com, and uses SDL2 via the bindbc-sdl bindings for 
-cross-platform support. Vulkan support is bound using the ErupteD binding for Vulkan. This repository includes the SDL DLLs 
+The current 'engine' is based on the excellent vulkan-tutorial.com, and uses SDL2 via the 
+[bindbc-sdl](https://github.com/BindBC/bindbc-sdl) bindings for cross-platform support. Vulkan support is bound using the 
+[ErupteD](https://github.com/ParticlePeter/ErupteD) binding for Vulkan. This repository includes the SDL DLLs 
 for windows, and is in itself a minimal SDL2 android_project. There are a lot of requirements to build the example 
 (SDL, AndroidStudio, Android NDK). The software has been tested under x64 (Windows and Linux) and on arm64-v8a (Android 10). 
 
@@ -8,8 +9,8 @@ for windows, and is in itself a minimal SDL2 android_project. There are a lot of
 Install the [DMD compiler](https://dlang.org/download.html), and compile the project:
 
 ```
-    git clone https://github.com/DannyArends/VulcanoD.git
-    cd VulcanoD
+    git clone https://github.com/DannyArends/CalderaD.git
+    cd CalderaD
     dub
 ```
 
@@ -18,7 +19,7 @@ the app/src/main/assets/data/shaders/ folder. The glslc compiler is included in 
 [LunarG Vulkan SDK](https://vulkan.lunarg.com/), as well as in the SDK provided by [Android Studio](https://developer.android.com/studio):
 
 ```
-    cd VulcanoD
+    cd CalderaD
     glslc.exe app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv
     glslc.exe app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv
     dub
@@ -37,8 +38,8 @@ required as well as the following dependencies (and corresponding -dev packages)
 These can often be installed by using the build-in package manager such as apt. Steps for Linux are similar to Windows:
 
 ```
-    git clone https://github.com/DannyArends/VulcanoD.git
-    cd VulcanoD
+    git clone https://github.com/DannyArends/CalderaD.git
+    cd CalderaD
     glslc app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv
     glslc app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv
     dub
@@ -46,10 +47,10 @@ These can often be installed by using the build-in package manager such as apt. 
 
 
 ## Cross-Compiling for Android
-On android we need VulcanoD and a fix for Android relating to the loading SDL2 on Android using the bindbc-sdl library:
+On android we need CalderaD and a fix for Android relating to the loading SDL2 on Android using the bindbc-sdl library:
 
 ```
-    git clone https://github.com/DannyArends/VulcanoD.git
+    git clone https://github.com/DannyArends/CalderaD.git
     git clone https://github.com/DannyArends/bindbc-sdl.git
 ```
 
@@ -93,24 +94,24 @@ Download and extract the SDL2 source zip-files:
 [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/), 
 [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/), and extract them.
 
-Create symlinks (e.g. using mklink for windows, or ln -s in linux) in tot VulcanoD\app\jni folder and 
-link to the extracted SDL source packages. Change PATHTO to where your cloned VulcanoD, and PATHSDL to 
+Create symlinks (e.g. using mklink for windows, or ln -s in linux) in tot CalderaD\app\jni folder and 
+link to the extracted SDL source packages. Change PATHTO to where your cloned CalderaD, and PATHSDL to 
 where your downloaded the SDL libraries:
 
 ```
-mklink /d "PATHTO\VulcanoD\app\jni\SDL" "PATHSDL\SDL2-2.0.14"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_image" "PATHSDL\SDL2_image-2.0.5"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_net" "PATHSDL\SDL2_net-2.0.1"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_ttf" "PATHSDL\SDL2_ttf-2.0.15"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_mixer" "PATHSDL\SDL2_mixer-2.0.4"
+mklink /d "PATHTO\CalderaD\app\jni\SDL" "PATHSDL\SDL2-2.0.14"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_image" "PATHSDL\SDL2_image-2.0.5"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_net" "PATHSDL\SDL2_net-2.0.1"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_ttf" "PATHSDL\SDL2_ttf-2.0.15"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_mixer" "PATHSDL\SDL2_mixer-2.0.4"
 ```
 
 ### Cross-compiling the D source code (Android version)
 
-Cross-compile the VulcanoD android aarch64 library with dub:
+Cross-compile the CalderaD android aarch64 library with dub:
 
 ```
-cd VulcanoD
+cd CalderaD
 dub --compiler=ldc2 --arch=aarch64-*-linux-android --config=android-64
 ```
 
@@ -118,6 +119,6 @@ This will produce a libmain.so in app/src/main/jniLibs/arm64-v8a
 
 ### Build APK, and run on Android
 
-Open up the VulcanoD project in Android Studio, and build the APK. Inspect the APK, to see if 
+Open up the CalderaD project in Android Studio, and build the APK. Inspect the APK, to see if 
 libmain.so and several SDL .so files are included into the APK. If so, install the APK onto 
 your Android device.
