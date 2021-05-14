@@ -50,7 +50,7 @@ struct Geometry {
 }
 
 Geometry loadWavefront(ref App app, string path) {
-  char[] content = cast(char[])app.readFile(path); // Open for reading
+  char[] content = cast(char[])readFile(path); // Open for reading
   string filecontent = to!string(content);
   foreach (line; content.split("\n")) {
     if (line.startsWith("v ")) {

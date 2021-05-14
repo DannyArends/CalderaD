@@ -10,7 +10,8 @@ import erupted;
 
 import application, buffer, log, wavefront;
 
-uint[] readFile(App app, string path) {
+/* Load a file using SDL2 */
+uint[] readFile(string path) {
   SDL_RWops *rw = SDL_RWFromFile(toStringz(path), "rb");
   if (rw == null){
     SDL_Log("readFile: couldn't open file '%s'\n", toStringz(path));
