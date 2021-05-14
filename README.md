@@ -9,7 +9,9 @@ Install the [DMD compiler](https://dlang.org/download.html) for your OS, and com
     dub
 ```
 
-Make sure the glslc compiler (glslc.exe) is available to build the vertex and fragment shaders in app\src\main\assets\data\shaders
+Make sure the glslc compiler (glslc.exe) is available to build the vertex and fragment shaders in app\src\main\assets\data\shaders.
+The glslc compiler is included in the [LunarG Vulkan SDK](https://vulkan.lunarg.com/), as well as in the SDK provided by 
+[Android Studio](https://developer.android.com/studio):
 
 ```
     cd VulcanoD
