@@ -1,4 +1,4 @@
-
+An SDL/Vulkan renderer for windows/linux/android in the D Programming Language (based on vulkan-tutorial.com)
 
 ## Compiling for windows
 Install the [DMD compiler](https://dlang.org/download.html) for your OS, and compile the project:
@@ -8,6 +8,16 @@ Install the [DMD compiler](https://dlang.org/download.html) for your OS, and com
     cd VulcanoD
     dub
 ```
+
+Make sure the glslc compiler (glslc.exe) is available to build the vertex and fragment shaders in app\src\main\assets\data\shaders
+
+```
+    cd VulcanoD
+    glslc.exe app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv
+    glslc.exe app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv
+    dub
+```
+
 ## Compiling for linux
 For Linux a working [D compiler](https://dlang.org/download.html) (DMD, LDC2, GDC), and DUB package manager are required as well as the following 
 dependencies (and corresponding -dev packages):
