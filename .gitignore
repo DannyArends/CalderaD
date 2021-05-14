@@ -8,6 +8,10 @@ app/.cxx
 dub.selections.json
 app/build
 CMakelist.txt
+gradle/
+gradlew
+gradlew.bat
+local.properties
 app/jni/CMakeLists.txt
 app/jni/SDL
 app/jni/SDL2_image
