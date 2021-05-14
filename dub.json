@@ -1,0 +1,86 @@
+{
+	"name": "vulcanod",
+	"targetName": "vulcanoD",
+	"description": "SDL2/Vulkan render in the D programming language (based on vulkan-tutorial.com)",
+	"authors": ["Danny Arends"],
+	"copyright": "Copyright © 2021 - Danny Arends",
+	"license": "Unknown",
+	"homepage": "http://www.dannyarends.nl",
+	"importPaths": ["src"],
+	"sourcePaths": ["src"],
+	"configurations": [
+	{
+		"name": "default",
+		"targetPath": "bin",
+		"targetType": "executable",
+		"preBuildCommands": [
+			"glslc.exe app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv",
+			"glslc.exe app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv"
+		],
+		"dependencies": {
+			"bindbc-loader": "~>0.3.0",
+			"bindbc-sdl": "~>0.21.2",
+			"erupted": "~>2.1.24+v1.2.174",
+		},
+		"subConfigurations": {
+			"bindbc-sdl": "dynamicBC",
+		},
+		"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer","BindSDL_Net" ],
+		"copyFiles-windows-x86_64": [
+			"libs/windows/x86_64/libfreetype-6.dll",
+			"libs/windows/x86_64/libgcc_s_seh-1.dll",
+			"libs/windows/x86_64/libjpeg-9.dll",
+			"libs/windows/x86_64/libogg-0.dll",
+			"libs/windows/x86_64/libpng16-16.dll",
+			"libs/windows/x86_64/libstdc++-6.dll",
+			"libs/windows/x86_64/libtiff-5.dll",
+			"libs/windows/x86_64/libvorbis-0.dll",
+			"libs/windows/x86_64/libvorbisfile-3.dll",
+			"libs/windows/x86_64/libwebp-7.dll",
+			"libs/windows/x86_64/libwinpthread-1.dll",
+			"libs/windows/x86_64/SDL2.dll",
+			"libs/windows/x86_64/SDL2_image.dll",
+			"libs/windows/x86_64/SDL2_mixer.dll",
+			"libs/windows/x86_64/SDL2_net.dll",
+			"libs/windows/x86_64/SDL2_ttf.dll",
+			"libs/windows/x86_64/zlib1.dll"
+		],
+    "copyFiles-windows-x86": [
+			"libs/windows/i686/libfreetype-6.dll",
+			"libs/windows/i686/libjpeg-9.dll",
+			"libs/windows/i686/libogg-0.dll",
+			"libs/windows/i686/libpng16-16.dll",
+			"libs/windows/i686/libtiff-5.dll",
+			"libs/windows/i686/libvorbis-0.dll",
+			"libs/windows/i686/libvorbisfile-3.dll",
+			"libs/windows/i686/libwebp-7.dll",
+			"libs/windows/i686/SDL2.dll",
+			"libs/windows/i686/SDL2_image.dll",
+			"libs/windows/i686/SDL2_mixer.dll",
+			"libs/windows/i686/SDL2_net.dll",
+			"libs/windows/i686/SDL2_ttf.dll",
+			"libs/windows/i686/zlib1.dll"
+		],
+	},
+	{
+		"name": "android-64",
+		"targetType": "dynamicLibrary",
+		"targetPath": "app/src/main/jniLibs/arm64-v8a",
+		"targetName": "main",
+		"preBuildCommands": [
+			"glslc.exe app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv",
+			"glslc.exe app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv"
+		],
+		"dependencies": {
+			"bindbc-loader": "~>0.3.0",
+			"bindbc-sdl": {
+				"version": "~master",
+				"path": "../bindbc-sdl"
+			},
+			"erupted": "~>2.1.24+v1.2.174",
+		},
+		"libs": ["android"],
+		"subConfigurations": {"bindbc-sdl": "dynamicBC"},
+		"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer", "BindSDL_Net" ],
+	}]
+}
