@@ -9,13 +9,13 @@ Download and extract the SDL2 source zip-files:
 
 Create symlinks (e.g. using mklink for windows, or ln -s in linux) into 
 this folder and link to the extracted SDL source packages. 
-Change PATHTO to where your cloned VulcanoD, and PATHSDL to where the 
+Change PATHTO to where your cloned CalderaD, and PATHSDL to where the 
 downloaded the SDL libraries are:
 
 ```
-mklink /d "PATHTO\VulcanoD\app\jni\SDL" "PATHSDL\SDL2-2.0.14"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_image" "PATHSDL\SDL2_image-2.0.5"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_net" "PATHSDL\SDL2_net-2.0.1"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_ttf" "PATHSDL\SDL2_ttf-2.0.15"
-mklink /d "PATHTO\VulcanoD\app\jni\SDL2_mixer" "PATHSDL\SDL2_mixer-2.0.4"
+mklink /d "PATHTO\CalderaD\app\jni\SDL" "PATHSDL\SDL2-2.0.14"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_image" "PATHSDL\SDL2_image-2.0.5"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_net" "PATHSDL\SDL2_net-2.0.1"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_ttf" "PATHSDL\SDL2_ttf-2.0.15"
+mklink /d "PATHTO\CalderaD\app\jni\SDL2_mixer" "PATHSDL\SDL2_mixer-2.0.4"
 ```
