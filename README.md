@@ -30,7 +30,7 @@ dependencies (and corresponding -dev packages):
  * [SDL_net](https://www.libsdl.org/projects/SDL_net/)
  * [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 
-These can often be installed by using the build in package manager such as apt.
+These can often be installed by using the build-in package manager such as apt.
 
 ## Compiling Android version
 
@@ -74,7 +74,7 @@ change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
 ###  Install Android studio and prepare SDL
 Download [Andriod Studio](https://developer.android.com/studio), and install it.
 
-Download and the SDL2 source zip-files:
+Download and extract the SDL2 source zip-files:
 [SDL2](https://www.libsdl.org/download-2.0.php), 
 [SDL2_image](https://www.libsdl.org/projects/SDL_image/), 
 [SDL_net](https://www.libsdl.org/projects/SDL_net/), 
