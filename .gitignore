@@ -1,5 +1,6 @@
 bin/
 *.so
+*.spv
 app/.cxx
 .dub
 .idea
@@ -8,3 +9,9 @@ dub.selections.json
 app/build
 app/build.gradle
 CMakelist.txt
+app/jni/CMakeLists.txt
+app/jni/SDL
+app/jni/SDL2_image
+app/jni/SDL2_mixer
+app/jni/SDL2_net
+app/jni/SDL2_ttf
