@@ -1,4 +1,7 @@
-An SDL/Vulkan renderer for windows/linux/android in the D Programming Language (based on vulkan-tutorial.com)
+An SDL2 Vulkan renderer for Windows, Linux, and Android in the D Programming Language (based on vulkan-tutorial.com)
+Includes the SDL DLLs for windows, and a cleand up SDL2 android_project. There are a lot of requirements to build the 
+software (SDL, AndroidStudio, Android NDK). The software has been tested under x64 (Windows and Linux) and on 
+arm64-v8a (Android 10). 
 
 ## Compiling for windows
 Install the [DMD compiler](https://dlang.org/download.html) for your OS, and compile the project:
@@ -9,9 +12,9 @@ Install the [DMD compiler](https://dlang.org/download.html) for your OS, and com
     dub
 ```
 
-Make sure the glslc compiler (glslc.exe) is available to build the vertex and fragment shaders in app\src\main\assets\data\shaders.
-The glslc compiler is included in the [LunarG Vulkan SDK](https://vulkan.lunarg.com/), as well as in the SDK provided by 
-[Android Studio](https://developer.android.com/studio):
+Make sure the glslc compiler is available and on your $PATH variable to build the vertex and fragment shaders in 
+app\src\main\assets\data\shaders. The glslc compiler is included in the [LunarG Vulkan SDK](https://vulkan.lunarg.com/), 
+as well as in the SDK provided by [Android Studio](https://developer.android.com/studio):
 
 ```
     cd VulcanoD
@@ -30,10 +33,18 @@ dependencies (and corresponding -dev packages):
  * [SDL_net](https://www.libsdl.org/projects/SDL_net/)
  * [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 
-These can often be installed by using the build-in package manager such as apt.
+These can often be installed by using the build-in package manager such as apt. Steps for Linux are similar to Windows:
 
-## Compiling Android version
+```
+    git clone https://github.com/DannyArends/VulcanoD.git
+    cd VulcanoD
+    glslc app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv
+    glslc app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv
+    dub
+```
 
+
+## Cross-Compiling for Android
 On android we need VulcanoD and a fix for Android relating to the loading SDL2 on Android using the bindbc-sdl library:
 
 ```
@@ -41,17 +52,19 @@ On android we need VulcanoD and a fix for Android relating to the loading SDL2 o
     git clone https://github.com/DannyArends/bindbc-sdl.git
 ```
 
-###  Install Android studio and prepare SDL
-Download [Andriod Studio](https://developer.android.com/studio), and install it.
+###  Install Android studio and install the android NDK
+Download [Andriod Studio](https://developer.android.com/studio), and install it. 
+Follow [these steps](https://developer.android.com/studio/projects/install-ndk) 
+to install the NDK (CMake is not required).
 
-###  Install ldc and the android library
+###  Install LDC  and the android library
 
-1) Install the [LDC compiler](https://dlang.org/download.html), install for your OS
+1) Install the [LDC compiler](https://dlang.org/download.html) for your OS
 
-2) Download, and extract the LDC aarch64 library for Android:
-https://github.com/ldc-developers/ldc/releases/download/v1.23.0/ldc2-1.23.0-android-aarch64.tar.xz
+2) Download the LDC aarch64 library for Android file "ldc2-X.XX.X-android-aarch64.tar.xz" from 
+https://github.com/ldc-developers/ldc/releases/ where X.XX.X is your LDC version and extract it
 
-Open the file PATHTOLDC/ldc-1.23.0/etc/ldc2.conf, where PATHTOLDC is where you installed LDC in step 1. 
+Open the file PATHTOLDC/ldc-X.XX.X/etc/ldc2.conf, where PATHTOLDC is where you installed LDC in step 1. 
 
 To this file add the aarch64 compile target, make sure to change PATHTOSDK to the path of the Android Studio SDK&NDK, and to 
 change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
@@ -71,9 +84,7 @@ change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
 };
 ```
 
-###  Install Android studio and prepare SDL
-Download [Andriod Studio](https://developer.android.com/studio), and install it.
-
+###  Download the SDL Source zip files and link SDL into app/jni
 Download and extract the SDL2 source zip-files:
 [SDL2](https://www.libsdl.org/download-2.0.php), 
 [SDL2_image](https://www.libsdl.org/projects/SDL_image/), 
@@ -93,16 +104,17 @@ mklink /d "PATHTO\VulcanoD\app\jni\SDL2_ttf" "PATHSDL\SDL2_ttf-2.0.15"
 mklink /d "PATHTO\VulcanoD\app\jni\SDL2_mixer" "PATHSDL\SDL2_mixer-2.0.4"
 ```
 
-### Compiling the D source code (Android version)
+### Cross-compiling the D source code (Android version)
 
-Compile the VulcanoD android aarch64 library with dub:
+Cross-compile the VulcanoD android aarch64 library with dub:
 
 ```
 cd VulcanoD
 dub --compiler=ldc2 --arch=aarch64-*-linux-android --config=android-64
 ```
-this will produce a libmain.so in app/src/main/jniLibs/arm64-v8a
+
+This will produce a libmain.so in app/src/main/jniLibs/arm64-v8a
 
 ### Build APK, and run on Android
 
-Open up the VulcanoD project in Android Studio, and build/run the APK
+Open up the VulcanoD project in Android Studio, and build the APK and install onto your Android mobile.
