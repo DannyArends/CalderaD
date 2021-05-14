@@ -1,7 +1,8 @@
-An SDL2 Vulkan renderer for Windows, Linux, and Android in the D Programming Language (based on vulkan-tutorial.com)
-Includes the SDL DLLs for windows, and a cleand up SDL2 android_project. There are a lot of requirements to build the 
-software (SDL, AndroidStudio, Android NDK). The software has been tested under x64 (Windows and Linux) and on 
-arm64-v8a (Android 10). 
+Another SDL2 Vulkan renderer in the D Programming Language. However, this one will work on Windows, Linux, and even Android.
+The current 'engine' is based on the excellent vulkan-tutorial.com, and uses SDL2 via the bindbc-sdl bindings for 
+cross-platform support. Vulkan support is bound using the ErupteD binding for Vulkan. This repository includes the SDL DLLs 
+for windows, and is in itself a minimal SDL2 android_project. There are a lot of requirements to build the example 
+(SDL, AndroidStudio, Android NDK). The software has been tested under x64 (Windows and Linux) and on arm64-v8a (Android 10). 
 
 ## Compiling for windows
 Install the [DMD compiler](https://dlang.org/download.html), and compile the project:
