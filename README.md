@@ -39,10 +39,10 @@ Download [Andriod Studio](https://developer.android.com/studio), and install it.
 2) Download, and extract the LDC aarch64 library for Android:
 https://github.com/ldc-developers/ldc/releases/download/v1.23.0/ldc2-1.23.0-android-aarch64.tar.xz
 
-Open the file <pathtoLDC>/ldc-1.23.0/etc/ldc2.conf, replace pathtoLDC by where you installed LDC in step 1. 
+Open the file PATHTOLDC/ldc-1.23.0/etc/ldc2.conf, replace PATHTOLDC by where you installed LDC in step 1. 
 
-To this file add the aarch64 compile target, make sure to change pathtoSDK to the path of the Android NDK, and to 
-change the pathtoLDCLibrary  to the path of the LDC aarch64 library (step 2):
+To this file add the aarch64 compile target, make sure to change PATHTOSDK to the path of the Android NDK, and to 
+change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
 
 ```Gradle
 "aarch64-.*-linux-android":
@@ -50,10 +50,10 @@ change the pathtoLDCLibrary  to the path of the LDC aarch64 library (step 2):
     switches = [
         "-defaultlib=phobos2-ldc,druntime-ldc",
         "-link-defaultlib-shared=false",
-        "-gcc=<pathtoSDK>/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang",
+        "-gcc=PATHTOSDK/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang",
     ];
     lib-dirs = [
-        "<pathtoLDCLibrary>/ldc2-1.23.0-android-aarch64/lib",
+        "<PATHTOLDCLIB>/ldc2-1.23.0-android-aarch64/lib",
     ];
     rpath = "";
 };
