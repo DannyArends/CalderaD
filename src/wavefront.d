@@ -1,6 +1,10 @@
+// Copyright Danny Arends 2021
+// Distributed under the GNU General Public License, Version 3
+// See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import std.string;
 import std.conv : to;
-import std.array;
+import std.array : array;
 import std.algorithm;
 
 import bindbc.sdl;
@@ -16,7 +20,7 @@ struct Geometry {
     Vertex[] vtx;
     vtx.length = verts.length;
     foreach (i, pos; verts) { vtx[i] = Vertex(pos); }
-    foreach(face; faces){
+    foreach (face; faces) {
       vtx[face[0]].texCoord = mapcoords[face[1]];
       vtx[face[0]].normal = normals[face[2]];
       vtx[face[0]].texCoord[1] = 1.0f - vtx[face[0]].texCoord[1];
@@ -30,6 +34,7 @@ struct Geometry {
     foreach(i, face; faces) { idx[i] = face[0]; }
     return(idx);
   }
+
   int[3][] faces;
   float[3][] verts;
   float[3][] normals;
@@ -37,6 +42,7 @@ struct Geometry {
   
   VkBuffer vertexBuffer;
   VkDeviceMemory vertexBufferMemory;
+
   VkBuffer indexBuffer;
   VkDeviceMemory indexBufferMemory;
 
