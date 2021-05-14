@@ -69,15 +69,16 @@ Download and the SDL2 source zip-files:
 [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/), 
 [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/), and extract them.
 
-Create symlinks in tot VulcanoD\app\jni folder and link to the extracted different SDL packahes code.
-Change pathto to where your cloned VulcanoD, and pathtodownload to where your downloaded the SDL libraries
+Create symlinks (e.g. using mklink for windows, or ln -s in linux) in tot VulcanoD\app\jni folder and 
+link to the extracted SDL source packages. Change PATHTO to where your cloned VulcanoD, and PATHSDL to 
+where your downloaded the SDL libraries:
 
 ```
-mklink /d "<pathto>\VulcanoD\app\jni\SDL" "<pathtodownload>\SDL2-2.0.14"
-mklink /d "<pathto>\VulcanoD\app\jni\SDL2_image" "<pathtodownload>\SDL2_image-2.0.5"
-mklink /d "<pathto>\VulcanoD\app\jni\SDL2_net" "<pathtodownload>\SDL2_net-2.0.1"
-mklink /d "<pathto>\VulcanoD\app\jni\SDL2_ttf" "<pathtodownload>\SDL2_ttf-2.0.15"
-mklink /d "<pathto>\VulcanoD\app\jni\SDL2_mixer" "<pathtodownload>\SDL2_mixer-2.0.4"
+mklink /d "PATHTO\VulcanoD\app\jni\SDL" "PATHSDL\SDL2-2.0.14"
+mklink /d "PATHTO\VulcanoD\app\jni\SDL2_image" "PATHSDL\SDL2_image-2.0.5"
+mklink /d "PATHTO\VulcanoD\app\jni\SDL2_net" "PATHSDL\SDL2_net-2.0.1"
+mklink /d "PATHTO\VulcanoD\app\jni\SDL2_ttf" "PATHSDL\SDL2_ttf-2.0.15"
+mklink /d "PATHTO\VulcanoD\app\jni\SDL2_mixer" "PATHSDL\SDL2_mixer-2.0.4"
 ```
 
 ### Compiling the D source code (Android version)
@@ -85,6 +86,7 @@ mklink /d "<pathto>\VulcanoD\app\jni\SDL2_mixer" "<pathtodownload>\SDL2_mixer-2.
 Compile the VulcanoD android aarch64 library with dub:
 
 ```
+cd VulcanoD
 dub --compiler=ldc2 --arch=aarch64-*-linux-android --config=android-64
 ```
 this will produce a libmain.so in app/src/main/jniLibs/arm64-v8a
