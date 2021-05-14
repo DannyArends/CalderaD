@@ -1,7 +1,7 @@
 {
 	"name": "vulcanod",
 	"targetName": "vulcanoD",
-	"description": "SDL2/Vulkan render in the D programming language (based on vulkan-tutorial.com)",
+	"description": "SDL2 Vulkan renderer for windows/linux/android in the D Programming Language (based on vulkan-tutorial.com)",
 	"authors": ["Danny Arends"],
 	"copyright": "Copyright © 2021 - Danny Arends",
 	"license": "Unknown",
