@@ -31,7 +31,7 @@
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
         android:hardwareAccelerated="true" >
 
-        <activity android:name="SDLActivity"
+        <activity android:name="org.libsdl.app.SDLActivity"
             android:label="VulcanoD"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
