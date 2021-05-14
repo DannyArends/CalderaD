@@ -53,7 +53,7 @@ https://github.com/ldc-developers/ldc/releases/download/v1.23.0/ldc2-1.23.0-andr
 
 Open the file PATHTOLDC/ldc-1.23.0/etc/ldc2.conf, where PATHTOLDC is where you installed LDC in step 1. 
 
-To this file add the aarch64 compile target, make sure to change PATHTOSDK to the path of the Android NDK, and to 
+To this file add the aarch64 compile target, make sure to change PATHTOSDK to the path of the Android Studio SDK&NDK, and to 
 change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
 
 ```Gradle
