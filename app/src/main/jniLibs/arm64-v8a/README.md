@@ -1,0 +1,1 @@
+Output folder for the arm64-v8a version of libmain.so
