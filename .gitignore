@@ -7,7 +7,6 @@ app/.cxx
 .gradle
 dub.selections.json
 app/build
-app/build.gradle
 CMakelist.txt
 app/jni/CMakeLists.txt
 app/jni/SDL
