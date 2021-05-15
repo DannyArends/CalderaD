@@ -29,9 +29,9 @@ struct App {
   uint width = 1024;
   uint height = 768;
   VkApplicationInfo info  = {
-    pApplicationName: "VulcanoDemo", 
+    pApplicationName: "CalderaDemo", 
     applicationVersion: 0, 
-    pEngineName: "DlangEngine", 
+    pEngineName: "CalderaD", 
     engineVersion: 0,
     apiVersion: VK_API_VERSION_1_2
   };

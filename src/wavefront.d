@@ -50,7 +50,7 @@ struct Geometry {
 }
 
 Geometry loadWavefront(ref App app, string path) {
-  char[] content = cast(char[])app.readFile(path); // Open for reading
+  char[] content = cast(char[])readFile(path); // Open for reading
   string filecontent = to!string(content);
   foreach (line; content.split("\n")) {
     if (line.startsWith("v ")) {
@@ -65,7 +65,7 @@ Geometry loadWavefront(ref App app, string path) {
       app.geometry.normals ~= line[3..$].splitter.map!(to!float).array[0 .. 3];
     }
   }
-  toStdout("vertices: %d, faces: %d", app.geometry.vertices.length, app.geometry.indices.length);
+  toStdout("Wavefront '%s', nVertices: %d, nFaces: %d", toStringz(path), app.geometry.vertices.length, app.geometry.indices.length);
   return(app.geometry);
 }
 

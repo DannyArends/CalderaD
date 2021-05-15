@@ -16,7 +16,7 @@ void createInstance(ref App app) {
     ppEnabledExtensionNames: &app.instanceExtensions[0],
     pApplicationInfo: &app.info
   };
-  vkCreateInstance(&instanceInfo, null, &app.instance);
+  enforceVK(vkCreateInstance(&instanceInfo, null, &app.instance));
   toStdout("Vulkan Instance created: %p", app.instance);
   loadInstanceLevelFunctions(app.instance);
   toStdout("Instance level functions loaded");

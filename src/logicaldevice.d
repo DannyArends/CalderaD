@@ -18,7 +18,7 @@ void getGraphicsQueueFamilyIndex(ref App app) {
     if (fproperties.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
       VkBool32 presentSupport = false;
       toStdout("VK_QUEUE_GRAPHICS_BIT: %d", i);
-      vkGetPhysicalDeviceSurfaceSupportKHR(app.physicalDevices[app.selected], cast(uint)i, app.surface, &presentSupport);
+      enforceVK(vkGetPhysicalDeviceSurfaceSupportKHR(app.physicalDevices[app.selected], cast(uint)i, app.surface, &presentSupport));
       if (presentSupport) { app.familyIndices.presentFamily = cast(uint)i; }
       if (app.familyIndices.graphicsFamily == uint.max){ app.familyIndices.graphicsFamily = cast(uint)i; }
     }
@@ -51,10 +51,10 @@ void createLogicalDevice(ref App app){
     pEnabledFeatures: &deviceFeatures
   };
 
-  vkCreateDevice(app.physicalDevices[app.selected], &deviceCreateInfo, null, &app.device);
+  enforceVK(vkCreateDevice(app.physicalDevices[app.selected], &deviceCreateInfo, null, &app.device));
   toStdout("Logical device %p created", app.device);
   loadDeviceLevelFunctions(app.device);
-  toStdout("Logical device created");
+  toStdout("Device level functions loaded via device %p", app.device);
   vkGetDeviceQueue(app.device, app.familyIndices.graphicsFamily, 0, &app.graphicsQueue);
   toStdout("Logical device graphics queue obtained");
   vkGetDeviceQueue(app.device, app.familyIndices.presentFamily, 0, &app.presentQueue);

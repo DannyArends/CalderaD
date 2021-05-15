@@ -30,8 +30,8 @@ VkShaderModule createShaderModule(App app, const uint[] code) {
 GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/shaders/vert.spv", string fragPath = "data/shaders/frag.spv"){
   toStdout("creating pipeline");
 
-  auto vertShaderCode = app.readFile(vertPath);
-  auto fragShaderCode = app.readFile(fragPath);
+  auto vertShaderCode = readFile(vertPath);
+  auto fragShaderCode = readFile(fragPath);
 
   VkShaderModule vertShaderModule = app.createShaderModule(cast(uint[])vertShaderCode);
   VkShaderModule fragShaderModule = app.createShaderModule(cast(uint[])fragShaderCode);
