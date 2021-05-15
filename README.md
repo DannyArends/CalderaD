@@ -9,8 +9,30 @@ The name CalderaD, comes from the word caldera a large cauldron-like hollow that
 The term comes from Spanish caldera, and Latin caldaria, meaning "cooking pot". I hope this project can help others cook up 
 some nice android apps, and will show that a language like D has something to offer on the mobile platform.
 
-## Compiling for windows
-Install the [DMD compiler](https://dlang.org/download.html), and compile the project:
+### Structure
+The following folders are interesting, if you're interested in how CalderaD is coded:
+
+- [src/](./src/) which stores the D source code
+- [app/jni](./app/jni/) the folder where the sdl library symlinks should be created (for android)
+- [app/src/main/assets](./app/src/main/assets/) wavefront object files, texture/font files, glsl shader source code
+- [app/src/main/java](./app/src/main/java) the android side of the app (android_project java files from SDL)
+- [app/src/main/jniLibs](./app/src/main/jniLibs) the output folder for SDL and CalderaD libmain.so
+- [libs/](./libs/) compatible set of Windows 32/64 runtime SDL2 DLLs for a standalone build on windows
+
+Some noteworthy files:
+
+- [dub.json](./dub.json) contains the D language dependancies, and build instructions
+- [src/main.d](./src/main.d) contains the main entry function, and SDL event loop
+- [app/src/main/AndroidManifest.xml](./app/src/main/AndroidManifest.xml) is CalderaD Android Manifest file with build instructions, adapted from SDL2
+- [vert](./app/src/main/assets/data/shaders/wavefront.vert) and [fragment](./app/src/main/assets/data/shaders/wavefront.frag) shaders for wavefront objects
+
+## Compiling for Windows
+To compile the shaders, install the glslc compiler from [LunarG Vulkan SDK](https://vulkan.lunarg.com/), 
+a glslc compiler is also included in [Android Studio](https://developer.android.com/studio). 
+
+Make sure the glslc compiler is installed and on your $PATH variable, if it is shaders are automatically 
+compiled by dub. Install the [DMD compiler](https://dlang.org/download.html), and compile the project 
+using dub:
 
 ```
     git clone https://github.com/DannyArends/CalderaD.git
@@ -18,9 +40,9 @@ Install the [DMD compiler](https://dlang.org/download.html), and compile the pro
     dub
 ```
 
-Make sure the glslc compiler is installed and on your $PATH variable to build the vertex and fragment shaders in 
-the app/src/main/assets/data/shaders/ folder. The glslc compiler is included in the 
-[LunarG Vulkan SDK](https://vulkan.lunarg.com/), as well as in the SDK provided by [Android Studio](https://developer.android.com/studio):
+If this doesn't work, try to manually build the vertex and fragment shaders in the 
+[app/src/main/assets/data/shaders/](./app/src/main/assets/data/shaders/) folder, 
+before building with dub:
 
 ```
     cd CalderaD
@@ -29,7 +51,7 @@ the app/src/main/assets/data/shaders/ folder. The glslc compiler is included in 
     dub
 ```
 
-## Compiling for linux
+## Compiling for Linux
 For Linux a working [D compiler](https://dlang.org/download.html) (DMD, LDC2, GDC) and DUB package manager are 
 required as well as the following dependencies (and corresponding -dev packages):
 
@@ -39,7 +61,8 @@ required as well as the following dependencies (and corresponding -dev packages)
  * [SDL_net](https://www.libsdl.org/projects/SDL_net/)
  * [SDL_ttf](https://www.libsdl.org/projects/SDL_ttf/)
 
-These can often be installed by using the build-in package manager such as apt. Steps for Linux are similar to Windows:
+These can often be installed by using the build-in package manager such as apt. Compilation steps for 
+Linux are similar to Windows, the [dub.json](./dub.json) might need some paths adjusted:
 
 ```
     git clone https://github.com/DannyArends/CalderaD.git
@@ -51,12 +74,16 @@ These can often be installed by using the build-in package manager such as apt. 
 
 
 ## Cross-Compiling for Android
-On android we need CalderaD and a fix for Android relating to the loading SDL2 on Android using the bindbc-sdl library:
+To get CalderaD working on an android device, the CalderaD repository and a fix for Android relating to the 
+loading of SDL2 on Android using the bindbc-sdl library is required:
 
 ```
     git clone https://github.com/DannyArends/CalderaD.git
     git clone https://github.com/DannyArends/bindbc-sdl.git
 ```
+
+Clone both CalderaD and the adjusted bindbc-sdl library side-by-side in the same folder, or update the 
+[dub.json](./dub.json) to point to another DannyArends/bindbc-sdl repository by updating the path location.
 
 ###  Install Android studio and install the android NDK
 Download [Andriod Studio](https://developer.android.com/studio), and install it. 
@@ -70,7 +97,7 @@ to install the NDK (CMake is not required).
 2) Download the LDC aarch64 library for Android file "ldc2-X.XX.X-android-aarch64.tar.xz" from 
 https://github.com/ldc-developers/ldc/releases/ where X.XX.X is your LDC version and extract it
 
-Open the file PATHTOLDC/ldc-X.XX.X/etc/ldc2.conf, where PATHTOLDC is where you installed LDC in step 1. 
+Open the file PATHTOLDC/ldc2-X.XX.X/etc/ldc2.conf, where PATHTOLDC is where you installed LDC in step 1. 
 
 To this file add the aarch64 compile target, make sure to change PATHTOSDK to the path of the Android Studio SDK&NDK, and to 
 change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
@@ -84,11 +111,13 @@ change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
         "-gcc=PATHTOSDK/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang",
     ];
     lib-dirs = [
-        "<PATHTOLDCLIB>/ldc2-1.23.0-android-aarch64/lib",
+        "<PATHTOLDCLIB>/ldc2-X.XX.X-android-aarch64/lib",
     ];
     rpath = "";
 };
 ```
+
+A tip: make sure API versions match, sometimes misadjusted versions can cause hour long headaches
 
 ###  Download the SDL Source zip files and link SDL into app/jni
 Download and extract the SDL2 source zip-files:
@@ -126,3 +155,14 @@ This will produce a libmain.so in app/src/main/jniLibs/arm64-v8a
 Open up the CalderaD project in Android Studio, and build the APK. Inspect the APK, to see if 
 libmain.so and several SDL .so files are included into the APK. If so, install the APK onto 
 your Android device.
+
+## Contributing
+
+Want to contribute? Great! Contribute to DaNode by starring or forking on Github, and feel free to start an issue or sending a pull request.
+
+Fell free to also post comments on commits.
+
+Or be a maintainer, and adopt (the documentation of) a function.
+### License
+
+DaNode is written by Danny Arends and is released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). See [LICENSE.txt](./LICENSE.txt).

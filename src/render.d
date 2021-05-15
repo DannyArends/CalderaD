@@ -70,9 +70,8 @@ void drawFrame(ref App app) {
   result = vkQueuePresentKHR(app.presentQueue, &presentInfo);
   //SDL_Log("vkQueuePresentKHR: %d", result);
 
-  if (result == VK_ERROR_OUT_OF_DATE_KHR || app.hasResized) {
-    toStdout("!!!!! Hmm: %d %d (%d, %d)", result, app.hasResized, VK_ERROR_OUT_OF_DATE_KHR, VK_SUBOPTIMAL_KHR);
-    app.hasResized = false;
+  if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || app.hasResized) {
+    if(app.hasResized) app.hasResized = false;
     return app.recreateSwapChain();
   } else {
     enforce(result == VkResult.VK_SUCCESS, "failed to present swap chain image!");
