@@ -99,7 +99,7 @@ Download and extract the SDL2 source zip-files:
 [SDL_mixer](https://www.libsdl.org/projects/SDL_mixer/), and extract them.
 
 Create symlinks (e.g. using mklink for windows, or ln -s in linux) in tot CalderaD\app\jni folder and 
-link to the extracted SDL source packages. Change PATHTO to where your cloned CalderaD, and PATHSDL to 
+link to the extracted SDL source packages. Change PATHTO to where your cloned CalderaD is located, and PATHSDL to 
 where your downloaded the SDL libraries:
 
 ```
