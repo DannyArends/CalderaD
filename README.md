@@ -158,11 +158,12 @@ your Android device.
 
 ## Contributing
 
-Want to contribute? Great! Contribute to DaNode by starring or forking on Github, and feel free to start an issue or sending a pull request.
-
-Fell free to also post comments on commits.
+Want to contribute? Great! Contribute to CalderaD by starring or forking on Github, and feel free 
+to start an issue first to discuss idea's before sending a pull request. You're also welcome to 
+post comments on commits.
 
 Or be a maintainer, and adopt (the documentation of) a function.
+
 ### License
 
-DaNode is written by Danny Arends and is released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). See [LICENSE.txt](./LICENSE.txt).
+CalderaD is written by Danny Arends and is released under the GNU GENERAL PUBLIC LICENSE Version 3 (GPLv3). See [LICENSE.txt](./LICENSE.txt).
