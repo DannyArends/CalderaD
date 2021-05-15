@@ -5,10 +5,7 @@
 import std.conv;
 import std.string;
 
-import bindbc.sdl;
-import erupted;
-
-import application, buffer, log, wavefront;
+import calderad, buffer, wavefront;
 
 /* Load a file using SDL2 */
 uint[] readFile(string path) {

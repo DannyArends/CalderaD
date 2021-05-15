@@ -2,15 +2,9 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import std.string;
-import std.conv : to;
-import std.array : array;
-import std.algorithm;
-
-import bindbc.sdl;
-import erupted;
-
-import application, io, log, vertex;
+import std.array : array, split;
+import std.algorithm : map, startsWith, splitter;
+import calderad, io, vertex;
 
 struct Geometry {
   string name;

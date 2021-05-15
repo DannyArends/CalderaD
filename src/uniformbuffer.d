@@ -4,12 +4,8 @@
 
 import core.stdc.string : memcpy;
 import std.datetime : MonoTime, dur;
-
-import bindbc.sdl;
-import erupted;
-
-import application, buffer, log;
 import matrix : mat4, radian, rotate, rotateZ, lookAt, perspective;
+import calderad, buffer;
 
 struct UniformBufferObject {
   mat4 model;

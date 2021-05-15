@@ -2,12 +2,9 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import bindbc.sdl;
-import erupted;
+import calderad;
 
-import log, application;
-
-void initSDL() {
+void initSDL(ref App app) {
   loadSDL();
   toStdout("SDL loaded %d", loadedSDLVersion);
   auto initSDL = SDL_Init(SDL_INIT_EVERYTHING);

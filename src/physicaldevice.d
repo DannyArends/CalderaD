@@ -2,8 +2,7 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import erupted;
-import application, log;
+import calderad;
 
 void pickPhysicalDevice(ref App app, uint select = 0) {
   uint pDevicetype = 0;

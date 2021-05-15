@@ -2,9 +2,7 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import bindbc.sdl;
-import erupted;
-import application, log;
+import calderad;
 
 void createFramebuffers(ref App app) {
   app.swapchain.swapChainFramebuffers.length = app.swapchain.swapChainImageViews.length;

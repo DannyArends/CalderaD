@@ -2,14 +2,7 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import core.stdc.stdlib;
-import std.conv;
-import std.string;
-
-import bindbc.sdl;
-import erupted;
-
-import application, log, io, vertex;
+import calderad, io, vertex;
 
 struct GraphicsPipeline {
   VkPipelineLayout pipelineLayout;

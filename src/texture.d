@@ -3,12 +3,7 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import core.stdc.string : memcpy;
-import std.string;
-
-import bindbc.sdl;
-import erupted;
-
-import application, buffer, images, log;
+import calderad, buffer, images, log;
 
 struct Texture {
   VkImage textureImage;

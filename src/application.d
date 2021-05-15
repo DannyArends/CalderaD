@@ -6,10 +6,7 @@ import std.exception;
 import std.conv;
 import std.datetime : MonoTime;
 
-import bindbc.sdl;
-import erupted;
-
-import depthbuffer, descriptorset, log, pipeline, sync, surface, swapchain, texture, uniformbuffer, wavefront;
+import calderad, depthbuffer, descriptorset, pipeline, sync, surface, swapchain, texture, uniformbuffer, wavefront;
 
 void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string); }
 
@@ -67,8 +64,6 @@ struct App {
   bool running = true;
   bool hasResized = false;
 }
-
-App app;
 
 // Supporting structs
 struct VkQueueFamilyIndices {
