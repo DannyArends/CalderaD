@@ -9,4 +9,4 @@ CalderaD source code highlights
 - [src/io.d](./io.d) OS agnostic layer for I/O
 
 All code files here originally started as a rough translation of the [vulkan-tutorial](https://vulkan-tutorial.com/), 
-an excelent tutorial how Vulkan works.
+an excelent tutorial to learn how Vulkan works.
