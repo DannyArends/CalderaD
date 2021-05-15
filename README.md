@@ -100,7 +100,7 @@ Download and extract the SDL2 source zip-files:
 
 Create symlinks (e.g. using mklink for windows, or ln -s in linux) in tot CalderaD\app\jni folder and 
 link to the extracted SDL source packages. Change PATHTO to where your cloned CalderaD is located, and PATHSDL to 
-where your downloaded the SDL libraries:
+where you downloaded the SDL libraries:
 
 ```
 mklink /d "PATHTO\CalderaD\app\jni\SDL" "PATHSDL\SDL2-2.0.14"
