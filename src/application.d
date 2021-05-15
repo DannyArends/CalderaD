@@ -16,13 +16,12 @@ void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string
 struct App {
   version (Android) {
     uint[2] pos = [0, 0];
-    SDL_WindowFlags flags = SDL_WINDOW_VULKAN | SDL_WINDOW_SHOWN;
     uint imageflags = IMG_INIT_JPG | IMG_INIT_PNG;
   } else {
     uint[2] pos = [SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED];
-    SDL_WindowFlags flags = SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN;
     uint imageflags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_TIF;
   }
+  SDL_WindowFlags flags = SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN;
   SDL_Window* ptr;
   alias ptr this;
 

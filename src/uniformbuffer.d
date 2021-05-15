@@ -9,12 +9,13 @@ import bindbc.sdl;
 import erupted;
 
 import application, buffer, log;
-import matrix : mat4, radian, rotate, lookAt, perspective;
+import matrix : mat4, radian, rotate, rotateZ, lookAt, perspective;
 
 struct UniformBufferObject {
   mat4 model;
   mat4 view;
   mat4 proj;
+  mat4 orientation; // Screen orientation
 }
 
 struct Uniform {
@@ -36,13 +37,24 @@ void createUniformBuffers(ref App app) {
 
 void updateUniformBuffer(ref App app, uint currentImage) {
   MonoTime currentTime = MonoTime.currTime;
-  auto time = (currentTime - app.startTime).total!"msecs"() / 100.0f;
-  //SDL_Log("Time passed: %f", time);
+  auto time = (currentTime - app.startTime).total!"msecs"() / 100.0f;  // Update the current time
+
   UniformBufferObject ubo = {
     model: rotate(mat4.init, [0.0f, 0.0f, time * radian(90.0f)]),
     view: lookAt([1.0f, 1.0f, 1.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 1.0f]),
-    proj: perspective(45.0f, app.surface.capabilities.currentExtent.width / cast(float) app.surface.capabilities.currentExtent.height, 0.1f, 10.0f)
+    proj: perspective(45.0f, app.surface.capabilities.currentExtent.width / cast(float) app.surface.capabilities.currentExtent.height, 0.1f, 10.0f),
+    orientation: mat4.init
   };
+
+  // Adjust for screen orientation so that the world is always up
+  if (app.surface.capabilities.currentTransform & VK_SURFACE_TRANSFORM_ROTATE_90_BIT_KHR) {
+    ubo.orientation.rotateZ(-90.0f);
+  } else if (app.surface.capabilities.currentTransform & VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR) {
+    ubo.orientation.rotateZ(-270.0f);
+  } else if (app.surface.capabilities.currentTransform & VK_SURFACE_TRANSFORM_ROTATE_180_BIT_KHR) {
+    ubo.orientation.rotateZ(180.0f);
+  }
+
   void* data;
   vkMapMemory(app.device, app.uniform.uniformBuffersMemory[currentImage], 0, ubo.sizeof, 0, &data);
   memcpy(data, &ubo, ubo.sizeof);

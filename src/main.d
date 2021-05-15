@@ -33,7 +33,10 @@ void run (string[] args) {
     while (SDL_PollEvent(&ev)) {
       if (ev.type == SDL_QUIT) app.running = false;
       if (ev.type == SDL_KEYUP && ev.key.keysym.sym == SDLK_ESCAPE) app.running = false;
-      if (ev.type == SDL_WINDOWEVENT && ev.window.event == SDL_WINDOWEVENT_RESIZED){ app.hasResized = true; }
+      if (ev.type == SDL_WINDOWEVENT && ev.window.event == SDL_WINDOWEVENT_RESIZED){ 
+      SDL_SetWindowSize(app.ptr, ev.window.data1, ev.window.data2);
+      app.hasResized = true;
+      }
     }
     app.drawFrame(); // have the device draw a frame;
   }
