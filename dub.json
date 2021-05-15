@@ -8,24 +8,24 @@
 	"homepage": "http://www.dannyarends.nl",
 	"importPaths": ["src"],
 	"sourcePaths": ["src"],
+	"dependencies": {
+		"bindbc-loader": "~>0.3.0",
+		"erupted": "~>2.1.24+v1.2.174",
+	},
+	"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer", "BindSDL_Net" ],
+	"subConfigurations": {"bindbc-sdl": "dynamicBC"},
 	"configurations": [
 	{
 		"name": "default",
 		"targetPath": "bin",
 		"targetType": "executable",
-		"preBuildCommands": [
-			"glslc.exe app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv",
-			"glslc.exe app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv"
-		],
 		"dependencies": {
-			"bindbc-loader": "~>0.3.0",
-			"bindbc-sdl": "~>0.21.2",
-			"erupted": "~>2.1.24+v1.2.174",
+			"bindbc-sdl": "~>0.21.2"
 		},
-		"subConfigurations": {
-			"bindbc-sdl": "dynamicBC",
-		},
-		"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer","BindSDL_Net" ],
+		"preBuildCommands": [
+			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
+			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
+		],
 		"copyFiles-windows-x86_64": [
 			"libs/windows/x86_64/libfreetype-6.dll",
 			"libs/windows/x86_64/libgcc_s_seh-1.dll",
@@ -68,19 +68,15 @@
 		"targetPath": "app/src/main/jniLibs/arm64-v8a",
 		"targetName": "main",
 		"preBuildCommands": [
-			"glslc.exe app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv",
-			"glslc.exe app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv"
+			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
+			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
 		],
 		"dependencies": {
-			"bindbc-loader": "~>0.3.0",
 			"bindbc-sdl": {
 				"version": "~master",
 				"path": "../bindbc-sdl"
 			},
-			"erupted": "~>2.1.24+v1.2.174",
 		},
 		"libs": ["android"],
-		"subConfigurations": {"bindbc-sdl": "dynamicBC"},
-		"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer", "BindSDL_Net" ],
 	}]
 }

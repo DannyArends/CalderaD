@@ -1,3 +1,8 @@
+// CaldaraD - Wavefront VERTEX SHADER
+// Copyright Danny Arends 2021
+// Distributed under the GNU General Public License, Version 3
+// See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
 
@@ -18,7 +23,7 @@ layout(location = 1) out vec3 fragNormal;
 layout(location = 2) out vec2 fragTexCoord;
 
 void main() {
-  gl_Position = ubo.ori * (ubo.proj * ubo.view * ubo.model * vec4(inPosition, 1.0));
+  gl_Position = (ubo.ori * (ubo.proj * ubo.view * ubo.model)) * vec4(inPosition, 1.0);
   fragColor = inColor;
   fragNormal = inNormal;
   fragTexCoord = inTexCoord;
