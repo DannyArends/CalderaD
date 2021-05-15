@@ -9,6 +9,22 @@ The name CalderaD, comes from the word caldera a large cauldron-like hollow that
 The term comes from Spanish caldera, and Latin caldaria, meaning "cooking pot". I hope this project can help others cook up 
 some nice android apps, and will show that a language like D has something to offer on the mobile platform.
 
+### Structure
+The following folders are interesting, if you're interested in how CalderaD is coded:
+
+- [src/](./src/) which stores the D source code
+- [app/jni](./app/jni/) the folder where the sdl library symlinks should be created (for android)
+- [app/src/main/assets](./app/src/main/assets/) wavefront object files, texture/font files, glsl shader source code
+- app/src/main/java the android side of the app (android_project from SDL)
+- app/src/main/jniLibs the output folder for SDL and CalderaD libmain.so
+- libs/ compatible set of Windows 32/64 runtime SDL2 DLLs for a standalone build on windows
+
+Some noteworthy files:
+
+- [dub.json](./dub.json) contains the D language dependancies, and build instructions
+- [app/src/main/AndroidManifest.xml](./app/src/main/AndroidManifest.xml) is CalderaD Android Manifest file with build instructions, adapted from SDL2
+- [vert](./app/src/main/assets/data/shaders/wavefront.vert) and [fragment](./app/src/main/assets/data/shaders/wavefront.frag) shaders for wavefront objects
+
 ## Compiling for windows
 Install the [DMD compiler](https://dlang.org/download.html), and compile the project:
 
