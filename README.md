@@ -22,6 +22,7 @@ The following folders are interesting, if you're interested in how CalderaD is c
 Some noteworthy files:
 
 - [dub.json](./dub.json) contains the D language dependancies, and build instructions
+- [src/main.d](./src/main.d) contains the main entry function, and SDL event loop
 - [app/src/main/AndroidManifest.xml](./app/src/main/AndroidManifest.xml) is CalderaD Android Manifest file with build instructions, adapted from SDL2
 - [vert](./app/src/main/assets/data/shaders/wavefront.vert) and [fragment](./app/src/main/assets/data/shaders/wavefront.frag) shaders for wavefront objects
 
