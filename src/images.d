@@ -45,7 +45,7 @@ void createImage(ref App app, uint width, uint height, VkFormat format,
     memoryTypeIndex: app.findMemoryType(memRequirements.memoryTypeBits, properties)
 
   };
-  toStdout("Allocating: %d", memRequirements.size);
+  toStdout(" - allocating: %d bytes", memRequirements.size);
   enforceVK(vkAllocateMemory(app.device, &allocInfo, null, imageMemory));
 
   vkBindImageMemory(app.device, (*image), (*imageMemory), 0);
@@ -54,7 +54,7 @@ void createImage(ref App app, uint width, uint height, VkFormat format,
 void transitionImageLayout(ref App app, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
   toStdout("transitionImageLayout");
   VkCommandBuffer commandBuffer = app.beginSingleTimeCommands();
-  toStdout("command started");
+  toStdout(" - Single time command started");
   VkImageSubresourceRange subresourceRange = {
     aspectMask: VK_IMAGE_ASPECT_COLOR_BIT,
     baseMipLevel: 0,
@@ -109,9 +109,8 @@ void transitionImageLayout(ref App app, VkImage image, VkFormat format, VkImageL
   }
 
   vkCmdPipelineBarrier(commandBuffer, sourceStage, destinationStage, 0, 0, null, 0, null, 1, &barrier);
-  toStdout("endSingleTimeCommands");
   app.endSingleTimeCommands(commandBuffer);
-  toStdout("command started");
+  toStdout(" - Single time command finished");
 }
 
 VkImageView createImageView(App app, VkImage image, VkFormat format, VkImageAspectFlags aspectMask = VK_IMAGE_ASPECT_COLOR_BIT) {

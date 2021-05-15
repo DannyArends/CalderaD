@@ -41,7 +41,7 @@ void createDepthResources(ref App app) {
                   VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &app.depthbuffer.depthImage, &app.depthbuffer.depthImageMemory);
   toStdout(" - image created: %p", app.depthbuffer.depthImage);
   app.depthbuffer.depthImageView = app.createImageView(app.depthbuffer.depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
-  toStdout(" - image view created: %p", app.depthbuffer.depthImage);
+  toStdout(" - image view created: %p", app.depthbuffer.depthImageView);
   app.transitionImageLayout(app.depthbuffer.depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
   toStdout("Depth resources created");
 }

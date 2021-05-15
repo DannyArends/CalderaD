@@ -29,14 +29,14 @@ void loadSurfaceCapabilities(ref App app) {
   enforceVK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(app.physicalDevices[app.selected], app.surface, &app.surface.capabilities));  // Capabilities
 
   // Surface formats
-  vkGetPhysicalDeviceSurfaceFormatsKHR(app.physicalDevices[app.selected], app.surface, &formatCount, null);
+  enforceVK(vkGetPhysicalDeviceSurfaceFormatsKHR(app.physicalDevices[app.selected], app.surface, &formatCount, null));
   app.surface.surfaceformats.length = formatCount;
   enforceVK(vkGetPhysicalDeviceSurfaceFormatsKHR(app.physicalDevices[app.selected], app.surface, &formatCount, &app.surface.surfaceformats[0]));
 
   // Surface present modes
-  vkGetPhysicalDeviceSurfacePresentModesKHR(app.physicalDevices[app.selected], app.surface, &presentModeCount, null);
+  enforceVK(vkGetPhysicalDeviceSurfacePresentModesKHR(app.physicalDevices[app.selected], app.surface, &presentModeCount, null));
   app.surface.presentModes.length = presentModeCount;
-  vkGetPhysicalDeviceSurfacePresentModesKHR(app.physicalDevices[app.selected], app.surface, &presentModeCount, &app.surface.presentModes[0]);
+  enforceVK(vkGetPhysicalDeviceSurfacePresentModesKHR(app.physicalDevices[app.selected], app.surface, &presentModeCount, &app.surface.presentModes[0]));
 
   toStdout("formatCount: %d, presentModeCount: %d", formatCount, presentModeCount);
 }

@@ -54,7 +54,7 @@ void createLogicalDevice(ref App app){
   enforceVK(vkCreateDevice(app.physicalDevices[app.selected], &deviceCreateInfo, null, &app.device));
   toStdout("Logical device %p created", app.device);
   loadDeviceLevelFunctions(app.device);
-  toStdout("Logical device created");
+  toStdout("Device level functions loaded via device %p", app.device);
   vkGetDeviceQueue(app.device, app.familyIndices.graphicsFamily, 0, &app.graphicsQueue);
   toStdout("Logical device graphics queue obtained");
   vkGetDeviceQueue(app.device, app.familyIndices.presentFamily, 0, &app.presentQueue);
