@@ -10,7 +10,7 @@ public {
   import std.exception : enforce;
   import std.array : array;
   import std.conv : to;
-  import std.string : toStringz, fromStringz;
+  import std.string : format, toStringz, fromStringz;
 
   import log : toStdout;
   import application : App, enforceVK;
