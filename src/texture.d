@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import core.stdc.string : memcpy;
-import calderad, buffer, images, log;
+import calderad, buffer, glyphatlas, images, log;
 
 struct Texture {
   int width = 0;
@@ -11,6 +11,13 @@ struct Texture {
   VkImage textureImage;
   VkDeviceMemory textureImageMemory;
   VkImageView textureImageView;
+}
+
+void createTextureImage(ref App app, ref GlyphAtlas glyphatlas) {
+  auto surface = TTF_RenderUNICODE_Blended_Wrapped(glyphatlas.ttf, glyphatlas.atlas.ptr, SDL_Color(255, 255, 255, 255), glyphatlas.width);
+  if (!surface) { toStdout("Unable to render font: '%s'\n", TTF_GetError()); return; }
+  toStdout("GlyphAtlas texture surface %p: [%dx%d:%d]\n", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
+  app.createTextureImage(surface);
 }
 
 Texture createTextureImage(ref App app, string filename) {
