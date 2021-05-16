@@ -6,6 +6,8 @@ import core.stdc.string : memcpy;
 import calderad, buffer, images, log;
 
 struct Texture {
+  int width = 0;
+  int height = 0;
   VkImage textureImage;
   VkDeviceMemory textureImageMemory;
   VkImageView textureImageView;
@@ -31,7 +33,7 @@ Texture createTextureImage(ref App app, SDL_Surface* surface) {
     }
   }
 
-  Texture texture;
+  Texture texture = { width: surface.w, height: surface.h };
   VkBuffer stagingBuffer;
   VkDeviceMemory stagingBufferMemory;
   app.createBuffer(
