@@ -6,12 +6,12 @@ import std.datetime : MonoTime;
 import std.utf : isValidDchar;
 import calderad, glyph, texture;
 
-// The GlyphAtlas structure holds links to the TTF_Font, the Texture and the atlas
+// The GlyphAtlas structure holds links to the TTF_Font, Glyphs, Texture and the atlas
 struct GlyphAtlas {
     string path;
     TTF_Font* ttf; // Pointer to the loaded TTF_Font
     ubyte size; // Font size
-    Glyph[dchar] glyphs; // associative array couples glypgs to dchar
+    Glyph[dchar] glyphs; // associative array couples Glyph and dchar
     ushort[] atlas; // ushort array of chars which were valid and stored into the atlas (\n for linebreaks)
     Texture texture; // Holds the Texture structure created by createTextureImage() 
     int width;
