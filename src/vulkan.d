@@ -8,9 +8,9 @@ import logicaldevice, physicaldevice, renderpass, surface, sync, swapchain, text
 void initVulkan(ref App app, 
                 string vertPath = "data/shaders/vert.spv",
                 string fragPath = "data/shaders/frag.spv",
+                string fontPath = "data/fonts/FreeMono.ttf",
                 string modelPath = "data/obj/viking_room.obj",
-                string texturePath = "data/textures/viking_room.png",
-                string fontPath = "data/fonts/FreeMono.ttf") {
+                string texturePath = "data/textures/viking_room.png") {
   toStdout("initializing Vulkan");
   version(Android){ }else{ //version(SDL)
     modelPath = "app/src/main/assets/" ~ modelPath;
@@ -19,7 +19,7 @@ void initVulkan(ref App app,
     texturePath = "app/src/main/assets/" ~ texturePath;
     fontPath = "app/src/main/assets/" ~ fontPath;
   }
-  app.glyphatlas = loadGlyphAtlas(fontPath);
+  app.glyphatlas = loadGlyphAtlas(fontPath, 24, '\U000000FF', 256);
   app.loadInstanceExtensions();
   app.createInstance();
   app.pickPhysicalDevice();
@@ -35,6 +35,7 @@ void initVulkan(ref App app,
   app.createCommandPool();
   app.createDepthResources();
   app.createFramebuffers();
+  app.createTextureImage(app.glyphatlas); // Creates the GlyphAtlas texture in 0
   app.createTextureImage(texturePath);
   app.createTextureSampler();
   app.createVertexBuffer();
