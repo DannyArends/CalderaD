@@ -2,21 +2,24 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import calderad, commands, depthbuffer, descriptorset, framebuffer, pipeline, instance, images;
+import calderad, commands, depthbuffer, descriptorset, framebuffer, pipeline, instance, images, glyphatlas;
 import logicaldevice, physicaldevice, renderpass, surface, sync, swapchain, texture, vertex, uniformbuffer, wavefront;
 
 void initVulkan(ref App app, 
                 string vertPath = "data/shaders/vert.spv",
                 string fragPath = "data/shaders/frag.spv",
                 string modelPath = "data/obj/viking_room.obj",
-                string texturePath = "data/textures/viking_room.png") {
+                string texturePath = "data/textures/viking_room.png",
+                string fontPath = "data/fonts/FreeMono.ttf") {
   toStdout("initializing Vulkan");
   version(Android){ }else{ //version(SDL)
     modelPath = "app/src/main/assets/" ~ modelPath;
     vertPath = "app/src/main/assets/" ~ vertPath;
     fragPath = "app/src/main/assets/" ~ fragPath;
     texturePath = "app/src/main/assets/" ~ texturePath;
+    fontPath = "app/src/main/assets/" ~ fontPath;
   }
+  app.glyphatlas = loadGlyphAtlas(fontPath);
   app.loadInstanceExtensions();
   app.createInstance();
   app.pickPhysicalDevice();

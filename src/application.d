@@ -6,7 +6,7 @@ import std.exception;
 import std.conv;
 import std.datetime : MonoTime;
 
-import calderad, depthbuffer, descriptorset, pipeline, sync, surface, swapchain, texture, uniformbuffer, wavefront;
+import calderad, depthbuffer, descriptorset, glyphatlas, pipeline, sync, surface, swapchain, texture, uniformbuffer, wavefront;
 
 void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string); }
 
@@ -55,6 +55,7 @@ struct App {
   DepthBuffer depthbuffer;
   Geometry geometry;
   SyncObjects synchronization;
+  GlyphAtlas glyphatlas;
 
   uint frame = 1;
   uint currentFrame = 0;
