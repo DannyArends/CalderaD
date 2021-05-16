@@ -88,7 +88,7 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     rasterizerDiscardEnable: VK_FALSE,
     polygonMode: VK_POLYGON_MODE_FILL,
     lineWidth: 1.0f,
-    cullMode: VK_CULL_MODE_BACK_BIT,
+    cullMode: VK_CULL_MODE_NONE,//VK_CULL_MODE_BACK_BIT,
     frontFace: VK_FRONT_FACE_COUNTER_CLOCKWISE,
     depthBiasEnable: VK_FALSE,
     depthBiasConstantFactor: 0.0f, // Optional
@@ -108,9 +108,9 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
 
   VkPipelineColorBlendAttachmentState colorBlendAttachment = {
     colorWriteMask: VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
-    blendEnable: VK_FALSE,
+    blendEnable: VK_TRUE,
     srcColorBlendFactor: VK_BLEND_FACTOR_ONE, // Optional
-    dstColorBlendFactor: VK_BLEND_FACTOR_ZERO, // Optional
+    dstColorBlendFactor: VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA, // Optional
     colorBlendOp: VK_BLEND_OP_ADD, // Optional
     srcAlphaBlendFactor: VK_BLEND_FACTOR_ONE, // Optional
     dstAlphaBlendFactor: VK_BLEND_FACTOR_ZERO, // Optional

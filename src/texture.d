@@ -14,10 +14,10 @@ struct Texture {
 }
 
 void createTextureImage(ref App app, ref GlyphAtlas glyphatlas) {
-  auto surface = TTF_RenderUNICODE_Blended_Wrapped(glyphatlas.ttf, glyphatlas.atlas.ptr, SDL_Color(255, 255, 255, 255), glyphatlas.width);
+  auto surface = TTF_RenderUNICODE_Blended_Wrapped(glyphatlas.ttf, glyphatlas.atlas.ptr, SDL_Color(255, 255, 0, 0), glyphatlas.width);
   if (!surface) { toStdout("Unable to render font: '%s'\n", TTF_GetError()); return; }
   toStdout("GlyphAtlas texture surface %p: [%dx%d:%d]\n", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
-  app.createTextureImage(surface);
+  app.glyphatlas.texture = app.createTextureImage(surface);
 }
 
 Texture createTextureImage(ref App app, string filename) {

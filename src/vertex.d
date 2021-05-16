@@ -8,9 +8,9 @@ import calderad, buffer, wavefront;
 
 struct Vertex {
   float[3] pos = [0.0f, 0.0f, 0.0f];
+  float[2] texCoord = [0.0f, 1.0f];
   float[3] color = [1.0f, 1.0f, 1.0f];
   float[3] normal = [0.0f, 1.0f, 0.0f];
-  float[2] texCoord = [0.0f, 0.0f];
 
   static VkVertexInputBindingDescription getBindingDescription() {
     VkVertexInputBindingDescription bindingDescription = {
