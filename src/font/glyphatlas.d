@@ -6,13 +6,14 @@ import std.datetime : MonoTime;
 import std.utf : isValidDchar;
 import calderad, glyph, texture;
 
+// The GlyphAtlas structure holds links to the TTF_Font, the Texture and the atlas
 struct GlyphAtlas {
     string path;
-    TTF_Font* ttf;
-    ubyte size;
-    Glyph[dchar] glyphs;
-    ushort[] atlas;
-    Texture texture;
+    TTF_Font* ttf; // Pointer to the loaded TTF_Font
+    ubyte size; // Font size
+    Glyph[dchar] glyphs; // associative array couples glypgs to dchar
+    ushort[] atlas; // ushort array of chars which were valid and stored into the atlas (\n for linebreaks)
+    Texture texture; // Holds the Texture structure created by createTextureImage() 
     int width;
     int height;
     int ascent;
@@ -42,6 +43,7 @@ struct GlyphAtlas {
     }
 }
 
+// Loads a GlyphAtlas from file
 GlyphAtlas loadGlyphAtlas(string filename, ubyte size = 12, dchar to = '\U00000FFF', uint width = 1024, uint max_width = 1024) {
   GlyphAtlas glyphatlas = GlyphAtlas(filename);
   glyphatlas.size = (size == 0)? 12 : size;
@@ -86,7 +88,7 @@ ushort[] createGlyphAtlas(ref GlyphAtlas glyphatlas, dchar to = '\U00000FFF', ui
   toStdout("%d unicode glyphs (%d unique ones)\n", atlas.length, glyphatlas.glyphs.length);
   toStdout("FontAscent: %d\n", TTF_FontAscent(glyphatlas.ttf));
   toStdout("FontAdvance: %d\n", glyphatlas.advance);
-  glyphatlas.height = h; // Use height from TTF_SizeUNICODE, since TTF_FontHeight reports it wrong for some glyphatlass
+  glyphatlas.height = h; // Use height from TTF_SizeUNICODE, since TTF_FontHeight reports it wrong for some glyphatlas
   glyphatlas.ascent = TTF_FontAscent(glyphatlas.ttf);
   MonoTime cT = MonoTime.currTime;
   auto time = (cT - sT).total!"msecs"();  // Update the current time

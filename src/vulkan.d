@@ -35,7 +35,7 @@ void initVulkan(ref App app,
   app.createCommandPool();
   app.createDepthResources();
   app.createFramebuffers();
-  app.createTextureImage(app.glyphatlas); // Creates the GlyphAtlas texture in 0
+  app.createTextureImage(app.glyphatlas); // Creates the GlyphAtlas as textures[0]
   app.createTextureImage(texturePath);
   app.createTextureSampler();
   app.createVertexBuffer();
