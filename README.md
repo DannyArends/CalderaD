@@ -74,16 +74,11 @@ Linux are similar to Windows, the [dub.json](./dub.json) might need some paths a
 
 
 ## Cross-Compiling for Android
-To get CalderaD working on an android device, the CalderaD repository and a fix for Android relating to the 
-loading of SDL2 on Android using the bindbc-sdl library is required:
+To get CalderaD working on an android device, follow the following step:
 
 ```
     git clone https://github.com/DannyArends/CalderaD.git
-    git clone https://github.com/DannyArends/bindbc-sdl.git
 ```
-
-Clone both CalderaD and the adjusted bindbc-sdl library side-by-side in the same folder, or update the 
-[dub.json](./dub.json) to point to another DannyArends/bindbc-sdl repository by updating the path location.
 
 ###  Install Android studio and install the android NDK
 Download [Andriod Studio](https://developer.android.com/studio), and install it. 
