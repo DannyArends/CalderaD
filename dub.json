@@ -20,7 +20,7 @@
 		"targetPath": "bin",
 		"targetType": "executable",
 		"dependencies": {
-			"bindbc-sdl": "~>0.21.2"
+			"bindbc-sdl": "~>0.21.4"
 		},
 		"preBuildCommands": [
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
@@ -72,10 +72,7 @@
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
 		],
 		"dependencies": {
-			"bindbc-sdl": {
-				"version": "~master",
-				"path": "../bindbc-sdl"
-			},
+			"bindbc-sdl": "~>0.21.4",
 		},
 		"libs": ["android"],
 	}]

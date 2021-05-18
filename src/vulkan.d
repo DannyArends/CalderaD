@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import calderad, commands, depthbuffer, descriptorset, framebuffer, pipeline, instance, images, glyphatlas;
-import logicaldevice, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture, vertex, uniformbuffer, wavefront;
+import logicaldevice, physicaldevice, renderpass, square, surface, sync, swapchain, texture, vertex, uniformbuffer, wavefront;
 
 void initVulkan(ref App app, 
                 string vertPath = "data/shaders/vert.spv",
