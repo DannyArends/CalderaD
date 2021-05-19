@@ -6,7 +6,7 @@ import calderad, swapchain, uniformbuffer, vulkan;
 
 void drawFrame(ref App app) {
   vkWaitForFences(app.device, 1, &app.synchronization.inFlightFences[app.currentFrame], VK_TRUE, uint.max);
-  //SDL_Log("vkWaitForFences: inFlight Fence[%d]", currentFrame);
+  //toStdout("vkWaitForFences: inFlight Fence[%d]", currentFrame);
 
   uint imageIndex;
   VkResult result = vkAcquireNextImageKHR(app.device, app.swapchain.swapChain, size_t.max, app.synchronization.imageAvailableSemaphores[app.currentFrame], VK_NULL_ND_HANDLE, &imageIndex);
@@ -15,20 +15,20 @@ void drawFrame(ref App app) {
     return app.recreateSwapChain();
   }
   enforce(result == VkResult.VK_SUCCESS || result == VK_SUBOPTIMAL_KHR, "failed to acquire swap chain image!");
-  //SDL_Log("vkAcquireNextImageKHR: %d %d", result, imageAvailableSemaphores[currentFrame]);
+  //toStdout("vkAcquireNextImageKHR: %d %d", result, imageAvailableSemaphores[currentFrame]);
 
   app.updateUniformBuffer(imageIndex);
-  //SDL_Log("updateUniformBuffer: %d", imageIndex);
+  //toStdout("updateUniformBuffer: %d", imageIndex);
 
   // Check if a previous frame is using this image (i.e. there is its fence to wait on)
   if (app.synchronization.imagesInFlight[imageIndex] != VK_NULL_ND_HANDLE) {
-    //SDL_Log("vkWaitForFences: %d", imagesInFlight[imageIndex]);
+    //toStdout("vkWaitForFences: %d", imagesInFlight[imageIndex]);
     vkWaitForFences(app.device, 1, &app.synchronization.imagesInFlight[imageIndex], VK_TRUE, uint.max);
   }
   // Mark the image as now being in use by this frame
   app.synchronization.imagesInFlight[imageIndex] = app.synchronization.inFlightFences[app.currentFrame];
   
-  //SDL_Log("Renderer next frame %d image = %d", frame, imageIndex);
+  //toStdout("Renderer next frame %d image = %d", frame, imageIndex);
   VkSemaphore[] waitSemaphores = [app.synchronization.imageAvailableSemaphores[app.currentFrame]];
   VkPipelineStageFlags[] waitStages = [VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT];
   VkSemaphore[] signalSemaphores = [app.synchronization.renderFinishedSemaphores[app.currentFrame]];
@@ -45,10 +45,10 @@ void drawFrame(ref App app) {
   };
 
   vkResetFences(app.device, 1, &app.synchronization.inFlightFences[app.currentFrame]);
-  //SDL_Log("vkResetFences: %d", inFlightFences[currentFrame]);
-    
+  //toStdout("vkResetFences: %d", inFlightFences[currentFrame]);
+
   enforceVK(vkQueueSubmit(app.graphicsQueue, 1, &submitInfo, app.synchronization.inFlightFences[app.currentFrame]));
-  //SDL_Log("vkQueueSubmit: %d", inFlightFences[currentFrame]);
+  //toStdout("vkQueueSubmit: %d", inFlightFences[currentFrame]);
 
   VkSwapchainKHR[] swapChains = [app.swapchain.swapChain];
 
@@ -63,7 +63,7 @@ void drawFrame(ref App app) {
   };
 
   result = vkQueuePresentKHR(app.presentQueue, &presentInfo);
-  //SDL_Log("vkQueuePresentKHR: %d", result);
+  //toStdout("vkQueuePresentKHR: %d", result);
 
   if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || app.hasResized) {
     if(app.hasResized) app.hasResized = false;
@@ -71,6 +71,6 @@ void drawFrame(ref App app) {
   } else {
     enforce(result == VkResult.VK_SUCCESS, "failed to present swap chain image!");
   }
-  //SDL_Log("Render completed, queue wait idle");
+  //toStdout("Render completed, queue wait idle");
   app.currentFrame = (app.frame++) % app.synchronization.MAX_FRAMES_IN_FLIGHT;
 }

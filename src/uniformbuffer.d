@@ -55,5 +55,5 @@ void updateUniformBuffer(ref App app, uint currentImage) {
   vkMapMemory(app.device, app.uniform.uniformBuffersMemory[currentImage], 0, ubo.sizeof, 0, &data);
   memcpy(data, &ubo, ubo.sizeof);
   vkUnmapMemory(app.device, app.uniform.uniformBuffersMemory[currentImage]);
-  //SDL_Log("updateUniformBuffer");
+  //toStdout("UniformBuffer updated");
 }

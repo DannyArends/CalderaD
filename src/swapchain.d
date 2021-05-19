@@ -101,5 +101,5 @@ void cleanupSwapChain(ref App app) {
     vkFreeMemory(app.device, app.uniform.uniformBuffersMemory[i], null);
   }
   vkDestroyDescriptorPool(app.device, app.descriptor.descriptorPool, null);
-  SDL_Log("Swapchain cleaned");
+  toStdout("Swapchain cleanup completed");
 }

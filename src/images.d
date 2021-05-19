@@ -153,7 +153,7 @@ void copyBufferToImage(ref App app, VkBuffer buffer, VkImage image, uint width, 
       imageExtent: imageExtent
     };
 
-    SDL_Log("copyBufferToImage %dx%d", width, height);
+    toStdout("copyBufferToImage %dx%d", width, height);
 
     vkCmdCopyBufferToImage(commandBuffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
     app.endSingleTimeCommands(commandBuffer);

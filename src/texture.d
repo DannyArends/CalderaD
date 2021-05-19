@@ -26,7 +26,7 @@ Texture createTextureImage(ref App app, string filename) {
 }
 
 Texture createTextureImage(ref App app, SDL_Surface* surface) {
-  SDL_Log("surface obtained: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
+  toStdout("surface obtained: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
 
   if (surface.format.BitsPerPixel != 32) {
     SDL_PixelFormat *fmt = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32);
@@ -36,7 +36,7 @@ Texture createTextureImage(ref App app, SDL_Surface* surface) {
     if (adapted) {
       SDL_FreeSurface(surface); // Free the SDL_Surface
       surface = adapted;
-      SDL_Log("surface adapted: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
+      toStdout("surface adapted: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
     }
   }
 
@@ -66,7 +66,7 @@ Texture createTextureImage(ref App app, SDL_Surface* surface) {
 
   texture.textureImageView = app.createImageView(texture.textureImage, VK_FORMAT_R8G8B8A8_SRGB);
 
-  SDL_Log("Freeing surface: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
+  toStdout("Freeing surface: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
   SDL_FreeSurface(surface);
   vkDestroyBuffer(app.device, stagingBuffer, null);
   vkFreeMemory(app.device, stagingBufferMemory, null);

@@ -49,7 +49,7 @@ GlyphAtlas loadGlyphAtlas(string filename, ubyte size = 12, dchar to = '\U00000F
   glyphatlas.size = (size == 0)? 12 : size;
   glyphatlas.ttf = TTF_OpenFont(toStringz(filename), glyphatlas.size);
   if (!glyphatlas.ttf) {
-    SDL_Log("Error by loading TTF_Font %s: %s\n", toStringz(filename), TTF_GetError());
+    toStdout("Error by loading TTF_Font %s: %s\n", toStringz(filename), TTF_GetError());
     return(glyphatlas);
   }
   glyphatlas.atlas = glyphatlas.createGlyphAtlas(to, width, max_width);
