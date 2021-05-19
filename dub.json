@@ -10,6 +10,7 @@
 	"sourcePaths": ["src"],
 	"dependencies": {
 		"bindbc-loader": "~>0.3.0",
+		"bindbc-sdl": "~>0.21.4",
 		"erupted": "~>2.1.24+v1.2.174",
 	},
 	"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer", "BindSDL_Net" ],
@@ -19,9 +20,6 @@
 		"name": "default",
 		"targetPath": "bin",
 		"targetType": "executable",
-		"dependencies": {
-			"bindbc-sdl": "~>0.21.4"
-		},
 		"preBuildCommands": [
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
@@ -71,9 +69,6 @@
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
 		],
-		"dependencies": {
-			"bindbc-sdl": "~>0.21.4",
-		},
 		"libs": ["android"],
 	}]
 }
