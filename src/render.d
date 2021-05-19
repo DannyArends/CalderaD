@@ -29,9 +29,9 @@ void drawFrame(ref App app) {
   app.synchronization.imagesInFlight[imageIndex] = app.synchronization.inFlightFences[app.currentFrame];
   
   //SDL_Log("Renderer next frame %d image = %d", frame, imageIndex);
-  VkSemaphore[] waitSemaphores = [app.synchronization.imageAvailableSemaphores[app.currentFrame]];
-  VkPipelineStageFlags[] waitStages = [VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT];
-  VkSemaphore[] signalSemaphores = [app.synchronization.renderFinishedSemaphores[app.currentFrame]];
+  VkSemaphore[1] waitSemaphores = [app.synchronization.imageAvailableSemaphores[app.currentFrame]];
+  VkPipelineStageFlags[1] waitStages = [VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT];
+  VkSemaphore[1] signalSemaphores = [app.synchronization.renderFinishedSemaphores[app.currentFrame]];
 
   VkSubmitInfo submitInfo = {
     sType: VK_STRUCTURE_TYPE_SUBMIT_INFO,
@@ -50,7 +50,7 @@ void drawFrame(ref App app) {
   enforceVK(vkQueueSubmit(app.graphicsQueue, 1, &submitInfo, app.synchronization.inFlightFences[app.currentFrame]));
   //SDL_Log("vkQueueSubmit: %d", inFlightFences[currentFrame]);
 
-  VkSwapchainKHR[] swapChains = [app.swapchain.swapChain];
+  VkSwapchainKHR[1] swapChains = [app.swapchain.swapChain];
 
   VkPresentInfoKHR presentInfo = {
     sType: VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
