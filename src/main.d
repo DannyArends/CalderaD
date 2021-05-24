@@ -35,7 +35,7 @@ void run (ref App app, string[] args) {
   while (app.running) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
-      //toStdout("SDL: %s", toStringz(format("%s", ev.type)));
+      toStdout("SDL: %s", toStringz(format("%s", ev.type)));
       if (ev.type == SDL_QUIT) app.running = false;
       if (ev.type == SDL_KEYUP && ev.key.keysym.sym == SDLK_ESCAPE) app.running = false;
       if (ev.type == SDL_WINDOWEVENT && ev.window.event == SDL_WINDOWEVENT_RESIZED) { 

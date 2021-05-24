@@ -65,14 +65,16 @@ void createCommandBuffers(ref App app) {
     toStdout("Command buffer %d recording", i);
 
     VkRect2D renderArea = {
-      offset: {x:0, y:0},
-      extent: {width: app.surface.capabilities.currentExtent.width, height: app.surface.capabilities.currentExtent.height}
+      offset: { x:0, y:0 },
+      extent: {
+               width: app.surface.capabilities.currentExtent.width,
+               height: app.surface.capabilities.currentExtent.height
+              }
     };
 
     VkClearValue[2] clearValues;
-    VkClearDepthStencilValue depthStencil =  {depth: 1.0f, stencil: 0 };
-    VkClearColorValue color = {float32: [0.0f, 0.0f, 0.0f, 1.0f] };
-    
+    VkClearColorValue color = { float32: [0.0f, 0.0f, 0.0f, 1.0f] };
+    VkClearDepthStencilValue depthStencil =  { depth: 1.0f, stencil: 0 };
     clearValues[0].color = color;
     clearValues[1].depthStencil = depthStencil;
 
@@ -88,16 +90,19 @@ void createCommandBuffers(ref App app) {
     vkCmdBeginRenderPass(app.commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
       toStdout("Render pass recording to %d", i);
       vkCmdBindPipeline(app.commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, app.pipeline.graphicsPipeline);
-      VkBuffer[] vertexBuffers = [app.geometry.vertexBuffer];
-      VkDeviceSize[] offsets = [0];
+      
+      for(size_t j = 0; j < app.geometry.length; j++) {
+        VkBuffer[] vertexBuffers = [app.geometry[j].vertexBuffer];
+        VkDeviceSize[] offsets = [0];
 
-      vkCmdBindVertexBuffers(app.commandBuffers[i], 0, 1, &vertexBuffers[0], &offsets[0]);
+        vkCmdBindVertexBuffers(app.commandBuffers[i], 0, 1, &vertexBuffers[0], &offsets[0]);
 
-      vkCmdBindIndexBuffer(app.commandBuffers[i], app.geometry.indexBuffer, 0, VK_INDEX_TYPE_UINT32);
+        vkCmdBindIndexBuffer(app.commandBuffers[i], app.geometry[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-      vkCmdBindDescriptorSets(app.commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, app.pipeline.pipelineLayout, 0, 1, &app.descriptor.descriptorSets[i], 0, null);
+        vkCmdBindDescriptorSets(app.commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, app.pipeline.pipelineLayout, 0, 1, &app.descriptor.descriptorSets[i], 0, null);
 
-      vkCmdDrawIndexed(app.commandBuffers[i], cast(uint)app.geometry.indices.length, 1, 0, 0, 0);
+        vkCmdDrawIndexed(app.commandBuffers[i], cast(uint)app.geometry[j].indices.length, 1, 0, 0, 0);
+      }
     vkCmdEndRenderPass(app.commandBuffers[i]);
     enforceVK(vkEndCommandBuffer(app.commandBuffers[i]));
     toStdout("Render pass finished to %d", i);

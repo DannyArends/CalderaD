@@ -26,10 +26,7 @@ void initVulkan(ref App app,
   app.createSurface();
   app.loadSurfaceCapabilities();
   app.createLogicalDevice();
-  //app.geometry = Square([0.0f,1.0f,0.0f], app.glyphatlas.surface.w / app.glyphatlas.size, app.glyphatlas.surface.h / app.glyphatlas.size);
-  app.geometry = Squares();
-  //app.geometry = Text(app.glyphatlas, "CanderaD\nEngine V0.0");
-  //app.geometry = app.loadWavefront(modelPath);
+
   app.createSwapChain();
   app.aquireSwapChainImages();
   app.createRenderPass();
@@ -41,8 +38,15 @@ void initVulkan(ref App app,
   app.createTextureImage(app.glyphatlas); // Creates the GlyphAtlas as textures[0]
   app.createTextureImage(texturePath);
   app.createTextureSampler();
-  app.createVertexBuffer();
-  app.createIndexBuffer();
+
+  // Create several the geometries
+  app.geometry ~= Square([0.0f,-4.0f,0.0f], app.glyphatlas.surface.w / app.glyphatlas.pointsize, app.glyphatlas.surface.h / app.glyphatlas.pointsize);
+  app.geometry ~= Squares();
+  app.geometry ~= Text(app.glyphatlas, "CanderaD\nv0.0.1");
+  //app.geometry ~= app.loadWavefront(modelPath);
+
+  app.createVertexBuffers();
+  app.createIndexBuffers();
   app.createUniformBuffers();
   app.createDescriptorPool();
   app.createDescriptorSets();

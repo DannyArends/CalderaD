@@ -18,43 +18,6 @@ struct Texture {
   alias surface this;
 }
 
-
-/* isPow2 and newtPow2 helper functions */
-@nogc bool isPow2(uint val) nothrow { return(nextPow2(val) == val); }
-@nogc uint nextPow2(uint val) nothrow { return(cast(uint)(pow(2, ceil(log2(val))))); }
-
-/* Resize a texture to be a power of 2 */
-void toPow2(ref SDL_Surface* surface) nothrow {
-    if (!surface) return;
-    uint reqW, reqH = 0;
-    uint bpp = surface.pitch / surface.w;
-    toStdout("Resize Texture original %dx%d:%d (%d)\n", surface.w, surface.h, bpp, surface.pitch);
-    reqW = (isPow2(surface.w))? surface.w : nextPow2(surface.w);
-    reqH = (isPow2(surface.h))? surface.h : nextPow2(surface.h);
-    toStdout("Resize Texture target %dx%d:%d\n", reqW, reqH, bpp);
-    uint[] data = new uint[](reqW * bpp * reqH);
-    SDL_LockSurface(surface);
-    uint* image = cast(uint*) surface.pixels;
-    size_t nbuf = 0;
-    for (size_t y = 0; y < surface.h; y++) {
-      size_t from = (y * surface.w);
-      size_t to = (y * surface.w) + surface.w;
-      if(!y) toStdout("Resize - copy [%d:%d]\n", from, to);
-      data[from .. to] = image[from .. to];
-      nbuf++;
-    }
-    toStdout("Resize texture copied %d buffers\n", nbuf);
-    SDL_UnlockSurface(surface);
-    SDL_Surface* adapted = SDL_CreateRGBSurfaceFrom(cast(void*)data.ptr, reqW, reqH, bpp * 8, reqW * bpp,
-                                                 surface.format.Rmask,
-                                                 surface.format.Gmask,
-                                                 surface.format.Bmask,
-                                                 surface.format.Amask);
-    //SDL_FreeSurface(surface); // Free the SDL_Surface
-    surface = adapted;
-    toStdout("Resize texture surface updated\n");
-}
-
 void createTextureImage(ref App app, ref GlyphAtlas glyphatlas) {
   app.glyphatlas.texture = app.createTextureImage(glyphatlas.surface);
 }
@@ -112,7 +75,7 @@ Texture createTextureImage(ref App app, SDL_Surface* surface) {
   texture.textureImageView = app.createImageView(texture.textureImage, VK_FORMAT_R8G8B8A8_SRGB);
 
   toStdout("Freeing surface: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
-  SDL_FreeSurface(surface);
+  //SDL_FreeSurface(surface);
   vkDestroyBuffer(app.device, stagingBuffer, null);
   vkFreeMemory(app.device, stagingBufferMemory, null);
 
