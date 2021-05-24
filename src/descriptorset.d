@@ -36,7 +36,7 @@ void createDescriptorSets(ref App app) {
 
     VkDescriptorImageInfo imageInfo = {
       imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      imageView: app.textureArray[1].textureImageView, // Texture 0 is reserved for font
+      imageView: app.textureArray[0].textureImageView, // Texture 0 is reserved for font
       sampler: app.textureSampler
     };
     

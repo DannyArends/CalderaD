@@ -46,8 +46,8 @@ before building with dub:
 
 ```
     cd CalderaD
-    glslc.exe app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv
-    glslc.exe app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv
+    glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv
+    glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv
     dub
 ```
 

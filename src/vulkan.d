@@ -3,14 +3,14 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import calderad, commands, depthbuffer, descriptorset, framebuffer, pipeline, instance, images, glyphatlas;
-import logicaldevice, physicaldevice, renderpass, square, surface, sync, swapchain, texture, vertex, uniformbuffer, wavefront;
+import logicaldevice, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture, vertex, uniformbuffer, wavefront;
 
 void initVulkan(ref App app, 
                 string vertPath = "data/shaders/vert.spv",
                 string fragPath = "data/shaders/frag.spv",
                 string fontPath = "data/fonts/FreeMono.ttf",
                 string modelPath = "data/obj/viking_room.obj",
-                string texturePath = "data/textures/viking_room.png") {
+                string texturePath = "data/textures/CalderaD.png") {
   toStdout("initializing Vulkan");
   version(Android){ }else{ //version(SDL)
     modelPath = "app/src/main/assets/" ~ modelPath;
@@ -19,15 +19,17 @@ void initVulkan(ref App app,
     texturePath = "app/src/main/assets/" ~ texturePath;
     fontPath = "app/src/main/assets/" ~ fontPath;
   }
-  app.glyphatlas = loadGlyphAtlas(fontPath, 12, '\U000000FF', 256);
+  app.glyphatlas = loadGlyphAtlas(fontPath, 24, '\U000000FF', 256);
   app.loadInstanceExtensions();
   app.createInstance();
   app.pickPhysicalDevice();
   app.createSurface();
   app.loadSurfaceCapabilities();
   app.createLogicalDevice();
-  app.geometry = app.loadWavefront(modelPath);
-  //app.geometry = Square();
+  //app.geometry = Square([0.0f,1.0f,0.0f], app.glyphatlas.surface.w / app.glyphatlas.size, app.glyphatlas.surface.h / app.glyphatlas.size);
+  //app.geometry = Squares();
+  app.geometry = Text(app.glyphatlas, "! Hello World !");
+  //app.geometry = app.loadWavefront(modelPath);
   app.createSwapChain();
   app.aquireSwapChainImages();
   app.createRenderPass();
@@ -37,7 +39,6 @@ void initVulkan(ref App app,
   app.createDepthResources();
   app.createFramebuffers();
   app.createTextureImage(app.glyphatlas); // Creates the GlyphAtlas as textures[0]
-  //app.geometry = app.createText();
   app.createTextureImage(texturePath);
   app.createTextureSampler();
   app.createVertexBuffer();

@@ -10,10 +10,11 @@ import calderad, glyph, texture;
 struct GlyphAtlas {
     string path;
     TTF_Font* ttf; // Pointer to the loaded TTF_Font
-    ubyte size; // Font size
+    ubyte pointsize; // Font size
     Glyph[dchar] glyphs; // associative array couples Glyph and dchar
     ushort[] atlas; // ushort array of chars which were valid and stored into the atlas (\n for linebreaks)
-    Texture texture; // Holds the Texture structure created by createTextureImage() 
+    SDL_Surface* surface; // Holds the SDL surface with the atlas
+    Texture texture; // Holds the SDL surface with the atlas
     int width;
     int height;
     int ascent;
@@ -26,12 +27,12 @@ struct GlyphAtlas {
     }
 
     @property @nogc float tX(Glyph* glyph) nothrow { 
-      return((glyph.atlasloc + glyph.minx) / cast(float)(this.texture.width));
+      return((glyph.atlasloc + glyph.minx) / cast(float)(surface.w));
     }
 
     @property @nogc float tY(Glyph* glyph) nothrow {
       int lineHsum = (this.height) * glyph.atlasrow;
-      return((lineHsum + (this.ascent - glyph.maxy)) / cast(float)(this.texture.height));
+      return((lineHsum + (this.ascent - glyph.maxy)) / cast(float)(surface.h));
     }
 
     @property @nogc float pX(Glyph* glyph, size_t col) nothrow {
@@ -44,10 +45,10 @@ struct GlyphAtlas {
 }
 
 // Loads a GlyphAtlas from file
-GlyphAtlas loadGlyphAtlas(string filename, ubyte size = 12, dchar to = '\U00000FFF', uint width = 1024, uint max_width = 1024) {
+GlyphAtlas loadGlyphAtlas(string filename, ubyte pointsize = 12, dchar to = '\U00000FFF', uint width = 1024, uint max_width = 1024) {
   GlyphAtlas glyphatlas = GlyphAtlas(filename);
-  glyphatlas.size = (size == 0)? 12 : size;
-  glyphatlas.ttf = TTF_OpenFont(toStringz(filename), glyphatlas.size);
+  glyphatlas.pointsize = (pointsize == 0)? 12 : pointsize;
+  glyphatlas.ttf = TTF_OpenFont(toStringz(filename), glyphatlas.pointsize);
   if (!glyphatlas.ttf) {
     toStdout("Error by loading TTF_Font %s: %s\n", toStringz(filename), TTF_GetError());
     return(glyphatlas);
@@ -84,12 +85,13 @@ ushort[] createGlyphAtlas(ref GlyphAtlas glyphatlas, dchar to = '\U00000FFF', ui
     }
     c++;
   }
-  TTF_SizeUNICODE(glyphatlas.ttf, atlas.ptr, &w, &h);
+  TTF_SizeUNICODE(glyphatlas.ttf, &atlas[0], &w, &h);
   toStdout("%d unicode glyphs (%d unique ones)\n", atlas.length, glyphatlas.glyphs.length);
   toStdout("FontAscent: %d\n", TTF_FontAscent(glyphatlas.ttf));
   toStdout("FontAdvance: %d\n", glyphatlas.advance);
   glyphatlas.height = h; // Use height from TTF_SizeUNICODE, since TTF_FontHeight reports it wrong for some glyphatlas
   glyphatlas.ascent = TTF_FontAscent(glyphatlas.ttf);
+  glyphatlas.surface = TTF_RenderUNICODE_Blended_Wrapped(glyphatlas.ttf, &atlas[0], SDL_Color(255, 255, 255, 255), glyphatlas.width);
   MonoTime cT = MonoTime.currTime;
   auto time = (cT - sT).total!"msecs"();  // Update the current time
   toStdout("%d/%d unicode glyphs on %d lines in %d msecs\n", glyphatlas.glyphs.length, c, ++atlasrow, time);

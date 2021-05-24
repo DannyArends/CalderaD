@@ -3,21 +3,60 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import core.stdc.string : memcpy;
+import std.math;
 import calderad, buffer, glyphatlas, images, log;
 
 struct Texture {
   int width = 0;
   int height = 0;
+
   VkImage textureImage;
   VkDeviceMemory textureImageMemory;
   VkImageView textureImageView;
+
+  SDL_Surface* surface;
+  alias surface this;
+}
+
+
+/* isPow2 and newtPow2 helper functions */
+@nogc bool isPow2(uint val) nothrow { return(nextPow2(val) == val); }
+@nogc uint nextPow2(uint val) nothrow { return(cast(uint)(pow(2, ceil(log2(val))))); }
+
+/* Resize a texture to be a power of 2 */
+void toPow2(ref SDL_Surface* surface) nothrow {
+    if (!surface) return;
+    uint reqW, reqH = 0;
+    uint bpp = surface.pitch / surface.w;
+    toStdout("Resize Texture original %dx%d:%d (%d)\n", surface.w, surface.h, bpp, surface.pitch);
+    reqW = (isPow2(surface.w))? surface.w : nextPow2(surface.w);
+    reqH = (isPow2(surface.h))? surface.h : nextPow2(surface.h);
+    toStdout("Resize Texture target %dx%d:%d\n", reqW, reqH, bpp);
+    uint[] data = new uint[](reqW * bpp * reqH);
+    SDL_LockSurface(surface);
+    uint* image = cast(uint*) surface.pixels;
+    size_t nbuf = 0;
+    for (size_t y = 0; y < surface.h; y++) {
+      size_t from = (y * surface.w);
+      size_t to = (y * surface.w) + surface.w;
+      if(!y) toStdout("Resize - copy [%d:%d]\n", from, to);
+      data[from .. to] = image[from .. to];
+      nbuf++;
+    }
+    toStdout("Resize texture copied %d buffers\n", nbuf);
+    SDL_UnlockSurface(surface);
+    SDL_Surface* adapted = SDL_CreateRGBSurfaceFrom(cast(void*)data.ptr, reqW, reqH, bpp * 8, reqW * bpp,
+                                                 surface.format.Rmask,
+                                                 surface.format.Gmask,
+                                                 surface.format.Bmask,
+                                                 surface.format.Amask);
+    //SDL_FreeSurface(surface); // Free the SDL_Surface
+    surface = adapted;
+    toStdout("Resize texture surface updated\n");
 }
 
 void createTextureImage(ref App app, ref GlyphAtlas glyphatlas) {
-  auto surface = TTF_RenderUNICODE_Blended_Wrapped(glyphatlas.ttf, glyphatlas.atlas.ptr, SDL_Color(255, 255, 0, 0), glyphatlas.width);
-  if (!surface) { toStdout("Unable to render font: '%s'\n", TTF_GetError()); return; }
-  toStdout("GlyphAtlas texture surface %p: [%dx%d:%d]\n", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
-  app.glyphatlas.texture = app.createTextureImage(surface);
+  app.glyphatlas.texture = app.createTextureImage(glyphatlas.surface);
 }
 
 Texture createTextureImage(ref App app, string filename) {
@@ -25,22 +64,28 @@ Texture createTextureImage(ref App app, string filename) {
   return(app.createTextureImage(surface));
 }
 
+void toRGBA(ref SDL_Surface* surface){
+  SDL_PixelFormat *fmt = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32);
+  fmt.BitsPerPixel = 32;
+  SDL_Surface* adapted = SDL_ConvertSurface(surface, fmt, 0);
+  SDL_FreeFormat(fmt); // Free the SDL_PixelFormat
+  if (adapted) {
+    SDL_FreeSurface(surface); // Free the SDL_Surface
+    surface = adapted;
+    toStdout("surface adapted: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
+  }
+}
+
 Texture createTextureImage(ref App app, SDL_Surface* surface) {
   toStdout("surface obtained: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
 
   if (surface.format.BitsPerPixel != 32) {
-    SDL_PixelFormat *fmt = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32);
-    fmt.BitsPerPixel = 32;
-    SDL_Surface* adapted = SDL_ConvertSurface(surface, fmt, 0);
-    SDL_FreeFormat(fmt); // Free the SDL_PixelFormat
-    if (adapted) {
-      SDL_FreeSurface(surface); // Free the SDL_Surface
-      surface = adapted;
-      toStdout("surface adapted: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
-    }
+    surface.toRGBA();
+  }else{
+    toStdout("Surface not adapted");
   }
 
-  Texture texture = { width: surface.w, height: surface.h };
+  Texture texture = { width: surface.w, height: surface.h, surface: surface };
   VkBuffer stagingBuffer;
   VkDeviceMemory stagingBufferMemory;
   app.createBuffer(

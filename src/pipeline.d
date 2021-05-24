@@ -113,7 +113,7 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     dstColorBlendFactor: VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA, // Optional
     colorBlendOp: VK_BLEND_OP_ADD, // Optional
     srcAlphaBlendFactor: VK_BLEND_FACTOR_ONE, // Optional
-    dstAlphaBlendFactor: VK_BLEND_FACTOR_ZERO, // Optional
+    dstAlphaBlendFactor: VK_BLEND_FACTOR_ONE, // Optional
     alphaBlendOp: VK_BLEND_OP_ADD // Optional
   };
 

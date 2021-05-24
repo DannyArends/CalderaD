@@ -8,7 +8,7 @@
 
 layout(binding = 1) uniform sampler2D texSampler;
 
-layout(location = 0) in vec3 fragColor;
+layout(location = 0) in vec4 fragColor;
 layout(location = 1) in vec3 fragNormal;
 layout(location = 2) in vec2 fragTexCoord;
 
@@ -16,7 +16,7 @@ layout(location = 0) out vec4 outColor;
 
 void main() {
   vec4 color = texture(texSampler, fragTexCoord).rgba;
-  if (color.w < 1) { discard; }
-  outColor = vec4(fragColor, 1.0) * color;
-  
+  vec3 blended = fragColor.rgb * color.rgb;
+  if(color.a < 0.2f) discard;
+  outColor = vec4(blended, color.a);
 }

@@ -1,9 +1,9 @@
 // Copyright Danny Arends 2021
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
-
 import core.stdc.string : memcpy;
 import std.datetime : MonoTime, dur;
+import std.math;
 import matrix : mat4, radian, rotate, rotateZ, lookAt, perspective;
 import calderad, buffer;
 
@@ -36,7 +36,7 @@ void updateUniformBuffer(ref App app, uint currentImage) {
   auto time = (currentTime - app.startTime).total!"msecs"() / 100.0f;  // Update the current time
 
   UniformBufferObject ubo = {
-    model: rotate(mat4.init, [0.0f, 0.0f, time * radian(90.0f)]),
+    model: rotate(mat4.init, [0.0f, 0.0f, (PI * time) * radian(90.0f)]),
     view: lookAt([1.0f, 1.0f, 1.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 1.0f]),
     proj: perspective(45.0f, app.surface.capabilities.currentExtent.width / cast(float) app.surface.capabilities.currentExtent.height, 0.1f, 10.0f),
     orientation: mat4.init

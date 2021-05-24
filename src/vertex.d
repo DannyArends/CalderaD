@@ -9,7 +9,7 @@ import calderad, buffer, wavefront;
 struct Vertex {
   float[3] pos = [0.0f, 0.0f, 0.0f];
   float[2] texCoord = [0.0f, 1.0f];
-  float[3] color = [1.0f, 1.0f, 1.0f];
+  float[4] color = [1.0f, 1.0f, 1.0f, 1.0f];
   float[3] normal = [0.0f, 1.0f, 0.0f];
 
   static VkVertexInputBindingDescription getBindingDescription() {
@@ -31,7 +31,7 @@ struct Vertex {
     },{
       binding: 0,
       location: 1,
-      format: VK_FORMAT_R32G32B32_SFLOAT,
+      format: VK_FORMAT_R32G32B32A32_SFLOAT,
       offset: Vertex.color.offsetof
     },{
     binding: 0,
