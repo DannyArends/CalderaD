@@ -54,7 +54,7 @@ struct App {
   VkCommandPool commandPool;
   VkCommandBuffer[] commandBuffers;
   DepthBuffer depthbuffer;
-  Geometry geometry;
+  Geometry[] geometry;
   SyncObjects synchronization;
   GlyphAtlas glyphatlas;
 
@@ -90,13 +90,15 @@ void cleanup(ref App app) {
 
     vkDestroyDescriptorSetLayout(app.device, app.descriptor.descriptorSetLayout, null);
 
-    vkDestroyBuffer(app.device, app.geometry.indexBuffer, null);
-    vkFreeMemory(app.device, app.geometry.indexBufferMemory, null);
-    toStdout("Index buffer destroyed");
+    for(size_t i = 0; i < app.geometry.length; i++) {
+      vkDestroyBuffer(app.device, app.geometry[i].indexBuffer, null);
+      vkFreeMemory(app.device, app.geometry[i].indexBufferMemory, null);
+      toStdout("Index buffer destroyed");
 
-    vkDestroyBuffer(app.device, app.geometry.vertexBuffer, null);
-    vkFreeMemory(app.device, app.geometry.vertexBufferMemory, null);
-    toStdout("Vertex buffer destroyed");
+      vkDestroyBuffer(app.device, app.geometry[i].vertexBuffer, null);
+      vkFreeMemory(app.device, app.geometry[i].vertexBufferMemory, null);
+      toStdout("Vertex buffer destroyed");
+    }
 
     for (size_t i = 0; i < app.synchronization.MAX_FRAMES_IN_FLIGHT; i++) {
       vkDestroySemaphore(app.device, app.synchronization.renderFinishedSemaphores[i], null);
