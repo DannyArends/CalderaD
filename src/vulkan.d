@@ -19,7 +19,7 @@ void initVulkan(ref App app,
     texturePath = "app/src/main/assets/" ~ texturePath;
     fontPath = "app/src/main/assets/" ~ fontPath;
   }
-  app.glyphatlas = loadGlyphAtlas(fontPath, 24, '\U000000FF', 256);
+  app.glyphatlas = loadGlyphAtlas(fontPath, 80, '\U000000FF', 512);
   app.loadInstanceExtensions();
   app.createInstance();
   app.pickPhysicalDevice();
@@ -27,8 +27,8 @@ void initVulkan(ref App app,
   app.loadSurfaceCapabilities();
   app.createLogicalDevice();
   //app.geometry = Square([0.0f,1.0f,0.0f], app.glyphatlas.surface.w / app.glyphatlas.size, app.glyphatlas.surface.h / app.glyphatlas.size);
-  //app.geometry = Squares();
-  app.geometry = Text(app.glyphatlas, "! Hello World !");
+  app.geometry = Squares();
+  //app.geometry = Text(app.glyphatlas, "! Hello World !");
   //app.geometry = app.loadWavefront(modelPath);
   app.createSwapChain();
   app.aquireSwapChainImages();

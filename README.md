@@ -67,8 +67,8 @@ Linux are similar to Windows, the [dub.json](./dub.json) might need some paths a
 ```
     git clone https://github.com/DannyArends/CalderaD.git
     cd CalderaD
-    glslc app/src/main/assets/data/shaders/tiangle.vert -o app/src/main/assets/data/shaders/vert.spv
-    glslc app/src/main/assets/data/shaders/tiangle.frag -o app/src/main/assets/data/shaders/frag.spv
+    glslc app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv
+    glslc app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv
     dub
 ```
 
