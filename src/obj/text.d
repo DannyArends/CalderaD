@@ -16,18 +16,18 @@ struct Text {
   this(GlyphAtlas atlas, string value = "Hellow World", float scale = 0.3f){
     float glyphscale = (1.0f/scale) * atlas.pointsize;
     toStdout("GlyphAtlas: %d, %d, %d, %d, %d", atlas.width, atlas.height, atlas.ascent, atlas.miny, atlas.advance);
-    size_t[2] row = [1, value.split("\n").length];
+    size_t[2] line = [1, value.split("\n").length];
     size_t col = 0;
     size_t nGlyhs = 0;
     foreach(i, dchar c; value.array) {
-      if(c == '\n'){ row[0]++; col = 0; continue; }
+      if(c == '\n'){ line[0]++; col = 0; continue; }
       auto cChar = atlas.getGlyph(c);
       //toStdout("Glyph[%d|%c] = i:[%d,%d]", c, c, cChar.atlasloc, cChar.atlasrow);
       //toStdout("Glyph[%d|%c] = g:[%d,%d]", c, c, cChar.gX, cChar.gY);
       //toStdout("Glyph[%d|%c] = t:[%.4f,%.4f]", c, c, atlas.tX(cChar), atlas.tY(cChar));
       // Convert everything to Glyphscale (based on the chosen fontsize)
       float pX = atlas.pX(cChar, col) /  glyphscale;
-      float pY = atlas.pY(cChar, row) /  glyphscale;
+      float pY = atlas.pY(cChar, line) /  glyphscale;
       float w = cChar.gX / glyphscale;
       float h = cChar.gY / glyphscale;
       float tXo = cChar.gX / cast(float)(atlas.surface.w);
@@ -46,7 +46,7 @@ struct Text {
       col++;
       nGlyhs++;
     }
-
   }
+
   alias geometry this;
 }

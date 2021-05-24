@@ -39,8 +39,8 @@ struct GlyphAtlas {
       return(cast(float)(col) * glyph.advance + glyph.minx);
     }
 
-    @property @nogc float pY(Glyph* glyph, size_t[2] row) nothrow {
-      return(cast(float)(row[1] - row[0]) * (this.height) + glyph.miny - this.miny);
+    @property @nogc float pY(Glyph* glyph, size_t[2] line) nothrow {
+      return(cast(float)(line[1] - line[0]) * (this.height) + glyph.miny - this.miny);
     }
 }
 
