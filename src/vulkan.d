@@ -10,7 +10,7 @@ void initVulkan(ref App app,
                 string fragPath = "data/shaders/frag.spv",
                 string fontPath = "data/fonts/FreeMono.ttf",
                 string modelPath = "data/obj/viking_room.obj",
-                string texturePath = "data/textures/CalderaD.png") {
+                string texturePath = "data/textures/viking_room.png") {
   toStdout("initializing Vulkan");
   version(Android){ }else{ //version(SDL)
     modelPath = "app/src/main/assets/" ~ modelPath;
