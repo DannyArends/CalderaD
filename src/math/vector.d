@@ -95,6 +95,9 @@ import std.math : sqrt;
 @nogc pure T[3] negate(T)(ref T[3] v) nothrow {
     v[] = -v[]; return(v);
 }
+@nogc pure T[3] vMul(T)(const T[3] v, const T[3] b) nothrow {
+    T[3] vMul = v[] * b[]; return(vMul);
+}
 @nogc pure T[3] vMul(T)(const T[3] v, const T b) nothrow {
     T[3] vMul = v[] * b; return(vMul);
 }
