@@ -28,7 +28,9 @@ Some noteworthy files:
 
 ## Compiling for Windows
 To compile the shaders, install the glslc compiler from [LunarG Vulkan SDK](https://vulkan.lunarg.com/), 
-a glslc compiler is also included in [Android Studio](https://developer.android.com/studio). 
+a glslc compiler is also included in the shader-tools/windows-x86_64 folder of the Android Native 
+Development Kit (NDK) which [Android Studio](https://developer.android.com/studio) can install for you 
+(see [here](https://developer.android.com/studio/projects/install-ndk)).
 
 Make sure the glslc compiler is installed and on your $PATH variable, if it is shaders are automatically 
 compiled by dub. Install the [DMD compiler](https://dlang.org/download.html), and compile the project 
