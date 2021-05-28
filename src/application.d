@@ -6,11 +6,20 @@ import std.exception;
 import std.conv;
 import std.datetime : MonoTime;
 
-import calderad, depthbuffer, descriptorset, geometry, glyphatlas, pipeline, sync, surface, swapchain, texture, uniformbuffer, wavefront;
+import calderad, depthbuffer, descriptorset, geometry, glyphatlas, pipeline, sync, surface, swapchain, texture, uniformbuffer, vkdebug, wavefront;
 
 void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string); }
 SDL_bool enforceSDL(SDL_bool res) { enforce(res == SDL_bool.SDL_TRUE, to!string(SDL_GetError())); return(res); }
 
+/*
+  Main application structure, aliasses the SDL_Window
+
+  Should stores all global SDL/Window/Vulkan related variables
+  To keep code encapsulated, the idea should be to avoid passing it by ref unless absolutely needed 
+  (Currently this is not the case, unfortunately). By keeping acces to this structure const() as much 
+  as possible, we can in future avoid threading issues when we de-couple the main loop with the render 
+  loop.
+*/
 struct App {
   version (Android) {
     uint[2] pos = [0, 0];
@@ -33,9 +42,12 @@ struct App {
     apiVersion: VK_API_VERSION_1_2
   };
 
+  bool enableValidationLayers = false;
+  const(char*)[] validationLayers = ["VK_LAYER_KHRONOS_validation"];
+  VkDebugUtilsMessengerEXT debugMessenger;
+
   const(char)*[] instanceExtensions;
   VkInstance instance;
-
   uint nPhysDevices;
   uint selected;
   VkPhysicalDevice[] physicalDevices;
@@ -114,7 +126,7 @@ void cleanup(ref App app) {
     vkDestroySurfaceKHR(app.instance, app.surface, null);
     toStdout("Surface destroyed");
     if (app.enabledValidationLayers) {
-      //vkDestroyDebugUtilsMessengerEXT(app.instance, debugMessenger, null);
+      destroyDebugMessenger(app.instance, app.debugMessenger, null);
       toStdout("Validation debug layer destroyed");
     }
     vkDestroyInstance(app.instance, null);
