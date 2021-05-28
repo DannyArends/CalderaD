@@ -3,7 +3,8 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import calderad, commands, depthbuffer, descriptorset, framebuffer, pipeline, instance, images, glyphatlas;
-import logicaldevice, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture, vertex, uniformbuffer, wavefront;
+import logicaldevice, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture;
+import uniformbuffer, vertex, vkdebug, wavefront;
 
 void initVulkan(ref App app, 
                 string vertPath = "data/shaders/vert.spv",
@@ -19,9 +20,12 @@ void initVulkan(ref App app,
     texturePath = "app/src/main/assets/" ~ texturePath;
     fontPath = "app/src/main/assets/" ~ fontPath;
   }
+
   app.glyphatlas = loadGlyphAtlas(fontPath, 80, '\U000000FF', 1024);
+  app.enableValidationLayers = app.checkValidationLayerSupport(app.validationLayers[0]);
   app.loadInstanceExtensions();
   app.createInstance();
+  app.setupDebugMessenger();
   app.pickPhysicalDevice();
   app.createSurface();
   app.loadSurfaceCapabilities();
