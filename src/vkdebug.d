@@ -7,9 +7,8 @@ import calderad;
 
 bool checkValidationLayerSupport(ref App app, const(char*) layerName) {
   uint32_t layerCount;
-  toStdout("checkValidationLayerSupport: %s", layerName);
   vkEnumerateInstanceLayerProperties(&layerCount, null);
-  toStdout("layerCount: %d", layerCount);
+  toStdout("checkValidationLayerSupport: %s, layerCount: %d", layerName, layerCount);
   if(layerCount == 0) return(false);
 
   VkLayerProperties[] availableLayers;
@@ -65,5 +64,3 @@ void setupDebugMessenger(ref App app) {
   };
   enforceVK(createDebugMessenger(app.instance, &createInfo, null, &app.debugMessenger));
 }
-
-
