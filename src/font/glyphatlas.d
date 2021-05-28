@@ -6,14 +6,15 @@ import std.datetime : MonoTime;
 import std.utf : isValidDchar;
 import calderad, glyph, texture;
 
-// The GlyphAtlas structure holds links to the TTF_Font, Glyphs, Texture and the atlas
+/* 
+  The GlyphAtlas structure holds links to the TTF_Font, Glyphs, Texture and the atlas
+*/
 struct GlyphAtlas {
     string path;
     TTF_Font* ttf; // Pointer to the loaded TTF_Font
     ubyte pointsize; // Font size
     Glyph[dchar] glyphs; // associative array couples Glyph and dchar
     ushort[] atlas; // ushort array of chars which were valid and stored into the atlas (\n for linebreaks)
-    SDL_Surface* surface; // Holds the SDL surface with the atlas
     Texture texture; // Holds the SDL surface with the atlas
     int width;
     int height;
@@ -21,27 +22,38 @@ struct GlyphAtlas {
     int miny;
     int advance;
 
-    Glyph* getGlyph(dchar letter) nothrow {
-      if(letter in glyphs) return(&glyphs[letter]);
-      return(&(glyphs.values[0]));
+    // Get a specific glyph from the atlas
+    Glyph getGlyph(dchar letter) nothrow {
+      if(letter in glyphs) return(glyphs[letter]);
+      return(glyphs[0]);
     }
 
-    @property @nogc float tX(Glyph* glyph) nothrow { 
+    // Glyph texture X postion
+    @property @nogc float tX(Glyph glyph) nothrow { 
       return((glyph.atlasloc + glyph.minx) / cast(float)(surface.w));
     }
 
-    @property @nogc float tY(Glyph* glyph) nothrow {
+    // Glyph texture Y postion
+    @property @nogc float tY(Glyph glyph) nothrow {
       int lineHsum = (this.height) * glyph.atlasrow;
       return((lineHsum + (this.ascent - glyph.maxy)) / cast(float)(surface.h));
     }
 
-    @property @nogc float pX(Glyph* glyph, size_t col) nothrow {
+    // X postion of the glyph, when on column col
+    @property @nogc float pX(Glyph glyph, size_t col) nothrow {
       return(cast(float)(col) * glyph.advance + glyph.minx);
     }
 
-    @property @nogc float pY(Glyph* glyph, size_t[2] line) nothrow {
+    // Y postion of the glyph, when on line[0] out of line[1]
+    @property @nogc float pY(Glyph glyph, size_t[2] line) nothrow {
       return(cast(float)(line[1] - line[0]) * (this.height) + glyph.miny - this.miny);
     }
+
+    // Generate a surface from the initialized atlas
+    // NOTE: Make sure ttf, atlas, and width have been set by calling createGlyphAtlas()
+    @nogc SDL_Surface* surface() nothrow {
+      return(TTF_RenderUNICODE_Blended_Wrapped(ttf, &atlas[0], SDL_Color(255, 255, 255, 255), width));
+    };
 }
 
 // Loads a GlyphAtlas from file
@@ -91,7 +103,7 @@ ushort[] createGlyphAtlas(ref GlyphAtlas glyphatlas, dchar to = '\U00000FFF', ui
   toStdout("FontAdvance: %d\n", glyphatlas.advance);
   glyphatlas.height = h; // Use height from TTF_SizeUNICODE, since TTF_FontHeight reports it wrong for some glyphatlas
   glyphatlas.ascent = TTF_FontAscent(glyphatlas.ttf);
-  glyphatlas.surface = TTF_RenderUNICODE_Blended_Wrapped(glyphatlas.ttf, &atlas[0], SDL_Color(255, 255, 255, 255), glyphatlas.width);
+
   MonoTime cT = MonoTime.currTime;
   auto time = (cT - sT).total!"msecs"();  // Update the current time
   toStdout("%d/%d unicode glyphs on %d lines in %d msecs\n", glyphatlas.glyphs.length, c, ++atlasrow, time);
