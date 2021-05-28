@@ -13,6 +13,12 @@ void createInstance(ref App app) {
     ppEnabledExtensionNames: &app.instanceExtensions[0],
     pApplicationInfo: &app.info
   };
+
+  if (app.enableValidationLayers) {
+    instanceInfo.enabledLayerCount = cast(uint)(app.validationLayers.length);
+    instanceInfo.ppEnabledLayerNames = &app.validationLayers[0];
+  }
+
   enforceVK(vkCreateInstance(&instanceInfo, null, &app.instance));
   toStdout("Vulkan Instance created: %p", app.instance);
   loadInstanceLevelFunctions(app.instance);
@@ -25,6 +31,11 @@ const(char)*[] loadInstanceExtensions(ref App app) {
   SDL_Vulkan_GetInstanceExtensions(app, &nExtensions, null);
   app.instanceExtensions.length = nExtensions;
   SDL_Vulkan_GetInstanceExtensions(app, &nExtensions, &app.instanceExtensions[0]);
+
+  if (app.enableValidationLayers) {
+    app.instanceExtensions.length = nExtensions + app.enableValidationLayers;
+    app.instanceExtensions[($-1)] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+  }
   toStdout("Number of instance extensions: %d", nExtensions);
   foreach(i, extension; app.instanceExtensions) { toStdout("- %s", extension); }
   return(app.instanceExtensions);
