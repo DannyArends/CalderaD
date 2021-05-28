@@ -25,32 +25,25 @@ bool checkValidationLayerSupport(ref App app, const(char*) layerName) {
   return(layerFound);
 }
 
-version (Android) {
-  extern (C) VkBool32 debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) nothrow @nogc {
-    toStdout("validation layer: %s", pCallbackData.pMessage);
-    return VK_FALSE;
-  }
-}else{
+version (Windows) {
   extern (Windows) VkBool32 debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) nothrow @nogc {
-    toStdout("validation layer: %s", pCallbackData.pMessage);
-    return VK_FALSE;
+    toStdout("validation layer: %s", pCallbackData.pMessage); return VK_FALSE;
+  }
+} else { // Version not Windows uses C bindings
+  extern (C) VkBool32 debugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageType, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void* pUserData) nothrow @nogc {
+    toStdout("validation layer: %s", pCallbackData.pMessage); return VK_FALSE;
   }
 }
 
 VkResult createDebugMessenger(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
   auto fn = cast(PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-  if (fn) {
-    return fn(instance, pCreateInfo, pAllocator, pDebugMessenger);
-  } else {
-    return VK_ERROR_EXTENSION_NOT_PRESENT;
-  }
+  if (fn) return fn(instance, pCreateInfo, pAllocator, pDebugMessenger);
+  return VK_ERROR_EXTENSION_NOT_PRESENT;
 }
 
 void destroyDebugMessenger(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
   auto fn = cast(PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
-  if (fn) {
-    fn(instance, debugMessenger, pAllocator);
-  }
+  if (fn) fn(instance, debugMessenger, pAllocator);
 }
 
 void setupDebugMessenger(ref App app) {
