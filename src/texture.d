@@ -6,6 +6,11 @@ import core.stdc.string : memcpy;
 import std.math;
 import calderad, buffer, glyphatlas, images, log;
 
+/*
+  Texture application structure, aliasses the SDL_Surface
+
+  Stores texture related Vulkan variables
+*/
 struct Texture {
   int width = 0;
   int height = 0;
@@ -85,7 +90,10 @@ Texture createTextureImage(ref App app, SDL_Surface* surface) {
 
 void createTextureSampler(ref App app) {
   VkPhysicalDeviceProperties properties = {};
+  VkPhysicalDeviceFeatures supportedFeatures = {};
+
   vkGetPhysicalDeviceProperties(app.physicalDevices[app.selected], &properties);
+  vkGetPhysicalDeviceFeatures(app.physicalDevices[app.selected], &supportedFeatures);
 
   VkSamplerCreateInfo samplerInfo = {
     sType: VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
@@ -94,7 +102,7 @@ void createTextureSampler(ref App app) {
     addressModeU: VK_SAMPLER_ADDRESS_MODE_REPEAT,
     addressModeV: VK_SAMPLER_ADDRESS_MODE_REPEAT,
     addressModeW: VK_SAMPLER_ADDRESS_MODE_REPEAT,
-    anisotropyEnable: VK_TRUE,
+    anisotropyEnable: ((supportedFeatures.samplerAnisotropy) ? VK_FALSE : VK_TRUE),
     maxAnisotropy: properties.limits.maxSamplerAnisotropy,
     borderColor: VK_BORDER_COLOR_INT_OPAQUE_BLACK,
     unnormalizedCoordinates: VK_FALSE,
