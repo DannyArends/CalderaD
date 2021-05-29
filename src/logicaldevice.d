@@ -37,8 +37,17 @@ void createLogicalDevice(ref App app){
   };
 
   const(char)*[] deviceExtensions = [ VK_KHR_SWAPCHAIN_EXTENSION_NAME ];
+
+  VkPhysicalDeviceFeatures supportedFeatures = {};
+  vkGetPhysicalDeviceFeatures(app.physicalDevices[app.selected], &supportedFeatures);
+  toStdout("Physical device support (Anisotropy): %d", supportedFeatures.samplerAnisotropy);
+  toStdout("Physical device support (GeometryShader): %d", supportedFeatures.geometryShader);
+  toStdout("Physical device support (TessellationShader): %d", supportedFeatures.tessellationShader);
+
   VkPhysicalDeviceFeatures deviceFeatures = {
-    samplerAnisotropy: VK_FALSE
+    samplerAnisotropy: ((supportedFeatures.samplerAnisotropy) ? VK_TRUE : VK_FALSE),
+    geometryShader: ((supportedFeatures.geometryShader) ? VK_TRUE : VK_FALSE),
+    tessellationShader: ((supportedFeatures.tessellationShader) ? VK_TRUE : VK_FALSE)
   };
 
   VkDeviceCreateInfo deviceCreateInfo = {
