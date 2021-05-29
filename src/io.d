@@ -66,12 +66,11 @@ version(Android) {
 
   bool exists (string path) { return(isFile(path) | dirExists(path)); }
 
-}else{ // Version SDL/OS can provide for use
+}else{ // Version SDL/OS, just use D to get the dir() functionality
 
   public import std.file : dirEntries;
   import std.algorithm : map, filter;
 
-  // Just use D to get the dir() functionality
   string[] dir(string path, string pattern = "*", bool shallow = true) { 
     auto mode = SpanMode.shallow;
     if(!shallow) mode = SpanMode.depth;
