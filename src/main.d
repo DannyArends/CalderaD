@@ -28,6 +28,7 @@ version (Android) {
 
 void run (ref App app, string[] args) {
   app.initSDL(); // Hook SDL immediately to be able to do output
+  SDL_SetEventFilter(&sdlEventsFilter, &app); // Set the EventsFilter for immediate events
   app.createWindow();
   app.startTime = MonoTime.currTime;
   app.initVulkan();
@@ -35,42 +36,33 @@ void run (ref App app, string[] args) {
   while (app.running) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
+      toStdout("SDL event: %s", toStringz(format("%s", ev.type)));
       switch (ev.type) {
-        case SDL_QUIT: app.running = false; break;
-        // Keyboard and text input
-        case SDL_KEYDOWN:
-        case SDL_KEYUP:
-        case SDL_TEXTINPUT:
-        case SDL_TEXTEDITING:
-        app.handleKeyboard(ev); break;
-        // Mouse input
-        case SDL_MOUSEMOTION:
-        case SDL_MOUSEBUTTONDOWN:
-        case SDL_MOUSEBUTTONUP:
-        case SDL_MOUSEWHEEL:
-        app.handleMouse(ev); break;
-        // Touch input
-        case SDL_FINGERMOTION:
-        case SDL_FINGERDOWN:
-        case SDL_FINGERUP:
-        app.handleTouch(ev); break;
-        // SDL Audio
+
+        case SDL_KEYDOWN: case SDL_KEYUP: case SDL_TEXTINPUT: case SDL_TEXTEDITING:
+        app.handleKeyboard(ev); break; // Keyboard and text input
+
+        case SDL_MOUSEMOTION: case SDL_MOUSEBUTTONDOWN: case SDL_MOUSEBUTTONUP: case SDL_MOUSEWHEEL:
+        app.handleMouse(ev); break; // Mouse input
+
+        case SDL_FINGERMOTION: case SDL_FINGERDOWN: case SDL_FINGERUP:
+        app.handleTouch(ev); break; // Touch input
+
         case SDL_AUDIODEVICEADDED:
-        app.handleAudio(ev); break;
-        // Window input
+        app.handleAudio(ev); break; // SDL Audio
+
         case SDL_WINDOWEVENT:
-        app.handleWindow(ev); break;
-        // User event
+        app.handleWindow(ev); break; // Window input
+
         case SDL_USEREVENT:
-        app.handleUser(ev); break;
+        app.handleUser(ev); break; // User event
+
         default: 
-          toStdout("Unhandled SDL event: %s = %s", toStringz(format("%s", ev.type)), toStringz(format("%s", ev)));
+          toStdout("Unhandled SDL event: %s", toStringz(format("%s", ev.type)));
         break;
       }
     }
-    app.drawFrame(); // have the device draw a frame;
+    if(!app.isMinimized) app.drawFrame();
   }
-  toStdout("app.cleanup()");
-  app.cleanup();
   toStdout("run() function completed, return to OS");
 }

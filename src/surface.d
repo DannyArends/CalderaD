@@ -20,6 +20,10 @@ Surface createSurface(ref App app) {
   return(app.surface);
 }
 
+@nogc bool isMinimized(Surface surface) nothrow {
+  return(surface.capabilities.currentExtent.width == 0 || surface.capabilities.currentExtent.height == 0);
+}
+
 void loadSurfaceCapabilities(ref App app) {
   uint formatCount;
   uint presentModeCount;

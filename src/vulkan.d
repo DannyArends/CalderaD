@@ -69,6 +69,7 @@ void recreateSwapChain(ref App app,
 
   app.cleanupSwapChain();
   app.loadSurfaceCapabilities();
+  if (app.surface.isMinimized()) { app.isMinimized = true; return; }
   app.createSwapChain();
   app.aquireSwapChainImages();
   app.createRenderPass();
