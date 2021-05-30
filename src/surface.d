@@ -13,7 +13,7 @@ struct Surface {
 }
 
 Surface createSurface(ref App app) {
-  toStdout("createSurface()");
+  toStdout("createSurface(app: %p,instance: %p)", app.ptr, app.instance);
   SDL_Vulkan_CreateSurface(app.ptr, app.instance, &app.surface);
   toStdout("SDL error?: '%s'", SDL_GetError()); // Printing to see if no errors occured
   toStdout("SDL Vulkan Surface %p created", app.surface.surface);
