@@ -85,6 +85,11 @@ struct VkQueueFamilyIndices {
   uint presentFamily;
 };
 
+void resize(ref App app, uint w, uint h) {
+  SDL_SetWindowSize(app.ptr, w, h);
+  app.hasResized = true;
+}
+
 void cleanup(ref App app) {
   if (app.device != VK_NULL_HANDLE) {
     toStdout("Waiting for and destroying Vulkan device");

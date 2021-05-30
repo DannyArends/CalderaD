@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import std.datetime : MonoTime;
-import calderad, application, render, sdl, vulkan;
+import calderad, application, events, render, sdl, vulkan;
 
 /* Main entry point to the program */
 version (Android) {
@@ -35,12 +35,37 @@ void run (ref App app, string[] args) {
   while (app.running) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
-      toStdout("SDL: %s", toStringz(format("%s", ev.type)));
-      if (ev.type == SDL_QUIT) app.running = false;
-      if (ev.type == SDL_KEYUP && ev.key.keysym.sym == SDLK_ESCAPE) app.running = false;
-      if (ev.type == SDL_WINDOWEVENT && ev.window.event == SDL_WINDOWEVENT_RESIZED) { 
-        SDL_SetWindowSize(app.ptr, ev.window.data1, ev.window.data2);
-        app.hasResized = true;
+      switch (ev.type) {
+        case SDL_QUIT: app.running = false; break;
+        // Keyboard and text input
+        case SDL_KEYDOWN:
+        case SDL_KEYUP:
+        case SDL_TEXTINPUT:
+        case SDL_TEXTEDITING:
+        app.handleKeyboard(ev); break;
+        // Mouse input
+        case SDL_MOUSEMOTION:
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
+        case SDL_MOUSEWHEEL:
+        app.handleMouse(ev); break;
+        // Touch input
+        case SDL_FINGERMOTION:
+        case SDL_FINGERDOWN:
+        case SDL_FINGERUP:
+        app.handleTouch(ev); break;
+        // SDL Audio
+        case SDL_AUDIODEVICEADDED:
+        app.handleAudio(ev); break;
+        // Window input
+        case SDL_WINDOWEVENT:
+        app.handleWindow(ev); break;
+        // User event
+        case SDL_USEREVENT:
+        app.handleUser(ev); break;
+        default: 
+          toStdout("Unhandled SDL event: %s = %s", toStringz(format("%s", ev.type)), toStringz(format("%s", ev)));
+        break;
       }
     }
     app.drawFrame(); // have the device draw a frame;
