@@ -76,6 +76,7 @@ struct App {
   MonoTime startTime;
   bool enabledValidationLayers = true;
   bool running = true;
+  bool isMinimized = false;
   bool hasResized = false;
 }
 
@@ -87,6 +88,8 @@ struct VkQueueFamilyIndices {
 
 void resize(ref App app, uint w, uint h) {
   SDL_SetWindowSize(app.ptr, w, h);
+  if (w == 0 || h == 0){ app.isMinimized = true; return; }
+  app.isMinimized = false;
   app.hasResized = true;
 }
 
@@ -139,6 +142,7 @@ void cleanup(ref App app) {
   }
   toStdout("Destroying app and unloading SDL and Vulkan libraries");
   SDL_DestroyWindow(app);
+
   SDL_Vulkan_UnloadLibrary();
   toStdout("SDL Quit after rendering %d frames", app.frame);
   SDL_Quit();
