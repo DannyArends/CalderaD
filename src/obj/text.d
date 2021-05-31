@@ -4,12 +4,6 @@
 import std.array : split;
 import calderad, geometry, glyph, glyphatlas, vertex;
 
-int[2] getSize(GlyphAtlas atlas, const char* text){
-  int[2] size;
-  TTF_SizeText(atlas.ttf, text, &size[0], &size[1]);
-  return(size);
-}
-
 struct Text {
   Geometry geometry = { };
 
