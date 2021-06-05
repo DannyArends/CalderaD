@@ -34,12 +34,18 @@ void createDescriptorSets(ref App app) {
       range: UniformBufferObject.sizeof
     };
 
-    VkDescriptorImageInfo imageInfo = {
-      imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-      imageView: app.textureArray[0].textureImageView, // Texture 0 is reserved for font
-      sampler: app.textureSampler
-    };
-    
+    VkDescriptorImageInfo[] imageInformation;
+    imageInformation.length = app.textureArray.length;
+    for (size_t j = 0; j < app.textureArray.length; j++) {
+      VkDescriptorImageInfo img = {
+        imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+        imageView: app.textureArray[j].textureImageView, // Texture 0 is reserved for font
+        sampler: app.textureSampler
+      };
+      imageInformation[j] = img;
+    }
+    toStdout("wrote textures %d", app.textureArray.length);
+
     VkWriteDescriptorSet[2] descriptorWrites = [
       {
         sType: VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
@@ -58,8 +64,8 @@ void createDescriptorSets(ref App app) {
         dstBinding: 1,
         dstArrayElement: 0,
         descriptorType: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        descriptorCount: 1,
-        pImageInfo: &imageInfo
+        descriptorCount: 2,
+        pImageInfo: &imageInformation[0]
       }
     ];
     vkUpdateDescriptorSets(app.device, descriptorWrites.length, &descriptorWrites[0], 0, null);
@@ -79,7 +85,7 @@ void createDescriptorSetLayout(ref App app) {
 
   VkDescriptorSetLayoutBinding samplerLayoutBinding = {
     binding: 1,
-    descriptorCount: 1,
+    descriptorCount: 2,
     descriptorType: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
     pImmutableSamplers: null,
     stageFlags: VK_SHADER_STAGE_FRAGMENT_BIT
@@ -99,8 +105,8 @@ void createDescriptorSetLayout(ref App app) {
 
 void createDescriptorPool(ref App app) {
   VkDescriptorPoolSize[2] poolSizes = [
-    { type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, descriptorCount: cast(uint)(app.swapchain.swapChainImages.length) },
-    { type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, descriptorCount: cast(uint)(app.swapchain.swapChainImages.length) },
+    { type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, descriptorCount: cast(uint)(1) },
+    { type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, descriptorCount: cast(uint)(2) },
   ];
 
   VkDescriptorPoolCreateInfo poolInfo = {
