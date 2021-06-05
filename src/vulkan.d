@@ -47,7 +47,7 @@ void initVulkan(ref App app,
   app.geometry ~= Square([0.0f,-4.0f,0.0f], app.glyphatlas.surface.w / app.glyphatlas.pointsize, app.glyphatlas.surface.h / app.glyphatlas.pointsize);
   app.geometry ~= Squares();
   app.geometry ~= Text(app.glyphatlas, "CanderaD\nv0.0.1");
-  //app.geometry ~= app.loadWavefront(modelPath);
+  app.geometry ~= app.loadWavefront(modelPath);
 
   app.createVertexBuffers();
   app.createIndexBuffers();
