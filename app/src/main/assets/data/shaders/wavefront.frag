@@ -6,7 +6,11 @@
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
 
-layout(binding = 1) uniform sampler2D texSampler;
+layout(binding = 1) uniform sampler2D texureSamplers[2]; // Has 2 textureSamplers as input
+
+layout(push_constant) uniform constants {
+  int tSI; // textureSamplers index
+} pc;
 
 layout(location = 0) in vec4 fragColor;
 layout(location = 1) in vec3 fragNormal;
@@ -15,7 +19,7 @@ layout(location = 2) in vec2 fragTexCoord;
 layout(location = 0) out vec4 outColor;
 
 void main() {
-  vec4 color = texture(texSampler, fragTexCoord).rgba;
+  vec4 color = texture(texureSamplers[pc.tSI], fragTexCoord).rgba;
   vec3 blended = fragColor.rgb * color.rgb;
   if(color.a < 0.2f) discard;
   outColor = vec4(blended, color.a);
