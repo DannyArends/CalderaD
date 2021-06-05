@@ -14,5 +14,7 @@ struct Geometry {
   Vertex[] vertices;
   uint[] indices;
 
+  int texture = 0;
+
   Geometry* next;
 }

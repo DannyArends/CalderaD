@@ -95,6 +95,8 @@ void createCommandBuffers(ref App app) {
         VkBuffer[] vertexBuffers = [app.geometry[j].vertexBuffer];
         VkDeviceSize[] offsets = [0];
 
+        vkCmdPushConstants(app.commandBuffers[i], app.pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, int.sizeof, &app.geometry[j].texture);
+
         vkCmdBindVertexBuffers(app.commandBuffers[i], 0, 1, &vertexBuffers[0], &offsets[0]);
 
         vkCmdBindIndexBuffer(app.commandBuffers[i], app.geometry[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
