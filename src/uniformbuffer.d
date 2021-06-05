@@ -8,7 +8,7 @@ import matrix : mat4, radian, rotate, rotateZ, lookAt, perspective;
 import calderad, buffer;
 
 struct UniformBufferObject {
-  mat4 model;
+  mat4 scene;
   mat4 view;
   mat4 proj;
   mat4 orientation; // Screen orientation
@@ -36,7 +36,7 @@ void updateUniformBuffer(ref App app, uint currentImage) {
   auto time = (currentTime - app.startTime).total!"msecs"() / 100.0f;  // Update the current time
 
   UniformBufferObject ubo = {
-    model: rotate(mat4.init, [0.0f, 0.0f, (PI * time) * radian(90.0f)]),
+    scene: rotate(mat4.init, [0.0f, 0.0f, (PI * time) * radian(-90.0f)]),
     view: lookAt([1.0f, -3.0f, 1.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 1.0f]),
     proj: perspective(45.0f, app.surface.capabilities.currentExtent.width / cast(float) app.surface.capabilities.currentExtent.height, 0.1f, 10.0f),
     orientation: mat4.init

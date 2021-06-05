@@ -13,37 +13,32 @@ struct Descriptor {
 }
 
 void createDescriptorSets(ref App app) {
-  app.descriptor.layouts.length = app.swapchain.swapChainImages.length;
-  for (size_t i = 0; i < app.swapchain.swapChainImages.length; i++) {
+  app.descriptor.layouts.length = app.textureArray.length;
+  for (size_t i = 0; i < app.textureArray.length; i++) {
      app.descriptor.layouts[i] = app.descriptor.descriptorSetLayout;
   }
   VkDescriptorSetAllocateInfo allocInfo = {
     sType: VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
     descriptorPool: app.descriptor.descriptorPool,
-    descriptorSetCount: cast(uint)(app.swapchain.swapChainImages.length),
+    descriptorSetCount: cast(uint)(app.textureArray.length),
     pSetLayouts: &app.descriptor.layouts[0]
   };
   
-  app.descriptor.descriptorSets.length = app.swapchain.swapChainImages.length;
+  app.descriptor.descriptorSets.length = app.textureArray.length;
   enforceVK(vkAllocateDescriptorSets(app.device, &allocInfo, &app.descriptor.descriptorSets[0]));
   
-  for (size_t i = 0; i < app.swapchain.swapChainImages.length; i++) {
+  for (size_t i = 0; i < app.textureArray.length; i++) {
     VkDescriptorBufferInfo bufferInfo = {
       buffer: app.uniform.uniformBuffers[i],
       offset: 0,
       range: UniformBufferObject.sizeof
     };
 
-    VkDescriptorImageInfo[] imageInformation;
-    imageInformation.length = app.textureArray.length;
-    for (size_t j = 0; j < app.textureArray.length; j++) {
-      VkDescriptorImageInfo img = {
-        imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-        imageView: app.textureArray[j].textureImageView, // Texture 0 is reserved for font
-        sampler: app.textureSampler
-      };
-      imageInformation[j] = img;
-    }
+    VkDescriptorImageInfo img = {
+      imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
+      imageView: app.textureArray[i].textureImageView, // Texture 0 is reserved for font
+      sampler: app.textureSampler
+    };
     toStdout("wrote textures %d", app.textureArray.length);
 
     VkWriteDescriptorSet[2] descriptorWrites = [
@@ -64,8 +59,8 @@ void createDescriptorSets(ref App app) {
         dstBinding: 1,
         dstArrayElement: 0,
         descriptorType: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-        descriptorCount: 2,
-        pImageInfo: &imageInformation[0]
+        descriptorCount: 1,
+        pImageInfo: &img
       }
     ];
     vkUpdateDescriptorSets(app.device, descriptorWrites.length, &descriptorWrites[0], 0, null);
@@ -85,7 +80,7 @@ void createDescriptorSetLayout(ref App app) {
 
   VkDescriptorSetLayoutBinding samplerLayoutBinding = {
     binding: 1,
-    descriptorCount: 2,
+    descriptorCount: 1,
     descriptorType: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
     pImmutableSamplers: null,
     stageFlags: VK_SHADER_STAGE_FRAGMENT_BIT
@@ -105,15 +100,15 @@ void createDescriptorSetLayout(ref App app) {
 
 void createDescriptorPool(ref App app) {
   VkDescriptorPoolSize[2] poolSizes = [
-    { type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, descriptorCount: cast(uint)(1) },
-    { type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, descriptorCount: cast(uint)(2) },
+    { type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, descriptorCount: cast(uint)(app.textureArray.length) },
+    { type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, descriptorCount: cast(uint)(app.textureArray.length) },
   ];
 
   VkDescriptorPoolCreateInfo poolInfo = {
     sType: VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
     poolSizeCount: poolSizes.length,
     pPoolSizes: &poolSizes[0],
-    maxSets: cast(uint)(app.swapchain.swapChainImages.length)
+    maxSets: cast(uint)(app.textureArray.length)
   };
   
   enforceVK(vkCreateDescriptorPool(app.device, &poolInfo, null, &app.descriptor.descriptorPool));

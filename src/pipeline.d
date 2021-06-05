@@ -2,7 +2,7 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import calderad, io, vertex;
+import calderad, io, pushconstant, vertex;
 
 struct GraphicsPipeline {
   VkPipelineLayout pipelineLayout;
@@ -136,8 +136,8 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
 
   VkPushConstantRange pushConstant = {
     offset: 0,
-    size: int.sizeof,
-    stageFlags: VK_SHADER_STAGE_FRAGMENT_BIT
+    size: PushConstant.sizeof,
+    stageFlags: VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT
   };
 
   VkPipelineLayoutCreateInfo pipelineLayoutInfo = {

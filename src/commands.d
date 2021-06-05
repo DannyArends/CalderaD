@@ -2,7 +2,7 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import calderad;
+import calderad, matrix, pushconstant;
 
 void createCommandPool(ref App app) {
   VkCommandPoolCreateInfo poolInfo = {
@@ -95,13 +95,20 @@ void createCommandBuffers(ref App app) {
         VkBuffer[] vertexBuffers = [app.geometry[j].vertexBuffer];
         VkDeviceSize[] offsets = [0];
 
-        vkCmdPushConstants(app.commandBuffers[i], app.pipeline.pipelineLayout, VK_SHADER_STAGE_FRAGMENT_BIT, 0, int.sizeof, &app.geometry[j].texture);
+        PushConstant pc = {
+          oId: to!int(j),
+          tId: app.geometry[j].texture,
+          model: mat4.init
+        };
+        vkCmdPushConstants(app.commandBuffers[i], app.pipeline.pipelineLayout, 
+                           VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, 
+                           PushConstant.sizeof, &pc);
 
         vkCmdBindVertexBuffers(app.commandBuffers[i], 0, 1, &vertexBuffers[0], &offsets[0]);
 
         vkCmdBindIndexBuffer(app.commandBuffers[i], app.geometry[j].indexBuffer, 0, VK_INDEX_TYPE_UINT32);
 
-        vkCmdBindDescriptorSets(app.commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, app.pipeline.pipelineLayout, 0, 1, &app.descriptor.descriptorSets[i], 0, null);
+        vkCmdBindDescriptorSets(app.commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, app.pipeline.pipelineLayout, 0, 1, &app.descriptor.descriptorSets[app.geometry[j].texture], 0, null);
 
         vkCmdDrawIndexed(app.commandBuffers[i], cast(uint)app.geometry[j].indices.length, 1, 0, 0, 0);
       }
