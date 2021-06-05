@@ -30,10 +30,12 @@ struct WaveFront {
     return(geometry.indices);
   }
 
-  Geometry geometry;
+  Geometry geometry = { texture: 1 }; // WaveFront model uses texture 1 by default (fontatlas should be at 0)
   alias geometry this;
 }
 
+// Loads a wavefront obj file into a geometry
+// TODO: Update the geometry texture value based on file content
 WaveFront loadWavefront(ref App app, string path) {
   char[] content = cast(char[])readFile(path); // Open for reading
   string filecontent = to!string(content);
