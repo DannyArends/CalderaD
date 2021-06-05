@@ -133,13 +133,19 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     dynamicStateCount: 2,
     pDynamicStates: &dynamicStates[0]
   };
-  
+
+  VkPushConstantRange pushConstant = {
+    offset: 0,
+    size: int.sizeof,
+    stageFlags: VK_SHADER_STAGE_FRAGMENT_BIT
+  };
+
   VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
     sType: VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
     setLayoutCount: 1, // Optional
     pSetLayouts: &app.descriptor.descriptorSetLayout, // Optional
-    pushConstantRangeCount: 0, // Optional
-    pPushConstantRanges: null, // Optional
+    pushConstantRangeCount: 1, // Optional
+    pPushConstantRanges: &pushConstant, // Optional
   };
   enforceVK(vkCreatePipelineLayout(app.device, &pipelineLayoutInfo, null, &app.pipeline.pipelineLayout));
   toStdout("Vulkan pipeline layout created");
