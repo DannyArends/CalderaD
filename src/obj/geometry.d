@@ -2,7 +2,7 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import calderad, vertex;
+import calderad, matrix, vertex;
 
 struct Geometry {
   VkBuffer vertexBuffer;
@@ -15,6 +15,7 @@ struct Geometry {
   uint[] indices;
 
   int texture = 0;
+  mat4 model = mat4.init;
 
   Geometry* next;
 }
