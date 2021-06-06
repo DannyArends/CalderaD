@@ -26,14 +26,14 @@ void createDescriptorSets(ref App app) {
   
   app.descriptor.descriptorSets.length = app.textureArray.length;
   enforceVK(vkAllocateDescriptorSets(app.device, &allocInfo, &app.descriptor.descriptorSets[0]));
-  
-  for (size_t i = 0; i < app.textureArray.length; i++) {
-    VkDescriptorBufferInfo bufferInfo = {
-      buffer: app.uniform.uniformBuffers[i],
-      offset: 0,
-      range: UniformBufferObject.sizeof
-    };
 
+  VkDescriptorBufferInfo bufferInfo = {
+    buffer: app.uniform.uniformBuffers[0],
+    offset: 0,
+    range: UniformBufferObject.sizeof
+  };
+
+  for (size_t i = 0; i < app.textureArray.length; i++) {
     VkDescriptorImageInfo img = {
       imageLayout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
       imageView: app.textureArray[i].textureImageView, // Texture 0 is reserved for font
@@ -70,6 +70,7 @@ void createDescriptorSets(ref App app) {
 }
 
 void createDescriptorSetLayout(ref App app) {
+  toStdout("creating DescriptorSetLayout");
   VkDescriptorSetLayoutBinding uboLayoutBinding = {
     binding: 0,
     descriptorCount: 1,
