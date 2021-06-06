@@ -48,96 +48,37 @@ alias Matrix mat4;
     return res;
 }
 
-/* Matrix x EULER angle(x) */
-@nogc pure Matrix rotateX(ref Matrix m, float angle) nothrow {
-    Matrix rotation;
-    float sine = sin(radian(angle));
-    float cosine = cos(radian(angle));
-
-    rotation[5] = cosine;
-    rotation[6] = -sine;
-    rotation[9] = sine;
-    rotation[10] = cosine;
-
-    m = multiply(m, rotation);
-    return(m);
-}
-
-/* Matrix x EULER angle(y) */
-@nogc pure Matrix rotateY(ref Matrix m, float angle) nothrow {
-    Matrix rotation;
-    float sine = sin(radian(angle));
-    float cosine = cos(radian(angle));
-
-    rotation[0] = cosine;
-    rotation[8] = sine;
-    rotation[2] = -sine;
-    rotation[10] = cosine;
-
-    m = rotation;
-    return(m);
-}
-
-/* Matrix x EULER angle(z) */
-@nogc pure Matrix rotateZ(ref Matrix m, float angle) nothrow {
-    Matrix rotation;
-    float sine = sin(radian(angle));
-    float cosine = cos(radian(angle));
-
-    rotation[0] = cosine;
-    rotation[1] = -sine;
-    rotation[4] = sine;
-    rotation[5] = cosine;
-
-    m = rotation;
-    return(m);
-}
-
-/* Matrix x EULER angle V(x, y, z) */
+/* Matrix x Yaw, Pitch, Roll vector in degrees V(x, y, z) */
 @nogc pure Matrix rotate(const Matrix m, const float[3] v) nothrow {
-    Matrix rx, ry, rz;
-
-    rotateX(rx, v[0]);
-    rotateY(ry, v[1]);
-    rotateZ(rz, v[2]);
-    Matrix rxyz = multiply(multiply(rx, ry), rz);
-
-    auto r = multiply(m, rxyz);
-    return(r);
+  float α = radian(v[0]); float β = radian(v[1]); float γ = radian(v[2]);
+  Matrix mt = {
+    data: [
+  cos(α)*cos(β), (cos(α)*sin(β)*sin(γ)) - (sin(α)*cos(γ)), (cos(α)*sin(β)*cos(γ)) + (sin(β)*sin(γ)), 0.0f,
+  sin(α)*cos(β), (sin(α)*sin(β)*sin(γ)) + (cos(α)*cos(γ)), (sin(α)*sin(β)*cos(γ)) - (cos(β)*sin(γ)), 0.0f,
+  -sin(β)      ,  cos(β)*sin(γ)                          ,  cos(β)*cos(γ)                          , 0.0f,
+   0.0f        ,  0.0f                                   ,  0.0f,                                    1.0f ]
+  };
+  auto r = m.multiply(mt);
+  return(r);
 }
 
-/* Matrix x EULER angle V(x, y, z) */
-@nogc pure void rotate(ref Matrix m, const float[3] v) nothrow {
-    Matrix rx, ry, rz;
-
-    rotateX(rx, v[0]);
-    rotateY(ry, v[1]);
-    rotateZ(rz, v[2]);
-    Matrix rxyz = multiply(multiply(rx, ry), rz);
-
-    m = multiply(m, rxyz);
-}
+/* ref Matrix x Yaw, Pitch, Roll vector in degrees V(x, y, z) */
+@nogc pure Matrix rotate(ref Matrix m, const float[3] v) nothrow { m = rotate(m, v); return(m); }
 
 /* Matrix x Scale V(x, y, z) */
-@nogc pure void scale(ref Matrix m, const float[3] v) nothrow {
+@nogc pure Matrix scale(ref Matrix m, const float[3] v) nothrow {
     Matrix scale;
-
-    scale[0] = v[0];
-    scale[5] = v[1];
-    scale[10] = v[2];
-
+    scale[0] = v[0]; scale[5] = v[1]; scale[10] = v[2];
     m = multiply(m, scale);
+    return(m);
 }
 
 /* Matrix x Translation V(x, y, z) */
-@nogc pure void translate(ref Matrix m, const float[3] v) nothrow {
+@nogc pure Matrix translate(ref Matrix m, const float[3] v) nothrow {
     Matrix translation;
-
-    translation[12] = v[0];
-    translation[13] = v[1];
-    translation[14] = v[2];
-
+    translation[12] = v[0]; translation[13] = v[1]; translation[14] = v[2];
     m = multiply(m, translation);
+    return(m);
 }
 
 /* Orthogonal projection Matrix V4(l, r, b, t) */
