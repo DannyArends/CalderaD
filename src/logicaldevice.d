@@ -40,11 +40,13 @@ void createLogicalDevice(ref App app){
 
   VkPhysicalDeviceFeatures supportedFeatures = {};
   vkGetPhysicalDeviceFeatures(app.physicalDevices[app.selected], &supportedFeatures);
+  toStdout("Physical device support (fillModeNonSolid): %d", supportedFeatures.fillModeNonSolid);
   toStdout("Physical device support (Anisotropy): %d", supportedFeatures.samplerAnisotropy);
   toStdout("Physical device support (GeometryShader): %d", supportedFeatures.geometryShader);
   toStdout("Physical device support (TessellationShader): %d", supportedFeatures.tessellationShader);
 
   VkPhysicalDeviceFeatures deviceFeatures = {
+    fillModeNonSolid: ((supportedFeatures.fillModeNonSolid) ? VK_TRUE : VK_FALSE),
     samplerAnisotropy: ((supportedFeatures.samplerAnisotropy) ? VK_TRUE : VK_FALSE),
     geometryShader: ((supportedFeatures.geometryShader) ? VK_TRUE : VK_FALSE),
     tessellationShader: ((supportedFeatures.tessellationShader) ? VK_TRUE : VK_FALSE)
