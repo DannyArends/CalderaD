@@ -9,7 +9,8 @@ struct GraphicsPipeline {
   VkPipeline graphicsPipeline;
 }
 
-VkShaderModule createShaderModule(App app, const uint[] code) {
+VkShaderModule createShaderModule(App app, string path) {
+  auto code = cast(uint[])readFile(path);
   VkShaderModuleCreateInfo createInfo = {
     sType: VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
     codeSize: cast(uint) code.length,
@@ -20,35 +21,24 @@ VkShaderModule createShaderModule(App app, const uint[] code) {
   return(shaderModule);
 }
 
+VkPipelineShaderStageCreateInfo createShaderStageInfo(VkShaderStageFlagBits stage, VkShaderModule Module, const char* name = "main") {
+  VkPipelineShaderStageCreateInfo ssi = { sType: VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO, stage: stage, Module: Module, pName: name };
+  return(ssi);
+}
+
 GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/shaders/vert.spv", string fragPath = "data/shaders/frag.spv"){
-  toStdout("creating pipeline");
-
-  auto vertShaderCode = readFile(vertPath);
-  auto fragShaderCode = readFile(fragPath);
-
-  VkShaderModule vertShaderModule = app.createShaderModule(cast(uint[])vertShaderCode);
-  VkShaderModule fragShaderModule = app.createShaderModule(cast(uint[])fragShaderCode);
+  toStdout("createGraphicsPipeline");
+  VkShaderModule vertShaderModule = app.createShaderModule(vertPath);
+  VkShaderModule fragShaderModule = app.createShaderModule(fragPath);
 
   // Stage
-  VkPipelineShaderStageCreateInfo vertShaderStageInfo = {
-    sType: VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-    stage: VK_SHADER_STAGE_VERTEX_BIT,
-    Module: vertShaderModule,
-    pName: "main"
-  };
-  
-  VkPipelineShaderStageCreateInfo fragShaderStageInfo = {
-    sType: VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
-    stage: VK_SHADER_STAGE_FRAGMENT_BIT,
-    Module: fragShaderModule,
-    pName: "main"
-  };
-
-  VkPipelineShaderStageCreateInfo[] shaderStages = [ vertShaderStageInfo, fragShaderStageInfo ];
+  auto vertSSI = createShaderStageInfo(VK_SHADER_STAGE_VERTEX_BIT, vertShaderModule, "main");
+  auto fragSSI = createShaderStageInfo(VK_SHADER_STAGE_FRAGMENT_BIT, fragShaderModule, "main");
+  VkPipelineShaderStageCreateInfo[] shaderStages = [ vertSSI, fragSSI ];
 
   auto bindingDescription = Vertex.getBindingDescription();
   auto attributeDescriptions = Vertex.getAttributeDescriptions();
-  
+
   // Vertex input
   VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
     sType: VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
@@ -57,7 +47,7 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     vertexAttributeDescriptionCount: attributeDescriptions.length,
     pVertexAttributeDescriptions: &attributeDescriptions[0] // Optional
   };
-  
+
   // Input Assembly
   VkPipelineInputAssemblyStateCreateInfo inputAssembly = {
     sType: VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO,
@@ -65,6 +55,7 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     primitiveRestartEnable: VK_FALSE
   };
 
+  // Viewport
   VkViewport viewport = { x: 0.0f, y: 0.0f,
     width: cast(float) app.surface.capabilities.currentExtent.width,
     height: cast(float) app.surface.capabilities.currentExtent.height,
@@ -82,11 +73,12 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     pScissors: &scissor
   };
 
+  // Rasterizer (Point, Line, Fill)
   VkPipelineRasterizationStateCreateInfo rasterizer = {
     sType: VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
     depthClampEnable: VK_FALSE,
     rasterizerDiscardEnable: VK_FALSE,
-    polygonMode: VK_POLYGON_MODE_FILL,
+    polygonMode: VK_POLYGON_MODE_FILL, // Point/Line/Fill
     lineWidth: 1.0f,
     cullMode: VK_CULL_MODE_NONE,//VK_CULL_MODE_BACK_BIT,
     frontFace: VK_FRONT_FACE_COUNTER_CLOCKWISE,
@@ -126,11 +118,11 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     blendConstants: [0.0f, 0.0f, 0.0f, 0.0f]
   };
   
-  VkDynamicState[] dynamicStates = [ VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_LINE_WIDTH];
+  VkDynamicState[] dynamicStates = [ VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_LINE_WIDTH ];
 
   VkPipelineDynamicStateCreateInfo dynamicState = {
     sType: VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
-    dynamicStateCount: 2,
+    dynamicStateCount: cast(uint)dynamicStates.length,
     pDynamicStates: &dynamicStates[0]
   };
 
@@ -180,6 +172,7 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
     subpass: 0,
     basePipelineHandle: VK_NULL_ND_HANDLE, // Optional
   };
+
   enforceVK(vkCreateGraphicsPipelines(app.device, VK_NULL_ND_HANDLE, 1, &pipelineInfo, null, &app.pipeline.graphicsPipeline));
   toStdout("Vulkan GraphicsPipeline created");
   vkDestroyShaderModule(app.device, fragShaderModule, null);
