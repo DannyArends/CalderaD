@@ -13,13 +13,13 @@ struct Square {
     indices : [0, 2, 1, 0, 3, 2]
   };
 
-  this (float[3] position, float width, float height) {
-    foreach(ref v; geometry.vertices){
-      v.pos = position.vAdd(v.pos.vMul([width, 0.0f, height]));
-    }
-  }
-
   alias geometry this;
+}
+
+struct Rectangle {
+  Square square;
+  this (float width, float height) { foreach(ref v; square.geometry.vertices){ v.pos = v.pos.vMul([width, 0.0f, height]); } }
+  alias square this;
 }
 
 struct Squares {
