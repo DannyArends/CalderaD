@@ -1,8 +1,10 @@
 // Copyright Danny Arends 2021
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
+
 import std.random;
-import calderad, commands, depthbuffer, descriptorset, framebuffer, geometry, pipeline, instance, images, glyphatlas;
+
+import calderad, commands, cube, depthbuffer, descriptorset, framebuffer, geometry, pipeline, instance, images, glyphatlas;
 import logicaldevice, matrix, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture;
 import uniformbuffer, vertex, vkdebug, wavefront;
 
@@ -40,7 +42,7 @@ void initVulkan(ref App app,
   app.createDepthResources();
   app.createFramebuffers();
   app.createTextureImage(app.glyphatlas); // Creates the GlyphAtlas as textures[0]
-  app.createTextureImage(texturePath);
+  app.createTextureImage(texturePath); // Texture from disk as texture[1]
   app.createTextureSampler();
 
   // Create several the geometries
@@ -55,6 +57,9 @@ void initVulkan(ref App app,
   app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [2.0f, 2.0f, 2.0f]);
   app.geometry[($-1)].instances[0].offset = rotate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, 0.0f]);
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, 1.0f]);
+
+  app.geometry ~= Cube();
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-2.0f, 2.0f, 1.0f]);
 
   app.geometry ~= app.loadWavefront(modelPath);
   for(int x = -5; x < 5; x++){
