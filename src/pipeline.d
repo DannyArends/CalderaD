@@ -52,8 +52,8 @@ GraphicsPipeline createGraphicsPipeline(ref App app, string vertPath = "data/sha
   // Vertex input
   VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
     sType: VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-    vertexBindingDescriptionCount: 1,
-    pVertexBindingDescriptions: &bindingDescription, // Optional
+    vertexBindingDescriptionCount: bindingDescription.length,
+    pVertexBindingDescriptions: &bindingDescription[0], // Optional
     vertexAttributeDescriptionCount: attributeDescriptions.length,
     pVertexAttributeDescriptions: &attributeDescriptions[0] // Optional
   };
