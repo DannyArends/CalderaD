@@ -111,6 +111,10 @@ void cleanup(ref App app) {
     vkDestroyDescriptorSetLayout(app.device, app.descriptor.descriptorSetLayout, null);
 
     for(size_t i = 0; i < app.geometry.length; i++) {
+      vkDestroyBuffer(app.device, app.geometry[i].instanceBuffer, null);
+      vkFreeMemory(app.device, app.geometry[i].instanceBufferMemory, null);
+      toStdout("Instance buffer destroyed");
+
       vkDestroyBuffer(app.device, app.geometry[i].indexBuffer, null);
       vkFreeMemory(app.device, app.geometry[i].indexBufferMemory, null);
       toStdout("Index buffer destroyed");
