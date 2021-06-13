@@ -1,9 +1,9 @@
 // Copyright Danny Arends 2021
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
-
-import calderad, commands, depthbuffer, descriptorset, framebuffer, pipeline, instance, images, glyphatlas;
-import logicaldevice, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture;
+import std.random;
+import calderad, commands, depthbuffer, descriptorset, framebuffer, geometry, pipeline, instance, images, glyphatlas;
+import logicaldevice, matrix, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture;
 import uniformbuffer, vertex, vkdebug, wavefront;
 
 void initVulkan(ref App app, 
@@ -44,13 +44,33 @@ void initVulkan(ref App app,
   app.createTextureSampler();
 
   // Create several the geometries
-  app.geometry ~= Square([0.0f,-4.0f,0.0f], app.glyphatlas.surface.w / app.glyphatlas.pointsize, app.glyphatlas.surface.h / app.glyphatlas.pointsize);
+  app.geometry ~= Rectangle(app.glyphatlas.surface.w / app.glyphatlas.pointsize, app.glyphatlas.surface.h / app.glyphatlas.pointsize);
+  app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [0.2f, 0.2f, 0.2f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [5.0f, 2.0f, 2.0f]);
+
   app.geometry ~= Squares();
+  app.geometry[($-1)].texture = 1;
+
   app.geometry ~= Text(app.glyphatlas, "CanderaD\nv0.0.1");
+  app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [2.0f, 2.0f, 2.0f]);
+  app.geometry[($-1)].instances[0].offset = rotate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, 0.0f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, 1.0f]);
+
   app.geometry ~= app.loadWavefront(modelPath);
+  for(int x = -5; x < 5; x++){
+    for(int y = -5; y < 5; y++){
+      GeometryInstanceData instance;
+      auto scalefactor = uniform(0.2f, 0.6f);
+      instance.offset = scale(instance.offset, [scalefactor, scalefactor, scalefactor]);
+      instance.offset = translate(instance.offset, [cast(float) x * 2, cast(float)y, 0.0f]);
+      app.geometry[($-1)].instances ~= instance;
+    }
+  }
 
   app.createVertexBuffers();
   app.createIndexBuffers();
+  app.createInstanceBuffers();
+
   app.createUniformBuffers();
   app.createDescriptorPool();
   app.createDescriptorSets();
