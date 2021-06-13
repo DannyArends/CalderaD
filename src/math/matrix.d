@@ -63,7 +63,7 @@ alias Matrix mat4;
 }
 
 /* ref Matrix x Yaw, Pitch, Roll vector in degrees V(x, y, z) */
-@nogc pure Matrix rotate(ref Matrix m, const float[3] v) nothrow { m = rotate(m, v); return(m); }
+//@nogc pure Matrix rotate(ref Matrix m, const float[3] v) nothrow { m = rotate(m, v); return(m); }
 
 /* Matrix x Scale V(x, y, z) */
 @nogc pure Matrix scale(ref Matrix m, const float[3] v) nothrow {
@@ -74,11 +74,10 @@ alias Matrix mat4;
 }
 
 /* Matrix x Translation V(x, y, z) */
-@nogc pure Matrix translate(ref Matrix m, const float[3] v) nothrow {
+@nogc pure Matrix translate(const Matrix m, const float[3] v) nothrow {
     Matrix translation;
     translation[12] = v[0]; translation[13] = v[1]; translation[14] = v[2];
-    m = multiply(m, translation);
-    return(m);
+    return(multiply(m, translation));
 }
 
 /* Orthogonal projection Matrix V4(l, r, b, t) */
