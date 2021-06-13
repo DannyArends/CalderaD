@@ -98,7 +98,7 @@ void createCommandBuffers(ref App app) {
       PushConstant pc = {
         oId: to!int(j),
         tId: app.geometry[j].texture,
-        model: app.geometry[j].model
+        model: app.geometry[j].filemodel
       };
       vkCmdPushConstants(app.commandBuffers[i], app.pipeline.pipelineLayout, 
                          VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0, 
