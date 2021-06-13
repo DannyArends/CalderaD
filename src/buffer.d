@@ -4,11 +4,11 @@
 
 import calderad, commands, images;
 
-bool hasStencilComponent(VkFormat format) {
+@nogc bool hasStencilComponent(VkFormat format) nothrow {
   return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-uint findMemoryType(App app, uint typeFilter, VkMemoryPropertyFlags properties) {
+@nogc uint findMemoryType(App app, uint typeFilter, VkMemoryPropertyFlags properties) nothrow {
   VkPhysicalDeviceMemoryProperties memProperties;
   vkGetPhysicalDeviceMemoryProperties(app.physicalDevices[app.selected], &memProperties);
   for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) {
@@ -17,7 +17,7 @@ uint findMemoryType(App app, uint typeFilter, VkMemoryPropertyFlags properties) 
   assert(0, "failed to find suitable memory type");
 }
 
-void copyBuffer(ref App app, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) {
+@nogc void copyBuffer(ref App app, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size) nothrow {
   VkCommandBuffer commandBuffer = app.beginSingleTimeCommands();
   VkBufferCopy copyRegion = { size: size };
   vkCmdCopyBuffer(commandBuffer, srcBuffer, dstBuffer, 1, &copyRegion);
