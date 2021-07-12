@@ -74,13 +74,17 @@
 	},
 	{
 		"name": "android-64",
-        "platforms"   : ["android"],
+        "platforms" : ["android"],
 		"targetType": "dynamicLibrary",
 		"targetPath": "app/src/main/jniLibs/arm64-v8a",
 		"targetName": "main",
-		"preBuildCommands": [
+		"preBuildCommands-windows": [
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
 			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
+		],
+		"preBuildCommands-linux": [
+			"glslc app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
+			"glslc app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
 		],
 		"dependencies": {
 			"arsd-official:jni": "~>9.5.0"
