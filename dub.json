@@ -15,15 +15,21 @@
 	},
 	"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer", "BindSDL_Net" ],
 	"subConfigurations": {"bindbc-sdl": "dynamicBC"},
+	"preBuildCommands-windows": [
+		"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
+		"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
+	],
+	"preBuildCommands-linux": [
+		"glslc app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
+		"glslc app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
+	],
 	"configurations": [
 	{
 		"name": "default",
+		"platforms": ["windows", "linux"],
+		"buildRequirements": ["allowWarnings"],
 		"targetPath": "bin",
 		"targetType": "executable",
-		"preBuildCommands": [
-			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
-			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
-		],
 		"copyFiles-windows-x86_64": [
 			"libs/windows/x86_64/libfreetype-6.dll",
 			"libs/windows/x86_64/libgcc_s_seh-1.dll",
@@ -43,7 +49,7 @@
 			"libs/windows/x86_64/SDL2_ttf.dll",
 			"libs/windows/x86_64/zlib1.dll"
 		],
-    "copyFiles-windows-x86": [
+		"copyFiles-windows-x86": [
 			"libs/windows/i686/libfreetype-6.dll",
 			"libs/windows/i686/libjpeg-9.dll",
 			"libs/windows/i686/libogg-0.dll",
@@ -65,10 +71,6 @@
 		"targetType": "dynamicLibrary",
 		"targetPath": "app/src/main/jniLibs/arm64-v8a",
 		"targetName": "main",
-		"preBuildCommands": [
-			"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",
-			"glslc.exe app/src/main/assets/data/shaders/wavefront.frag -o app/src/main/assets/data/shaders/frag.spv"
-		],
 		"dependencies": {
 			"arsd-official:jni": "~>9.5.0"
 		},
