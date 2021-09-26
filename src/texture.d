@@ -3,17 +3,16 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import core.stdc.string : memcpy;
-import std.math;
 import calderad, buffer, glyphatlas, images, log;
 
 /*
   Texture application structure, aliasses the SDL_Surface
-
   Stores texture related Vulkan variables
 */
 struct Texture {
   int width = 0;
   int height = 0;
+  int id = 0;
 
   VkImage textureImage;
   VkDeviceMemory textureImageMemory;
@@ -83,7 +82,7 @@ Texture createTextureImage(ref App app, SDL_Surface* surface) {
   //SDL_FreeSurface(surface);
   vkDestroyBuffer(app.device, stagingBuffer, null);
   vkFreeMemory(app.device, stagingBufferMemory, null);
-
+  texture.id = to!int(app.textureArray.length);
   app.textureArray ~= texture;
   return(app.textureArray[($-1)]);
 }
