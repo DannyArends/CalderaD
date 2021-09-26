@@ -42,6 +42,7 @@ struct App {
     apiVersion: VK_API_VERSION_1_2
   };
 
+  bool isRotating = true;
   bool enableValidationLayers = false;
   const(char*)[] validationLayers = ["VK_LAYER_KHRONOS_validation"];
   VkDebugUtilsMessengerEXT debugMessenger;

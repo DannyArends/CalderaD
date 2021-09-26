@@ -42,6 +42,9 @@ void handleKeyboard(ref App app, const SDL_Event e) {
     SDL_Event evt = { type: SDL_QUIT };
     SDL_PushEvent(&evt);
   }
+  if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
+    app.isRotating = !app.isRotating;
+  }
 }
 void handleMouse(ref App app, const SDL_Event e) { }
 void handleTouch(ref App app, const SDL_Event e) { }

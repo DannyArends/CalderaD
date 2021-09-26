@@ -2,6 +2,8 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
+import std.random : choice, uniform;
+import std.algorithm : min;
 import calderad, square, geometry, search, searchnode, tileatlas, vector, vertex;
 
 struct Object {
@@ -39,24 +41,69 @@ void createGeometry(ref App app, ref Map map, float size = 0.5){
 Map generateMap(string seed = "CalderaD"){
   Map map;
   
-  for(float z = -10; z < 10; z += 0.25) {
-    for(float x = -15; x < 15; x += 1) {
-      for(float y = -15; y < 15; y += 1) {
+  for(float z = -10; z <= 10; z += 0.25f) {
+    for(float x = -25; x <= 25; x += 1) {
+      for(float y = -25; y <= 25; y += 1) {
         TileType type = TileType.None;
-        if(z <= -5) type = TileType.Lava;
+        if(z <= -5) type = choice([TileType.Lava,TileType.Gravel1]);
         if(z >= -6 && z <= -5) type = TileType.Gravel1;
-        if(z >= -5 && z <= 0) type = TileType.Mud1;
-        if(z >= -2 && z <= 0) type = TileType.Sand1;
-        if(z >= 0 && z <= 2) type = TileType.Grass1;
-        if(z >= 2) type = TileType.Water1;
-        if(z >= 5) type = TileType.Ice;
+        if(z >= -5 && z <= -2) type = choice([TileType.Mud1, TileType.Gravel1, TileType.Sand1]);
+        if(z >= -2 && z <= 0) type = choice([TileType.Mud1, TileType.Sand1, TileType.Sand2]);
+        if(z >= 0 && z <= 2) type = choice([TileType.Grass1, TileType.Grass2, TileType.Forestfloor1, TileType.Forestfloor2]);
+        if(z >= 2 && z <= 2.5) type = choice([TileType.Water1, TileType.Water2, TileType.Water3, TileType.Water4]);
+        if(z >= 5) type = TileType.None;
         Node n = {position: [x, y, z]};
         Object tile = { node: n, type: type };
         map.objects[n.position] = [tile];
   }}}
   toStdout("generateMap tiles = %d", map.objects.length);
+  for(int x = 0; x < 195; x++){
+    int xp = uniform(-15, 15);
+    int xw = uniform(0, 25);
+    int yp = uniform(-15, 15);
+    int yw = uniform(0, 25);
+    map.updateColumn([xp, min(xw, 25)], [yp, min(yw, 25)]);
+  }
   return(map);
 }
+
+void updateColumn(ref Map map, float[2] xr, float[2] yr){
+  toStdout("update column: ");
+  for(float x = xr[0]; x <= xr[1]; x += 1) {
+    for(float y = yr[0]; y <= yr[1]; y += 1) {
+      TileType type = TileType.Lava;
+      for(float z = -10; z <= 10; z += 0.25f) {
+        foreach(ref obj; map.objects[[x, y, z]]){
+          TileType old = obj.type;
+          obj.type = type;
+          type = old;//choice([old, type]);
+
+          if(z > 4 && (obj.type == TileType.Water1 || obj.type == TileType.Water2 || obj.type == TileType.Water3 || obj.type == TileType.Water4)){
+            obj.type = TileType.None;
+            type = TileType.None;
+          }
+/*          if(z > 2.5 && z < 3.5 && (obj.type == TileType.Grass1 || obj.type == TileType.Grass2 || obj.type == TileType.Forestfloor1)){
+            obj.type = choice([TileType.Sand1, obj.type]);
+            type = obj.type;
+          }
+          if(z > 3.5 && (obj.type == TileType.Sand1)){
+            obj.type = choice([TileType.Grass1, TileType.Grass2, TileType.Forestfloor2]);
+            type = obj.type;
+          }
+          if(z > 5 && (obj.type == TileType.Grass1 || obj.type == TileType.Grass2)){
+            obj.type = choice([TileType.Forestfloor1, TileType.Gravel1]);
+            type = obj.type;
+          }
+          if(z > 7 && (obj.type == TileType.Forestfloor1 || obj.type == TileType.Gravel1)){
+            obj.type = TileType.Ice;
+            type = obj.type;
+          } */
+        }
+      }
+    }
+  }
+}
+
 
 void testGenMap(ref App app){
   app.map = generateMap();
