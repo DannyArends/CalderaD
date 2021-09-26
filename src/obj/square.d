@@ -16,10 +16,8 @@ struct Square {
   alias geometry this;
 }
 
-struct Rectangle {
-  Square square;
-  this (float width, float height) { foreach(ref v; square.geometry.vertices){ v.pos = v.pos.vMul([width, 0.0f, height]); } }
-  alias square this;
+void split(Geometry g, int face = 0) {
+
 }
 
 struct Squares {

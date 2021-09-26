@@ -8,18 +8,18 @@ import calderad, io, geometry, vertex;
 
 struct WaveFront {
   string name;
-  int[3][] faces;
-  float[3][] verts;
-  float[3][] normals;
-  float[2][] mapcoords;
+  int[3][] faces; // faces holds the objects: [vertex index = 0, mapcoords index = 1, normal index = 2]
+  float[3][] verts; // per vertex position x,y,z
+  float[3][] normals; // per vertex normals x,y,z
+  float[2][] mapcoords; // per vertex texture mapcoords x,y,z
 
   Vertex[] createVertices(){
     geometry.vertices.length = verts.length;
     foreach (i, pos; verts) { geometry.vertices[i] = Vertex(pos); }
     foreach (face; faces) {
       geometry.vertices[face[0]].texCoord = mapcoords[face[1]];
-      geometry.vertices[face[0]].normal = normals[face[2]];
       geometry.vertices[face[0]].texCoord[1] = 1.0f - geometry.vertices[face[0]].texCoord[1];
+      geometry.vertices[face[0]].normal = normals[face[2]];
     }
     return(geometry.vertices);
   }
