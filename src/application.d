@@ -6,7 +6,7 @@ import std.exception;
 import std.conv;
 import std.datetime : MonoTime;
 
-import calderad, depthbuffer, descriptorset, geometry, glyphatlas, pipeline, sync, surface, swapchain, texture, uniformbuffer, vkdebug, wavefront;
+import calderad, depthbuffer, descriptorset, geometry, map, glyphatlas, pipeline, sync, surface, swapchain, texture, tileatlas, uniformbuffer, vkdebug, wavefront;
 
 void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string); }
 SDL_bool enforceSDL(SDL_bool res) { enforce(res == SDL_bool.SDL_TRUE, to!string(SDL_GetError())); return(res); }
@@ -60,6 +60,8 @@ struct App {
   VkRenderPass renderpass;
   Descriptor descriptor;
   Uniform uniform;
+  TileAtlas tileAtlas;
+  Map map;
   Texture[] textureArray;
   VkSampler textureSampler;
   GraphicsPipeline pipeline;

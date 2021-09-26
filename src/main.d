@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import std.datetime : MonoTime;
-import calderad, application, events, render, sdl, vulkan;
+import calderad, application, events, map, render, sdl, search, rnjesus, vulkan;
 
 /* Main entry point to the program */
 version (Android) {
@@ -29,6 +29,38 @@ version (Android) {
 void run (ref App app, string[] args) {
   app.initSDL(); // Hook SDL immediately to be able to do output
   SDL_SetEventFilter(&sdlEventsFilter, &app); // Set the EventsFilter for immediate events
+  app.testGenMap();
+  for(size_t x = 0; x < 4; x++){
+    char[] s1 = randomName([
+    [
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1], [99,1], [1,99]] // Pattern: consonant vowel vowel consonant
+    ],
+    [
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1], [1,99], [99,1], [1,99]] // Pattern: consonant vowel consonant vowel consonant
+    ]
+    ]);
+
+    char[] s2 = randomName([
+    [
+      [[50,50], [100,0]], // Pattern: vowel|consonant vowel
+      [[50,50], [99,1], [1,99]] // Pattern: vowel|consonant vowel consonant
+    ],
+    [
+      [[1,99], [99,1], [1,99], [99,1], [99,1]] // Pattern: consonant vowel consonant
+    ],
+    [
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1], [1,99]] // Pattern: consonant vowel consonant vowel consonant
+    ]
+    ]);
+    toStdout("%s", toStringz(format("%s", s1)));
+    toStdout("%s", toStringz(format("%s", s2)));
+  }
+  //return;
   app.createWindow();
   app.startTime = MonoTime.currTime;
   app.initVulkan();

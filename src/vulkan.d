@@ -5,7 +5,7 @@
 import std.random;
 
 import calderad, commands, cube, depthbuffer, descriptorset, framebuffer, geometry, pipeline, instance, images, glyphatlas;
-import logicaldevice, matrix, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture;
+import logicaldevice, map, matrix, physicaldevice, renderpass, square, surface, sync, swapchain, text, texture, tileatlas;
 import uniformbuffer, vertex, vkdebug, wavefront;
 
 void initVulkan(ref App app, 
@@ -13,14 +13,16 @@ void initVulkan(ref App app,
                 string fragPath = "data/shaders/frag.spv",
                 string fontPath = "data/fonts/FreeMono.ttf",
                 string modelPath = "data/obj/viking_room.obj",
-                string texturePath = "data/textures/viking_room.png") {
+                string texturePath = "data/textures/viking_room.png",
+                string atlasPath = "data/textures/tiles/") {
   toStdout("initializing Vulkan");
   version(Android){ }else{ //version(SDL)
-    modelPath = "app/src/main/assets/" ~ modelPath;
     vertPath = "app/src/main/assets/" ~ vertPath;
     fragPath = "app/src/main/assets/" ~ fragPath;
-    texturePath = "app/src/main/assets/" ~ texturePath;
     fontPath = "app/src/main/assets/" ~ fontPath;
+    modelPath = "app/src/main/assets/" ~ modelPath;
+    texturePath = "app/src/main/assets/" ~ texturePath;
+    atlasPath = "app/src/main/assets/" ~ atlasPath;
   }
 
   app.glyphatlas = loadGlyphAtlas(fontPath, 80, '\U000000FF', 1024);
@@ -43,15 +45,24 @@ void initVulkan(ref App app,
   app.createFramebuffers();
   app.createTextureImage(app.glyphatlas); // Creates the GlyphAtlas as textures[0]
   app.createTextureImage(texturePath); // Texture from disk as texture[1]
+  app.createTileAtlas(atlasPath); // Texture from disk as texture[1]
   app.createTextureSampler();
 
   // Create several the geometries
-  app.geometry ~= Rectangle(app.glyphatlas.surface.w / app.glyphatlas.pointsize, app.glyphatlas.surface.h / app.glyphatlas.pointsize);
-  app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [0.2f, 0.2f, 0.2f]);
-  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [5.0f, 2.0f, 2.0f]);
+  app.geometry ~= Square();//(app.glyphatlas.surface.w / app.glyphatlas.pointsize, app.glyphatlas.surface.h / app.glyphatlas.pointsize);
+  app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [0.5f, 0.5f, 0.5f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, 2.0f, 0.0f]);
+  app.geometry[($-1)].texture = app.glyphatlas.texture.id;
+  
+  // Create several the geometries
+  app.geometry ~= Square();
+  app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [1.5f, 1.5f, 1.5f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, 1.0f, 0.0f]);
+  app.geometry[($-1)].texture = app.tileAtlas.id;
 
-  app.geometry ~= Squares();
-  app.geometry[($-1)].texture = 1;
+  app.createGeometry(app.map);
+  app.geometry ~= app.map;
+  app.geometry[($-1)].texture = app.tileAtlas.id;
 
   app.geometry ~= Text(app.glyphatlas, "CanderaD\nv0.0.1");
   app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [2.0f, 2.0f, 2.0f]);
@@ -62,7 +73,9 @@ void initVulkan(ref App app,
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-2.0f, 2.0f, 1.0f]);
 
   app.geometry ~= app.loadWavefront(modelPath);
-  for(int x = -5; x < 5; x++){
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, 4.0f, 0.0f]);
+
+/*  for(int x = -5; x < 5; x++){
     for(int y = -5; y < 5; y++){
       GeometryInstanceData instance;
       auto scalefactor = uniform(0.2f, 0.6f);
@@ -70,7 +83,7 @@ void initVulkan(ref App app,
       instance.offset = translate(instance.offset, [cast(float) x * 2, cast(float)y, 0.0f]);
       app.geometry[($-1)].instances ~= instance;
     }
-  }
+  } */
 
   app.createVertexBuffers();
   app.createIndexBuffers();
