@@ -61,3 +61,35 @@ char[] randomName(float[2][][][] p){
   }
   return(w);
 }
+void testRandomNames(App app){
+  for(size_t x = 0; x < 4; x++){
+    char[] s1 = randomName([
+    [
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1], [99,1], [1,99]] // Pattern: consonant vowel vowel consonant
+    ],
+    [
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1], [1,99], [99,1], [1,99]] // Pattern: consonant vowel consonant vowel consonant
+    ]
+    ]);
+
+    char[] s2 = randomName([
+    [
+      [[50,50], [100,0]], // Pattern: vowel|consonant vowel
+      [[50,50], [99,1], [1,99]] // Pattern: vowel|consonant vowel consonant
+    ],
+    [
+      [[1,99], [99,1], [1,99], [99,1], [99,1]] // Pattern: consonant vowel consonant
+    ],
+    [
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1]], // Pattern: consonant vowel
+      [[1,99], [99,1], [1,99]] // Pattern: consonant vowel consonant vowel consonant
+    ]
+    ]);
+    toStdout("%s", toStringz(format("%s", s1)));
+    toStdout("%s", toStringz(format("%s", s2)));
+  }
+}

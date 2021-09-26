@@ -47,12 +47,11 @@ TileAtlas createTileAtlas(ref App app, string folder = "", int width = 512, int 
     tileAtlas.x[tname] = [tx, tx + surfaces[tname].w]; tx += surfaces[tname].w;
     tileAtlas.y[tname] = [yc, yc + surfaces[tname].h];
     ym = max(ym, surfaces[tname].h);
-    toStdout("createAtlas %s: %d [%d %d]", toStringz(tname), tx, surfaces[tname].w, surfaces[tname].h);
-
+    //toStdout("createAtlas %s: %d [%d %d]", toStringz(tname), tx, surfaces[tname].w, surfaces[tname].h);
   }
   auto surface = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
   foreach(tname; tileAtlas.names) {
-    toStdout("blitSurface %s", toStringz(tname));
+    //toStdout("blitSurface %s", toStringz(tname));
     SDL_Rect dstrect = {
       x: tileAtlas.x[tname][0], w: tileAtlas.x[tname][1] - tileAtlas.x[tname][0],
       y: tileAtlas.y[tname][0], h: tileAtlas.y[tname][1]
@@ -64,5 +63,6 @@ TileAtlas createTileAtlas(ref App app, string folder = "", int width = 512, int 
   auto texture = app.createTextureImage(surface);
   tileAtlas.id = texture.id;
   app.tileAtlas = tileAtlas;
+  toStdout("TileAtlas created with %d elements", tileAtlas.names.length);
   return(app.tileAtlas);
 }

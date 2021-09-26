@@ -40,18 +40,18 @@ void createGeometry(ref App app, ref Map map, float size = 0.5){
 Map generateMap(string seed = "CalderaD"){
   Map map;
   
-  for(float z = -1; z < 1; z += 0.05) {
-    for(float x = -1.5; x < 1.5; x += 0.1) {
-      for(float y = -1.5; y < 1.5; y += 0.1) {
+  for(float z = -10; z < 10; z += 0.25) {
+    for(float x = -15; x < 15; x += 1) {
+      for(float y = -15; y < 15; y += 1) {
         string name = "notile";
-        if(z <= -0.5) name = "lava";
-        if(z >= -0.6 && z <= -0.5) name = "gravel1";
-        if(z >= -0.5 && z <= 0) name = "mud1";
-        if(z >= -0.2 && z <= 0) name = "sand1";
-        if(z >= 0 && z <= 0.2) name = "grass1";
-        if(z >= 0.2) name = "water3";
-        if(z >= 0.5) name = "ice";
-        Node n = {position: [15 + x*10, y*10, z-3]};
+        if(z <= -5) name = "lava";
+        if(z >= -6 && z <= -5) name = "gravel1";
+        if(z >= -5 && z <= 0) name = "mud1";
+        if(z >= -2 && z <= 0) name = "sand1";
+        if(z >= 0 && z <= 2) name = "grass1";
+        if(z >= 2) name = "water3";
+        if(z >= 5) name = "ice";
+        Node n = {position: [x, y, z]};
         Object tile = { node: n, type: ObjectType.TILE, name : name };
         map.objects[n.position] = [tile];
   }}}
@@ -59,31 +59,9 @@ Map generateMap(string seed = "CalderaD"){
   return(map);
 }
 
-Map generateMapOld(){
-  Map map;
-
-  Node n1 = {position: [0.0f, 0.0f, 0.0f]};
-  Object startTile = { node: n1, type: ObjectType.TILE, name : "grass1" };
-  map.objects[n1.position] = [startTile];
-
-  Node n2 = {position: [0.25f, 0.25f, 0.0f]};
-  Object midTile1 = { node: n2, type: ObjectType.TILE, name : "sand1" };
-  map.objects[n2.position] = [midTile1];
-
-  Node n3 = {position: [0.0f, 0.25f, 0.25f]};
-  Object midTile2 = { node: n3, type: ObjectType.TILE, name : "water1" };
-  map.objects[n3.position] = [midTile2];
-
-  Node n4 = {position: [0.0f, 0.25f, 0.0f]};
-  Object endTile = { node: n4, type: ObjectType.TILE, name : "grass2" };
-  map.objects[n4.position] = [endTile];
-
-  return(map);
-}
-
 void testGenMap(ref App app){
   app.map = generateMap();
-  Search!(Map, Node) search = performSearch!(Map, Node)([0.0f, 0.0f, 0.0f], [0.0f, 0.25f, 0.25f], app.map);
+  Search!(Map, Node) search = performSearch!(Map, Node)([0.0f, 0.0f, 0.0f], [5.0f, 10.0f, -2.0f], app.map);
     // If the search was succesful or still searching is ok, we use the 'best path so far approach'
   if (search.state == SearchState.SUCCEEDED || search.state == SearchState.SEARCHING) {
     do {
@@ -95,6 +73,7 @@ void testGenMap(ref App app){
 }
 
 bool isTile(const Map map, float[3] node){
+  //toStdout("isTile: %f %f %f == %d",node[0],node[1],node[2], (node in map.objects));
   if((node in map.objects) is null) return(false);
   foreach(obj; map.objects[node]){
     if(obj.type == ObjectType.TILE) return(true);
@@ -104,13 +83,14 @@ bool isTile(const Map map, float[3] node){
 
 /* Get the successor nodes (reachable positions) of a node, we could use larger step-sizes 
    to allow for fine-grained adjustment by having the map to perform a cost-adjustment based on it */
-N[] getSuccessors(M, N)(const M map, N* parent, float[] stepsizes = [-0.25f, 0.25f]) {
+N[] getSuccessors(M, N)(const M map, N* parent, float[] stepsizes = [-1.0f, 1.0f]) {
   N[] successors;
   float[3] to;
   foreach (size_t d; [0, 1, 2]) {
     foreach (float v; stepsizes) {
       to = parent.position;
       to[d] += v;
+      //toStdout("getSuccessors: %d, [%f, %f, %f]", map.isTile(to),to[0],to[1],to[2]);
       if (map.isTile(to)) {
         successors ~= N(parent, to, map.cost(to));
       }
