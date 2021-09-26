@@ -23,14 +23,15 @@ char consonant(float[21] p = [0.05,0.10,0.15,0.05,0.05,0.15,0.10,0.15,0.15,0.15,
   return(c[dice(p)]);
 }
 
-/* Random vowel from ['a', 'e', 'i', 'o', 'u', 'y'] with probability p */
+/* Random letter (Vowel:Consonant) */
 char randomLetter(float[2] p = [0.55,0.45]){
   char[2] l = [vowel(),consonant()];
   return(l[dice(p)]);
 }
 
-//[[1,5], [5,1], [5,1], [1,5]] 
-//[[5,1], [1,5]]
+/* Random syllable (Vowel:Consonant)
+//[[1,5], [5,1], [5,1], [1,5]] = mostly: cvvc
+//[[5,1], [1,5]] = vc */
 char[] randomSyllable(float[2][] p){
   char[] syl;
   syl.length = p.length;
@@ -40,11 +41,11 @@ char[] randomSyllable(float[2][] p){
   return(syl);
 }
 
-
-/*[
-    [[1,50], [50,1]], // Pattern
-    [[1,50], [50,1]], // Pattern
-    [[1,50], [50,1], [50,1], [1,50]]
+/* A word consists of syllables put together 
+  [
+    [[1,50], [50,1]],                 = Syllable Pattern 1 +
+    [[1,50], [50,1]],                 = Syllable Pattern 2 +
+    [[1,50], [50,1], [50,1], [1,50]]  = Syllable Pattern 3
   ]*/
 char[] randomWord(float[2][][] p){
   char[] w;
@@ -54,6 +55,7 @@ char[] randomWord(float[2][][] p){
   return(w);
 }
 
+/* Crude name generator put [] words together */
 char[] randomName(float[2][][][] p){
   char[] w;
   for(size_t x = 0; x < p.length; x++){
@@ -61,6 +63,8 @@ char[] randomName(float[2][][][] p){
   }
   return(w);
 }
+
+/* Test the crudename generator */
 void testRandomNames(App app){
   for(size_t x = 0; x < 4; x++){
     char[] s1 = randomName([

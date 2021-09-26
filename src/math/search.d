@@ -22,7 +22,7 @@ struct Search(M, N) {
   SearchState state = SearchState.NOT_INITIALISED;
   size_t steps = 0; // search steps taken
   size_t path = 0; // step in current path
-  size_t maxsteps = 150; // maximum number of search steps
+  size_t maxsteps = 1500; // maximum number of search steps
   bool cancel = false; // cancels an active search
 }
 

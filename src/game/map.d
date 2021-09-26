@@ -2,15 +2,12 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import calderad, geometry, search, searchnode, tileatlas, vector, vertex;
-
-enum ObjectType { NONE = 0, TILE = 1 };
+import calderad, square, geometry, search, searchnode, tileatlas, vector, vertex;
 
 struct Object {
   Node node;
   alias node this;
-  ObjectType type = ObjectType.NONE;
-  string name = "tilenone";
+  TileType type = TileType.None;
 }
 
 /* Implementation of M abstract class
@@ -23,13 +20,15 @@ struct Map {
 
 void createGeometry(ref App app, ref Map map, float size = 0.5){
   int cnt = 0;
-  foreach(pos; map.objects.keys){
-    foreach(obj; map.objects[pos]){
-      if(obj.type == ObjectType.TILE){
-        map.geometry.vertices ~= Vertex([pos.x-size, pos.y-size, pos.z], rBot(app.tileAtlas, app.textureArray[app.tileAtlas.id], obj.name), [1.0f, 1.0f, 1.0f, 1.0f]); 
-        map.geometry.vertices ~= Vertex([pos.x+size, pos.y-size, pos.z], lBot(app.tileAtlas, app.textureArray[app.tileAtlas.id], obj.name), [1.0f, 1.0f, 1.0f, 1.0f]);
-        map.geometry.vertices ~= Vertex([pos.x+size, pos.y+size, pos.z], lTop(app.tileAtlas, app.textureArray[app.tileAtlas.id], obj.name), [1.0f, 1.0f, 1.0f, 1.0f]);
-        map.geometry.vertices ~= Vertex([pos.x-size, pos.y+size, pos.z], rTop(app.tileAtlas, app.textureArray[app.tileAtlas.id], obj.name), [1.0f, 1.0f, 1.0f, 1.0f]);
+  foreach(p; map.objects.keys){
+    foreach(obj; map.objects[p]){
+      if(obj.type != TileType.None){
+        //Cube cube;
+        Square square = Square(
+        [ [p.x-size, p.y-size, p.z], [p.x+size, p.y-size, p.z], [p.x+size, p.y+size, p.z], [p.x-size, p.y+size, p.z]],
+          [rBot(app, obj.type.name), lBot(app, obj.type.name), lTop(app, obj.type.name), rTop(app, obj.type.name)]
+        );
+        map.geometry.vertices ~= square.vertices;
         map.geometry.indices ~= [cnt+0, cnt+2, cnt+1, cnt+0, cnt+3, cnt+2];
         cnt += 4;
       }
@@ -43,16 +42,16 @@ Map generateMap(string seed = "CalderaD"){
   for(float z = -10; z < 10; z += 0.25) {
     for(float x = -15; x < 15; x += 1) {
       for(float y = -15; y < 15; y += 1) {
-        string name = "notile";
-        if(z <= -5) name = "lava";
-        if(z >= -6 && z <= -5) name = "gravel1";
-        if(z >= -5 && z <= 0) name = "mud1";
-        if(z >= -2 && z <= 0) name = "sand1";
-        if(z >= 0 && z <= 2) name = "grass1";
-        if(z >= 2) name = "water3";
-        if(z >= 5) name = "ice";
+        TileType type = TileType.None;
+        if(z <= -5) type = TileType.Lava;
+        if(z >= -6 && z <= -5) type = TileType.Gravel1;
+        if(z >= -5 && z <= 0) type = TileType.Mud1;
+        if(z >= -2 && z <= 0) type = TileType.Sand1;
+        if(z >= 0 && z <= 2) type = TileType.Grass1;
+        if(z >= 2) type = TileType.Water1;
+        if(z >= 5) type = TileType.Ice;
         Node n = {position: [x, y, z]};
-        Object tile = { node: n, type: ObjectType.TILE, name : name };
+        Object tile = { node: n, type: type };
         map.objects[n.position] = [tile];
   }}}
   toStdout("generateMap tiles = %d", map.objects.length);
@@ -61,7 +60,7 @@ Map generateMap(string seed = "CalderaD"){
 
 void testGenMap(ref App app){
   app.map = generateMap();
-  Search!(Map, Node) search = performSearch!(Map, Node)([0.0f, 0.0f, 0.0f], [5.0f, 10.0f, -2.0f], app.map);
+  Search!(Map, Node) search = performSearch!(Map, Node)([0.0f, 0.0f, 0.0f], [5.0f, 13.0f, 4.0f], app.map);
     // If the search was succesful or still searching is ok, we use the 'best path so far approach'
   if (search.state == SearchState.SUCCEEDED || search.state == SearchState.SEARCHING) {
     do {
@@ -76,7 +75,7 @@ bool isTile(const Map map, float[3] node){
   //toStdout("isTile: %f %f %f == %d",node[0],node[1],node[2], (node in map.objects));
   if((node in map.objects) is null) return(false);
   foreach(obj; map.objects[node]){
-    if(obj.type == ObjectType.TILE) return(true);
+    if(obj.type != TileType.None && obj.type.traverable) return(true);
   }
   return(false);
 }
@@ -101,7 +100,12 @@ N[] getSuccessors(M, N)(const M map, N* parent, float[] stepsizes = [-1.0f, 1.0f
 }
 
 /* Cost function for including a certain map position */
-float cost(M)(const M map, const float[3] position) {
+float cost(M)(const M map, const float[3] node) {
   float cost = 0.1f;
+  if((node in map.objects) is null) cost = 999.0f;
+  foreach(obj; map.objects[node]){
+    if(obj.type != TileType.None && obj.type.traverable) cost = 0.1 * obj.type.cost;
+  }
+  //toStdout("Cost: %f, [%f, %f, %f]", cost,node[0],node[1],node[2]);
   return cost;
 }

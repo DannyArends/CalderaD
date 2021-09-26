@@ -12,7 +12,15 @@ struct Square {
                  Vertex([-0.5f, 0.0f,  0.5f], [1.0f, 0.0f], [0.8f, 0.8f, 1.0f, 1.0f]) ],
     indices : [0, 2, 1, 0, 3, 2]
   };
-
+  
+  this(float[3][4] pos,
+       float[2][4] uv = [[1.0f, 1.0f], [0.0f, 1.0f], [0.0f, 0.0f], [1.0f, 0.0f]],
+       float[4][4] color = [[1.0f, 1.0f, 1.0f, 1.0f],[1.0f, 1.0f, 1.0f, 1.0f],[1.0f, 1.0f, 1.0f, 1.0f],[1.0f, 1.0f, 1.0f, 1.0f]])
+  {
+    for (int x = 0; x < 4; x++) {
+      vertices[x] = Vertex(pos[x], uv[x], color[x]);
+    }
+  }
   alias geometry this;
 }
 
