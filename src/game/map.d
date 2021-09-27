@@ -82,22 +82,6 @@ void updateColumn(ref Map map, float[2] xr, float[2] yr){
             obj.type = TileType.None;
             type = TileType.None;
           }
-/*          if(z > 2.5 && z < 3.5 && (obj.type == TileType.Grass1 || obj.type == TileType.Grass2 || obj.type == TileType.Forestfloor1)){
-            obj.type = choice([TileType.Sand1, obj.type]);
-            type = obj.type;
-          }
-          if(z > 3.5 && (obj.type == TileType.Sand1)){
-            obj.type = choice([TileType.Grass1, TileType.Grass2, TileType.Forestfloor2]);
-            type = obj.type;
-          }
-          if(z > 5 && (obj.type == TileType.Grass1 || obj.type == TileType.Grass2)){
-            obj.type = choice([TileType.Forestfloor1, TileType.Gravel1]);
-            type = obj.type;
-          }
-          if(z > 7 && (obj.type == TileType.Forestfloor1 || obj.type == TileType.Gravel1)){
-            obj.type = TileType.Ice;
-            type = obj.type;
-          } */
         }
       }
     }
