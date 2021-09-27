@@ -57,35 +57,64 @@ Map generateMap(string seed = "CalderaD"){
         map.objects[n.position] = [tile];
   }}}
   toStdout("generateMap tiles = %d", map.objects.length);
-  for(int x = 0; x < 195; x++){
+  int cnt = 0;
+  int niter = 195;
+  for(int i = 0; i < niter; i++){
     int xp = uniform(-15, 15);
-    int xw = uniform(0, 25);
+    int xw = uniform(1, 25);
     int yp = uniform(-15, 15);
-    int yw = uniform(0, 25);
-    map.updateColumn([xp, min(xw, 25)], [yp, min(yw, 25)]);
+    int yw = uniform(1, 25);
+    cnt += map.updateColumn([xp, min(xw, 25)], [yp, min(yw, 25)]);
   }
+  toStdout("updated %d tiles in %d loops", cnt, niter);
   return(map);
 }
 
-void updateColumn(ref Map map, float[2] xr, float[2] yr){
-  toStdout("update column: ");
+int updateColumn(ref Map map, float[2] xr, float[2] yr){
+  //toStdout("update column: ");
+  int cnt = 0;
   for(float x = xr[0]; x <= xr[1]; x += 1) {
     for(float y = yr[0]; y <= yr[1]; y += 1) {
-      TileType type = TileType.Lava;
-      for(float z = -10; z <= 10; z += 0.25f) {
-        foreach(ref obj; map.objects[[x, y, z]]){
-          TileType old = obj.type;
-          obj.type = type;
-          type = old;//choice([old, type]);
-
-          if(z > 4 && (obj.type == TileType.Water1 || obj.type == TileType.Water2 || obj.type == TileType.Water3 || obj.type == TileType.Water4)){
-            obj.type = TileType.None;
-            type = TileType.None;
-          }
-        }
+      if(uniform(0.0f,1.0f) > 0.1){
+        cnt += map.moveUp(x,y);
+      }else{
+        cnt += map.moveDown(x,y);
       }
     }
   }
+  return(cnt);
+}
+
+int moveUp(ref Map map, float cx, float cy) nothrow {
+  int cnt = 0;
+  TileType type = TileType.Lava;
+  for(float z = -10; z <= 10; z += 0.25f) {
+    foreach(ref obj; map.objects[[cx, cy, z]]){
+      TileType old = obj.type;
+      obj.type = type;
+      type = old;//choice([old, type]);
+      cnt++;
+      if(z > 4 && (obj.type == TileType.Water1 || obj.type == TileType.Water2 || obj.type == TileType.Water3 || obj.type == TileType.Water4)){
+        obj.type = TileType.None;
+        type = TileType.None;
+      }
+    }
+  }
+  return(cnt);
+}
+
+int moveDown(ref Map map, float cx, float cy) nothrow {
+  int cnt = 0;
+  TileType type = TileType.None;
+  for(float z = 10; z >= -10; z -= 0.25f) {
+    foreach(ref obj; map.objects[[cx, cy, z]]){
+      TileType old = obj.type;
+      obj.type = type;
+      type = old;//choice([old, type]);
+      cnt++;
+    }
+  }
+  return(cnt);
 }
 
 
