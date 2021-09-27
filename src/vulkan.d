@@ -57,7 +57,7 @@ void initVulkan(ref App app,
   // Create several the geometries
   app.geometry ~= Square();
   app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [1.5f, 1.5f, 1.5f]);
-  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-2.0f, 2.0f, 0.0f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, -2.0f, 0.0f]);
   app.geometry[($-1)].texture = app.tileAtlas.id;
 
   app.createGeometry(app.map);
@@ -75,14 +75,14 @@ void initVulkan(ref App app,
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-2.0f, 2.0f, 1.0f]);
 
   app.geometry ~= app.loadWavefront(modelPath);
-  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, 4.0f, 0.0f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, 0.0f, 0.0f]);
 
   for(int x = -5; x < -2; x++){
     for(int y = 7; y > 2; y--){
       GeometryInstanceData instance;
-      auto scalefactor = uniform(0.2f, 0.3f);
+      auto scalefactor = 0.2f;
       instance.offset = scale(instance.offset, [scalefactor, scalefactor, scalefactor]);
-      instance.offset = translate(instance.offset, [cast(float) x, cast(float)y, 0.0f]);
+      instance.offset = translate(instance.offset, [cast(float) x /2.0f, cast(float)y /2.0f,-1.0f]);
       app.geometry[($-1)].instances ~= instance;
     }
   }
