@@ -5,6 +5,8 @@ The current 'engine' is based on the excellent vulkan-tutorial.com, and uses SDL
 for windows, and is in itself a minimal SDL2 android_project. There are a lot of requirements to build the example 
 (SDL, AndroidStudio, Android NDK). The software has been tested under x64 (Windows and Linux) and on arm64-v8a (Android 10). 
 
+![Screenshot](/man/screenshot1.png?raw=true "CalderaDemo Screenshot")
+
 The name CalderaD, comes from the word caldera a large cauldron-like hollow that forms shortly after a volcanic eruption. 
 The term comes from Spanish caldera, and Latin caldaria, meaning "cooking pot". I hope this project can help others cook up 
 some nice android apps, and will show that a language like D has something to offer on the mobile platform.
