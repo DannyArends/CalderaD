@@ -66,10 +66,10 @@ void initVulkan(ref App app,
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, -3.5f]);
   app.geometry[($-1)].texture = app.tileAtlas.id;
 
-  app.geometry ~= Text(app.glyphatlas, "CanderaD\nv0.0.1");
+  app.geometry ~= Text(app.glyphatlas, "CalderaD\nv0.0.1");
   app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [2.0f, 2.0f, 2.0f]);
   app.geometry[($-1)].instances[0].offset = rotate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, 0.0f]);
-  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, 1.0f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, -2.0f, 1.0f]);
 
   app.geometry ~= Cube();
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-2.0f, 2.0f, 1.0f]);
