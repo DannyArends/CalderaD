@@ -39,7 +39,7 @@ void updateUniformBuffer(ref App app, uint currentImage) {
   }
   UniformBufferObject ubo = {
     scene: rotate(mat4.init, [time, 0.0f , 0.0f]),
-    view: lookAt([1.0f, -3.0f, 1.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 1.0f]),
+    view: lookAt([-6.0f, -6.0f, 1.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 1.0f]),
     proj: perspective(45.0f, app.surface.capabilities.currentExtent.width / cast(float) app.surface.capabilities.currentExtent.height, 0.1f, 10.0f),
     orientation: mat4.init
   };
