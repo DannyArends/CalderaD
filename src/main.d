@@ -29,9 +29,8 @@ version (Android) {
 void run (ref App app, string[] args) {
   app.initSDL(); // Hook SDL immediately to be able to do output
   SDL_SetEventFilter(&sdlEventsFilter, &app); // Set the EventsFilter for immediate events
-  app.testGenMap();
-  app.testRandomNames();
-  //return;
+  app.testGenMap(); //return;
+  app.testRandomNames();//return;
   app.createWindow();
   app.startTime = MonoTime.currTime;
   app.initVulkan();
