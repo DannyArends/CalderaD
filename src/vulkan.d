@@ -56,8 +56,8 @@ void initVulkan(ref App app,
   
   // Create several the geometries
   app.geometry ~= Square();
-  app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [1.5f, 1.5f, 1.5f]);
-  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, -2.0f, 0.0f]);
+  app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [-1.5f, 1.5f, 1.5f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-4.0f, -2.0f, 0.0f]);
   app.geometry[($-1)].texture = app.tileAtlas.id;
 
   app.createGeometry(app.map);
