@@ -2,7 +2,7 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import std.algorithm : sort, remove;
+import std.algorithm : sort, makeIndex, remove;
 import std.array : empty;
 import std.math : abs;
 import std.stdio : writefln;
@@ -22,7 +22,7 @@ struct Search(M, N) {
   SearchState state = SearchState.NOT_INITIALISED;
   size_t steps = 0; // search steps taken
   size_t path = 0; // step in current path
-  size_t maxsteps = 1500; // maximum number of search steps
+  size_t maxsteps = 150; // maximum number of search steps
   bool cancel = false; // cancels an active search
 }
 
@@ -116,14 +116,20 @@ SearchState step(S, N)(ref S search, N node = Node()) {
   // Remove n from the openlist, and add n to the closed list re-sort by cumulative cost values to target;
   search.closedlist ~= (*n);
   search.openlist = search.openlist.remove(0);
-  search.openlist.sort!("a.f < b.f")();
+
+  // Sort by index, see: https://forum.dlang.org/post/mailman.560.1633114028.21945.digitalmars-d-learn@puremagic.com
+  auto idx = new size_t[search.openlist.length];
+  search.openlist.makeIndex!("a.f < b.f")(idx);
+  foreach (c, i; idx) {
+    search.openlist[c] = search.openlist[i];
+  }
   return search.state;
 }
 
 /* Take a step through the path computed */
-float[3] stepThroughPath(S)(ref S search) {
+float[3] stepThroughPath(S)(ref S search, bool verbose = true) {
   float[3] p = [ search.pathptr.x, search.pathptr.y, search.pathptr.z ];
-  toStdout("path %d : [%.2f, %.2f, %.2f] %f\n", search.path, p[0], p[1], p[2], search.pathptr.h);
+  if(verbose) toStdout("path %d : [%.2f, %.2f, %.2f] %f\n", search.path, p[0], p[1], p[2], search.pathptr.h);
   search.pathptr = search.pathptr.child;
   search.path++;
   return(p);
@@ -135,8 +141,8 @@ bool atGoal(S)(const S search) {
 }
 
 /* Perform a search and return the result, after which the search.stepThroughPath allows to walk it */
-Search!(M, N) performSearch(M, N)(float[3] start = [0.0f, 0.0f, 0.0f], 
-                                  float[3] goal = [-7.0f, 15.7f, -7.2f], M map = Map()) {
+Search!(M, N) performSearch(M, N)(float[3] start = [0.0f, -4.0f, 0.0f], 
+                                  float[3] goal = [-3.0f, 2.0f, -3.2f], M map = Map()) {
   Search!(Map, Node) search;
   Node s = Node(null, start, 0.0f, 0.0f);
   Node g = Node(null, goal, 0.0f);
