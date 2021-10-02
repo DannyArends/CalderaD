@@ -21,6 +21,8 @@ struct Map {
 }
 
 void createGeometry(ref App app, ref Map map, float size = 0.5){
+  map.geometry.vertices = [];
+  map.geometry.indices = [];
   int cnt = 0;
   foreach(p; map.objects.keys){
     foreach(obj; map.objects[p]){
@@ -117,17 +119,33 @@ int moveDown(ref Map map, float cx, float cy) nothrow {
   return(cnt);
 }
 
+TileType getTileType(const Map map, float[3] pos){
+  auto p = (pos in map.objects);
+  if (p !is null) {
+    foreach(t; map.objects[pos]) {
+      if(t.type != TileType.None) return(t.type);
+    }
+  }
+  return(TileType.None);
+}
+
 
 void testGenMap(ref App app){
   app.map = generateMap();
-  Search!(Map, Node) search = performSearch!(Map, Node)([0.0f, 0.0f, 0.0f], [5.0f, 13.0f, 4.0f], app.map);
-    // If the search was succesful or still searching is ok, we use the 'best path so far approach'
-  if (search.state == SearchState.SUCCEEDED || search.state == SearchState.SEARCHING) {
-    do {
-      search.stepThroughPath();
-    } while( !search.atGoal() ); // We can step untill we are at the end of the path
-  }else{
-    toStdout("SearchState error: %s", toStringz(format("%s", search.state)));
+
+  // Test the search 100 times, to make sure we find a path or fail (correctly)
+  for(int x = 0; x < 100; x++) {
+    float[3] from = [uniform(-15, 15), uniform(-5, 5), uniform(-3, 5)];
+    float[3] to = [uniform(-15, 15), uniform(-5, 5), uniform(-3, 5)];
+  
+    Search!(Map, Node) search = performSearch!(Map, Node)(from, to, app.map);
+    // If the search was succesful, failed or still searching is ok, we use the 'best path so far approach'
+    toStdout("Search: %s:%s %s:%s = %s", toStringz(format("%s", from)), toStringz(format("%s", getTileType(app.map, from))), toStringz(format("%s", to)), toStringz(format("%s", getTileType(app.map, to))), toStringz(format("%s", search.state)));
+    if (search.state == SearchState.SUCCEEDED || search.state == SearchState.SEARCHING) {
+      do {
+        search.stepThroughPath(false);
+      } while( !search.atGoal() ); // We can step untill we are at the end of the path
+    }
   }
 }
 
