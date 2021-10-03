@@ -16,6 +16,7 @@ struct TileT {
 /* Define some basic tiles, traversabily and movement costs */
 enum TileType : TileT {
   None = TileType("tilenone", false, 0.0),
+  Air = TileType("air", true, 1.0),
   Asphalt = TileType("asphalt", true, 1.0),
   Forestfloor1 = TileType("forestfloor1", true, 1.5),
   Forestfloor2 = TileType("forestfloor2", true, 1.7),
