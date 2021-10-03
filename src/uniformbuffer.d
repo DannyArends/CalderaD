@@ -34,12 +34,12 @@ void createUniformBuffers(ref App app) {
 void updateUniformBuffer(ref App app, uint currentImage) {
   MonoTime currentTime = MonoTime.currTime;
   float time = 0.0f;
-  if(app.isRotating) {
-    time = (currentTime - app.startTime).total!"msecs"() / 25.0f;  // Update the current time
+  if (app.isRotating) {
+    time = (currentTime - app.startTime).total!"msecs"() / 50.0f;  // Update the current time
   }
   UniformBufferObject ubo = {
     scene: rotate(mat4.init, [time, 0.0f , 0.0f]),
-    view: lookAt([-6.0f, -6.0f, 1.0f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 1.0f]),
+    view: lookAt([-3.0f, -3.0f, 0.5f], [0.0f, 0.0f, 0.0f], [0.0f, 0.0f, 1.0f]),
     proj: perspective(45.0f, app.surface.capabilities.currentExtent.width / cast(float) app.surface.capabilities.currentExtent.height, 0.1f, 10.0f),
     orientation: mat4.init
   };
