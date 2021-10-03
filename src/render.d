@@ -2,11 +2,25 @@
 // Distributed under the GNU General Public License, Version 3
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
-import calderad, swapchain, uniformbuffer, vulkan;
+import std.random : choice, uniform;
+import std.algorithm : min;
+
+import calderad, swapchain, uniformbuffer, vertex, vulkan, map;
 
 void drawFrame(ref App app) {
   vkWaitForFences(app.device, 1, &app.synchronization.inFlightFences[app.currentFrame], VK_TRUE, uint.max);
   //toStdout("vkWaitForFences: inFlight Fence[%d]", currentFrame);
+
+  if(uniform(0.0f, 1.0f) < 0.02f){
+    int xp = uniform(-15, 15);
+    int xw = uniform(1, 10);
+    int yp = uniform(-15, 15);
+    int yw = uniform(1, 10);
+    app.updateColumn(app.map, [xp, min(xw, 25)], [yp, min(yw, 25)]);
+    //app.createGeometry(app.map);
+    app.geometry[2].vertices = app.map.vertices;
+    app.updateVertexBuffer();
+  }
 
   uint imageIndex;
   VkResult result = vkAcquireNextImageKHR(app.device, app.swapchain.swapChain, size_t.max, app.synchronization.imageAvailableSemaphores[app.currentFrame], VK_NULL_ND_HANDLE, &imageIndex);

@@ -4,10 +4,13 @@
 
 import std.random : choice, uniform;
 import std.algorithm : min;
+import std.math : round, ceil;
 import calderad, square, geometry, search, searchnode, tileatlas, vector, vertex;
 
 struct Object {
   Node node;
+  uint index;
+  uint vert;
   alias node this;
   TileType type = TileType.None;
 }
@@ -20,78 +23,100 @@ struct Map {
   alias geometry this;
 }
 
-void createGeometry(ref App app, ref Map map, float size = 0.5){
-  map.geometry.vertices = [];
-  map.geometry.indices = [];
-  int cnt = 0;
+size_t nobjects(const Map map) {
+  size_t cnt = 0;
   foreach(p; map.objects.keys){
     foreach(obj; map.objects[p]){
-      if(obj.type != TileType.None){
-        //Cube cube;
-        Square square = Square(
-        [ [p.x-size, p.y-size, p.z], [p.x+size, p.y-size, p.z], [p.x+size, p.y+size, p.z], [p.x-size, p.y+size, p.z]],
-          [rBot(app, obj.type.name), lBot(app, obj.type.name), lTop(app, obj.type.name), rTop(app, obj.type.name)]
-        );
-        map.geometry.vertices ~= square.vertices;
-        map.geometry.indices ~= [cnt+0, cnt+2, cnt+1, cnt+0, cnt+3, cnt+2];
-        cnt += 4;
-      }
+      cnt++;
     }
   }
+  return(cnt);
 }
 
-Map generateMap(string seed = "CalderaD"){
-  Map map;
-  
-  for(float z = -10; z <= 10; z += 0.25f) {
-    for(float x = -25; x <= 25; x += 1) {
-      for(float y = -25; y <= 25; y += 1) {
+int nTiles(float[3][3] dim = [[-30, 30, 1.0f],[-30, 30, 1.0f],[-10, 10, 0.25f]]){
+  int nx = 1 + to!int(ceil((dim[0][1] - dim[0][0]) * 1.0f / dim[0][2])); // from and including so + 1
+  int ny = 1 + to!int(ceil((dim[1][1] - dim[1][0]) * 1.0f / dim[1][2]));
+  int nz = 1 + to!int(ceil((dim[2][1] - dim[2][0]) * 1.0f / dim[2][2]));
+  //toStdout("Generating: %dx%dx%d = %d", nx, ny, nz, (nx * ny * nz));
+  return((nx * ny * nz));
+}
+
+Map generateMap(ref App app, string seed = "CalderaD", 
+                float[3][3] dim = [[-25, 25, 1.0f],[-20, 20, 1.0f],[-10, 10, 0.25f]], 
+                float size = 0.5) {
+  int icnt = 0, vcnt = 0; // Current start indices, vertices
+  int nTile = nTiles(dim); // Total number of tiles
+  toStdout("Generating: %s, number of tiles: %d", toStringz(seed), nTile);
+  app.map.geometry.vertices.length = nTile * 4;
+  app.map.geometry.indices.length = nTile * 6;
+  for(float z = dim[2][0]; z <= dim[2][1]; z += dim[2][2]) {
+    for(float x = dim[0][0]; x <= dim[0][1]; x += dim[0][2]) {
+      for(float y = dim[1][0]; y <= dim[1][1]; y += dim[1][2]) {
         TileType type = TileType.None;
-        if(z <= -5) type = choice([TileType.Lava,TileType.Gravel1]);
+        if(z <= -5) type = choice([TileType.Lava, TileType.Gravel1]);
         if(z >= -6 && z <= -5) type = TileType.Gravel1;
         if(z >= -5 && z <= -2) type = choice([TileType.Mud1, TileType.Gravel1, TileType.Sand1]);
         if(z >= -2 && z <= 0) type = choice([TileType.Mud1, TileType.Sand1, TileType.Sand2]);
         if(z >= 0 && z <= 2) type = choice([TileType.Grass1, TileType.Grass2, TileType.Forestfloor1, TileType.Forestfloor2]);
         if(z >= 2 && z <= 2.5) type = choice([TileType.Water1, TileType.Water2, TileType.Water3, TileType.Water4]);
-        if(z >= 5) type = TileType.None;
+        if(z >= 5) type =  choice([TileType.Air, TileType.None]);
         Node n = {position: [x, y, z]};
-        Object tile = { node: n, type: type };
-        map.objects[n.position] = [tile];
+        Object tile = { node: n, type: type, index: icnt, vert: vcnt };
+        app.map.objects[tile.node.position] = [tile];
+        app.updateTile(tile, x, y, z);
+        vcnt += 4;
+        icnt += 6;
   }}}
-  toStdout("generateMap tiles = %d", map.objects.length);
-  int cnt = 0;
+
+  toStdout("generateMap tiles = %d, v = %d, i = %d", app.map.objects.length, app.map.geometry.vertices.length, app.map.geometry.indices.length);
+  int tcnt = 0;
   int niter = 195;
   for(int i = 0; i < niter; i++){
     int xp = uniform(-15, 15);
     int xw = uniform(1, 25);
     int yp = uniform(-15, 15);
     int yw = uniform(1, 25);
-    cnt += map.updateColumn([xp, min(xw, 25)], [yp, min(yw, 25)]);
+    tcnt += app.updateColumn(app.map, [xp, min(xw, 25)], [yp, min(yw, 25)]);
   }
-  toStdout("updated %d tiles in %d loops", cnt, niter);
-  return(map);
+  toStdout("Updated %d tiles in %d loops", tcnt, niter);
+  return(app.map);
 }
 
-int updateColumn(ref Map map, float[2] xr, float[2] yr){
+void updateTile(ref App app, Object tile, float cx, float cy, float z, float size = 0.5f){
+  float up = 0.0f;
+  float[4] color = [1.0f, 1.0f, 1.0f, 1.0f];
+  if(tile.type == TileType.Air){ up = 15.0f; color = [1.0f, 1.0f, 1.0f, 0.0f]; size = uniform(0.1f, 0.7f); }
+  if(tile.type == TileType.None){ color = [0.0f, 0.0f, 0.0f, 1.0f]; size = 0.01f; }
+
+  auto square = Square(
+    [ [cx-size, cy-size, z+up], [cx+size, cy-size, z+up], [cx+size, cy+size, z+up], [cx-size, cy+size, z+up]],
+      [rBot(app, tile.type.name), lBot(app, tile.type.name), lTop(app, tile.type.name), rTop(app, tile.type.name)],
+      [color, color, color, color]
+    );
+  app.map.geometry.vertices[tile.vert .. (tile.vert + 4)] = square.vertices;
+  app.map.geometry.indices[tile.index .. (tile.index + 6)] = [tile.vert + 0, tile.vert + 2, tile.vert + 1, tile.vert + 0, tile.vert + 3, tile.vert + 2];
+}
+
+int updateColumn(ref App app, ref Map map, float[2] xr, float[2] yr){
   //toStdout("update column: ");
   int cnt = 0;
   for(float x = xr[0]; x <= xr[1]; x += 1) {
     for(float y = yr[0]; y <= yr[1]; y += 1) {
       if(uniform(0.0f,1.0f) > 0.1){
-        cnt += map.moveUp(x,y);
+        cnt += app.moveUp(map, x, y);
       }else{
-        cnt += map.moveDown(x,y);
+        cnt += app.moveDown(map, x, y);
       }
     }
   }
   return(cnt);
 }
 
-int moveUp(ref Map map, float cx, float cy) nothrow {
+int moveUp(ref App app, ref Map map, float cx, float cy, float size = 0.5) {
   int cnt = 0;
   TileType type = TileType.Lava;
   for(float z = -10; z <= 10; z += 0.25f) {
-    foreach(ref obj; map.objects[[cx, cy, z]]){
+    foreach(ref obj; map.getObjectsAt([cx, cy, z])){
       TileType old = obj.type;
       obj.type = type;
       type = old;//choice([old, type]);
@@ -100,24 +125,35 @@ int moveUp(ref Map map, float cx, float cy) nothrow {
         obj.type = TileType.None;
         type = TileType.None;
       }
+      app.updateTile(obj, cx, cy, z);
     }
   }
   return(cnt);
 }
 
-int moveDown(ref Map map, float cx, float cy) nothrow {
+int moveDown(ref App app, ref Map map, float cx, float cy, float size = 0.5) {
   int cnt = 0;
   TileType type = TileType.None;
-  for(float z = 10; z >= -10; z -= 0.25f) {
-    foreach(ref obj; map.objects[[cx, cy, z]]){
+  for (float z = 10; z >= -10; z -= 0.25f) {
+    foreach (ref obj; map.getObjectsAt([cx, cy, z])){
       TileType old = obj.type;
       obj.type = type;
       type = old;//choice([old, type]);
       cnt++;
+      app.updateTile(obj, cx, cy, z);
     }
   }
   return(cnt);
 }
+
+Object[] getObjectsAt(Map map, float[3] pos) nothrow {
+  auto p = (pos in map.objects);
+  if (p !is null) {
+    return(map.objects[pos]);
+  }
+  return([]);
+}
+
 
 TileType getTileType(const Map map, float[3] pos){
   auto p = (pos in map.objects);
@@ -129,9 +165,8 @@ TileType getTileType(const Map map, float[3] pos){
   return(TileType.None);
 }
 
-
 void testGenMap(ref App app){
-  app.map = generateMap();
+  app.map = app.generateMap();
 
   // Test the search 100 times, to make sure we find a path or fail (correctly)
   for(int x = 0; x < 100; x++) {
