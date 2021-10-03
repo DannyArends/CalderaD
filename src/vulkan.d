@@ -59,8 +59,8 @@ void initVulkan(ref App app,
   app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [-1.5f, 1.5f, 1.5f]);
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-4.0f, -2.0f, 0.0f]);
   app.geometry[($-1)].texture = app.tileAtlas.id;
+  app.testGenMap(); //return;
 
-  app.createGeometry(app.map);
   app.geometry ~= app.map;
   app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [0.5f, 0.5f, 0.25f]);
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, -3.5f]);
@@ -69,13 +69,14 @@ void initVulkan(ref App app,
   app.geometry ~= Text(app.glyphatlas, "CalderaDemo\nv0.0.1");
   app.geometry[($-1)].instances[0].offset = scale(app.geometry[($-1)].instances[0].offset, [2.0f, 2.0f, 2.0f]);
   app.geometry[($-1)].instances[0].offset = rotate(app.geometry[($-1)].instances[0].offset, [0.0f, 0.0f, 0.0f]);
-  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, -2.0f, 1.0f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [0.0f, 2.0f, 0.2f]);
 
   app.geometry ~= Cube();
   app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [-2.0f, 2.0f, 1.0f]);
+  app.geometry[($-1)].texture = app.tileAtlas.id;
 
   app.geometry ~= app.loadWavefront(modelPath);
-  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, 0.0f, 0.0f]);
+  app.geometry[($-1)].instances[0].offset = translate(app.geometry[($-1)].instances[0].offset, [2.0f, 0.0f, -0.5f]);
 
   for(int x = -5; x < -2; x++){
     for(int y = 7; y > 2; y--){
