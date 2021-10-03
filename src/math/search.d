@@ -153,9 +153,11 @@ Search!(M, N) performSearch(M, N)(float[3] start = [0.0f, -4.0f, 0.0f],
 
   // If we're still searching, set the optimal route to be the closest one so far 
   if (search.state == SearchState.SEARCHING) {
-    toStdout("SEARCHING: %s, after: %d / %d", toStringz(format("%s", search.state)), search.steps, search.maxsteps);
-    search.goal = search.openlist[0];
-    search.storeRoute(&search.openlist[0]);
+    toStdout("SEARCHING: %s, after: %d / %d, still open: %d", toStringz(format("%s", search.state)), search.steps, search.maxsteps, search.openlist.length);
+    if(search.openlist.length > 0){
+      search.goal = search.openlist[0];
+      search.storeRoute(&search.openlist[0]);
+    }
   }
   return(search);
 }
