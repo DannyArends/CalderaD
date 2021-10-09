@@ -16,7 +16,7 @@ void drawFrame(ref App app) {
     int xw = uniform(1, 10);
     int yp = uniform(-15, 15);
     int yw = uniform(1, 10);
-    app.updateColumn(app.map, [xp, min(xw, 25)], [yp, min(yw, 25)]);
+    app.updateColumn(app.map, [xp, min(xw, 25)], [yp, min(yw, 25)], app.map.tilesize);
     //app.createGeometry(app.map);
     app.geometry[2].vertices = app.map.vertices;
     app.updateVertexBuffer();
