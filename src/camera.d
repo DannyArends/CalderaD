@@ -44,8 +44,6 @@ struct Camera {
       float[3] right = -left()[];
       return(right);
     }
-
-
 }
 
 /* Get the normalized direction of the xy camera rotation (gimbal lock) */

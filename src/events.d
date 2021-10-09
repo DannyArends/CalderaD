@@ -72,7 +72,21 @@ void handleMouse(ref App app, const SDL_Event e) {
   }
 }
 
-void handleTouch(ref App app, const SDL_Event e) { }
+void handleTouch(ref App app, const SDL_Event event) {
+  SDL_TouchFingerEvent e = event.tfinger;
+  if(event.type == SDL_FINGERDOWN) {
+    if(e.fingerId == 0) app.camera.isdrag[0] = true;
+  }
+  if(event.type == SDL_FINGERUP) {
+    if(e.fingerId == 0) app.camera.isdrag[0] = false;
+    app.camera.move(app.camera.forward());
+  }
+  if(event.type == SDL_FINGERMOTION) {
+    toStdout("TouchMotion: %f %f [%f %f] by %.1f [%d]\n", e.x, e.y, e.dx * app.width, e.dy * app.height, e.pressure, e.fingerId);
+
+  }
+}
+
 void handleAudio(ref App app, const SDL_Event e) { }
 void handleWindow(ref App app, const SDL_Event e) {
   toStdout("WindowEvent: %s", toStringz(format("%s", e.window.event)));

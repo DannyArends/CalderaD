@@ -43,7 +43,7 @@ int nTiles(float[3][3] dim = [[-30, 30, 1.0f],[-30, 30, 1.0f],[-10, 10, 0.25f]])
 }
 
 Map generateMap(ref App app, string seed = "CalderaD", 
-                float[3][3] dim = [[-100, 100, 1.0f],[-100, 100, 1.0f],[-5, 5, 0.25f]], 
+                float[3][3] dim = [[-15, 15, 1.0f],[-20, 15, 1.0f],[-5, 10, 0.25f]], 
                 float size = 0.5) {
   int icnt = 0, vcnt = 0; // Current start indices, vertices
   app.map.tilesize = size;
@@ -72,7 +72,7 @@ Map generateMap(ref App app, string seed = "CalderaD",
 
   toStdout("generateMap tiles = %d, v = %d, i = %d", app.map.objects.length, app.map.geometry.vertices.length, app.map.geometry.indices.length);
   int tcnt = 0;
-  int niter = 195;
+  int niter = 100;
   for(int i = 0; i < niter; i++){
     int xp = uniform(-15, 15);
     int xw = uniform(1, 25);
