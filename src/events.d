@@ -4,7 +4,7 @@
 
 import core.stdc.stdlib : exit;
 import std.datetime : MonoTime;
-import calderad, main, application, sdl, swapchain, vulkan;
+import calderad, camera, main, application, sdl, swapchain, vulkan;
 
 // Immediate events to handle by the application
 void handleApp(ref App app, const SDL_Event e) { 
@@ -42,11 +42,36 @@ void handleKeyboard(ref App app, const SDL_Event e) {
     SDL_Event evt = { type: SDL_QUIT };
     SDL_PushEvent(&evt);
   }
-  if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_p) {
-    app.isRotating = !app.isRotating;
+  if (e.type == SDL_KEYDOWN) {
+    if(e.key.keysym.sym == SDLK_p) app.isRotating = !app.isRotating;
+    if(e.key.keysym.sym == SDLK_PAGEUP){ app.camera.move([ 0.0f,  0.0f, 1.0f]); }
+    if(e.key.keysym.sym == SDLK_PAGEDOWN){ app.camera.move([ 0.0f,  0.0f, -1.0f]); }
+    if(e.key.keysym.sym == SDLK_w || e.key.keysym.sym == SDLK_UP){ app.camera.move(app.camera.forward()); }
+    if(e.key.keysym.sym == SDLK_s || e.key.keysym.sym == SDLK_DOWN){ app.camera.move(app.camera.back());  }
+    if(e.key.keysym.sym == SDLK_a || e.key.keysym.sym == SDLK_LEFT){ app.camera.move(app.camera.left());  }
+    if(e.key.keysym.sym == SDLK_d || e.key.keysym.sym == SDLK_RIGHT){ app.camera.move(app.camera.right());  }
+  }
+
+}
+void handleMouse(ref App app, const SDL_Event e) { 
+  if(e.type == SDL_MOUSEBUTTONDOWN){
+    if (e.button.button == SDL_BUTTON_LEFT) { app.camera.isdrag[0] = true; }
+    if (e.button.button == SDL_BUTTON_RIGHT) { app.camera.isdrag[1] = true;}
+  }
+  if(e.type == SDL_MOUSEBUTTONUP){
+    if (e.button.button == SDL_BUTTON_LEFT) { app.camera.isdrag[0] = false; }
+    if (e.button.button == SDL_BUTTON_RIGHT) { app.camera.isdrag[1] = false;}
+  }
+  if(e.type == SDL_MOUSEMOTION){
+    if(app.camera.isdrag[1]) app.camera.drag(e.motion.xrel, e.motion.yrel);
+  }
+  if(e.type == SDL_MOUSEWHEEL){
+    if (e.wheel.y < 0 && app.camera.distance  >= -40.0f) app.camera.distance -= 0.5f;
+    if (e.wheel.y > 0 && app.camera.distance  <= -1.0f) app.camera.distance += 0.5f;
+    app.camera.move([ 0.0f,  0.0f,  0.0f]);
   }
 }
-void handleMouse(ref App app, const SDL_Event e) { }
+
 void handleTouch(ref App app, const SDL_Event e) { }
 void handleAudio(ref App app, const SDL_Event e) { }
 void handleWindow(ref App app, const SDL_Event e) {
