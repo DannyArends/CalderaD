@@ -20,6 +20,7 @@ struct Object {
 struct Map {
   Object[][float[3]] objects;
   Geometry geometry;
+  float tilesize;
   alias geometry this;
 }
 
@@ -42,9 +43,10 @@ int nTiles(float[3][3] dim = [[-30, 30, 1.0f],[-30, 30, 1.0f],[-10, 10, 0.25f]])
 }
 
 Map generateMap(ref App app, string seed = "CalderaD", 
-                float[3][3] dim = [[-25, 25, 1.0f],[-20, 20, 1.0f],[-10, 10, 0.25f]], 
+                float[3][3] dim = [[-100, 100, 1.0f],[-100, 100, 1.0f],[-5, 5, 0.25f]], 
                 float size = 0.5) {
   int icnt = 0, vcnt = 0; // Current start indices, vertices
+  app.map.tilesize = size;
   int nTile = nTiles(dim); // Total number of tiles
   toStdout("Generating: %s, number of tiles: %d", toStringz(seed), nTile);
   app.map.geometry.vertices.length = nTile * 4;
@@ -63,7 +65,7 @@ Map generateMap(ref App app, string seed = "CalderaD",
         Node n = {position: [x, y, z]};
         Object tile = { node: n, type: type, index: icnt, vert: vcnt };
         app.map.objects[tile.node.position] = [tile];
-        app.updateTile(tile, x, y, z);
+        app.updateTile(tile, x, y, z, app.map.tilesize);
         vcnt += 4;
         icnt += 6;
   }}}
@@ -76,7 +78,7 @@ Map generateMap(ref App app, string seed = "CalderaD",
     int xw = uniform(1, 25);
     int yp = uniform(-15, 15);
     int yw = uniform(1, 25);
-    tcnt += app.updateColumn(app.map, [xp, min(xw, 25)], [yp, min(yw, 25)]);
+    tcnt += app.updateColumn(app.map, [xp, min(xw, 25)], [yp, min(yw, 25)], app.map.tilesize);
   }
   toStdout("Updated %d tiles in %d loops", tcnt, niter);
   return(app.map);
@@ -97,15 +99,15 @@ void updateTile(ref App app, Object tile, float cx, float cy, float z, float siz
   app.map.geometry.indices[tile.index .. (tile.index + 6)] = [tile.vert + 0, tile.vert + 2, tile.vert + 1, tile.vert + 0, tile.vert + 3, tile.vert + 2];
 }
 
-int updateColumn(ref App app, ref Map map, float[2] xr, float[2] yr){
+int updateColumn(ref App app, ref Map map, float[2] xr, float[2] yr, float size = 0.5){
   //toStdout("update column: ");
   int cnt = 0;
   for(float x = xr[0]; x <= xr[1]; x += 1) {
     for(float y = yr[0]; y <= yr[1]; y += 1) {
       if(uniform(0.0f,1.0f) > 0.1){
-        cnt += app.moveUp(map, x, y);
+        cnt += app.moveUp(map, x, y, size);
       }else{
-        cnt += app.moveDown(map, x, y);
+        cnt += app.moveDown(map, x, y, size);
       }
     }
   }
@@ -125,7 +127,7 @@ int moveUp(ref App app, ref Map map, float cx, float cy, float size = 0.5) {
         obj.type = TileType.None;
         type = TileType.None;
       }
-      app.updateTile(obj, cx, cy, z);
+      app.updateTile(obj, cx, cy, z, size);
     }
   }
   return(cnt);
@@ -140,7 +142,7 @@ int moveDown(ref App app, ref Map map, float cx, float cy, float size = 0.5) {
       obj.type = type;
       type = old;//choice([old, type]);
       cnt++;
-      app.updateTile(obj, cx, cy, z);
+      app.updateTile(obj, cx, cy, z, size);
     }
   }
   return(cnt);
@@ -169,7 +171,7 @@ void testGenMap(ref App app){
   app.map = app.generateMap();
 
   // Test the search 100 times, to make sure we find a path or fail (correctly)
-  for(int x = 0; x < 100; x++) {
+  for(int x = 0; x < 10; x++) {
     float[3] from = [uniform(-15, 15), uniform(-5, 5), uniform(-3, 5)];
     float[3] to = [uniform(-15, 15), uniform(-5, 5), uniform(-3, 5)];
   
