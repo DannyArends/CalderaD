@@ -6,7 +6,7 @@ import std.exception;
 import std.conv;
 import std.datetime : MonoTime;
 
-import calderad, depthbuffer, descriptorset, geometry, map, glyphatlas, pipeline, sync, surface, swapchain, texture, tileatlas, uniformbuffer, vkdebug, wavefront;
+import calderad, camera, depthbuffer, descriptorset, geometry, map, glyphatlas, pipeline, sync, surface, swapchain, texture, tileatlas, uniformbuffer, vkdebug, wavefront;
 
 void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string); }
 SDL_bool enforceSDL(SDL_bool res) { enforce(res == SDL_bool.SDL_TRUE, to!string(SDL_GetError())); return(res); }
@@ -73,6 +73,8 @@ struct App {
   SyncObjects synchronization;
   GlyphAtlas glyphatlas;
 
+  Camera camera;
+
   uint frame = 1;
   uint currentFrame = 0;
 
@@ -94,6 +96,10 @@ void resize(ref App app, uint w, uint h) {
   if (w == 0 || h == 0){ app.isMinimized = true; return; }
   app.isMinimized = false;
   app.hasResized = true;
+}
+
+float aspectRatio(ref App app){
+  return(app.surface.capabilities.currentExtent.width / cast(float) app.surface.capabilities.currentExtent.height);
 }
 
 void cleanup(ref App app) {
