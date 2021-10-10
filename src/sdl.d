@@ -24,6 +24,8 @@ void initSDL(ref App app) {
   toStdout("MIXER loaded %d", loadMixer);
   auto initMixer = Mix_Init(0);
   toStdout("MIXER init: %d", initMixer);
+  auto openAudio = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+  toStdout("OpenAudio : %d", openAudio);
 }
 
 void createWindow(ref App app) {

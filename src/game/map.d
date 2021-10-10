@@ -43,7 +43,7 @@ int nTiles(float[3][3] dim = [[-30, 30, 1.0f],[-30, 30, 1.0f],[-10, 10, 0.25f]])
 }
 
 Map generateMap(ref App app, string seed = "CalderaD", 
-                float[3][3] dim = [[-15, 15, 1.0f],[-20, 15, 1.0f],[-5, 10, 0.25f]], 
+                float[3][3] dim = [[-20, 15, 1.0f],[-15, 25, 1.0f],[-10, 10, 0.25f]], 
                 float size = 0.5) {
   int icnt = 0, vcnt = 0; // Current start indices, vertices
   app.map.tilesize = size;
@@ -58,7 +58,7 @@ Map generateMap(ref App app, string seed = "CalderaD",
         if(z <= -5) type = choice([TileType.Lava, TileType.Gravel1]);
         if(z >= -6 && z <= -5) type = TileType.Gravel1;
         if(z >= -5 && z <= -2) type = choice([TileType.Mud1, TileType.Gravel1, TileType.Sand1]);
-        if(z >= -2 && z <= 0) type = choice([TileType.Mud1, TileType.Sand1, TileType.Sand2]);
+        if(z >= -2 && z <= 0) type = choice([TileType.Mud1, TileType.Sand1,  TileType.Water1, TileType.Water2, TileType.Sand2]);
         if(z >= 0 && z <= 2) type = choice([TileType.Grass1, TileType.Grass2, TileType.Forestfloor1, TileType.Forestfloor2]);
         if(z >= 2 && z <= 2.5) type = choice([TileType.Water1, TileType.Water2, TileType.Water3, TileType.Water4]);
         if(z >= 5) type =  choice([TileType.Air, TileType.None]);
@@ -72,7 +72,7 @@ Map generateMap(ref App app, string seed = "CalderaD",
 
   toStdout("generateMap tiles = %d, v = %d, i = %d", app.map.objects.length, app.map.geometry.vertices.length, app.map.geometry.indices.length);
   int tcnt = 0;
-  int niter = 100;
+  int niter = 25;
   for(int i = 0; i < niter; i++){
     int xp = uniform(-15, 15);
     int xw = uniform(1, 25);
@@ -87,8 +87,8 @@ Map generateMap(ref App app, string seed = "CalderaD",
 void updateTile(ref App app, Object tile, float cx, float cy, float z, float size = 0.5f){
   float up = 0.0f;
   float[4] color = [1.0f, 1.0f, 1.0f, 1.0f];
-  if(tile.type == TileType.Air){ up = 15.0f; color = [1.0f, 1.0f, 1.0f, 0.0f]; size = uniform(0.1f, 0.7f); }
-  if(tile.type == TileType.None){ color = [0.0f, 0.0f, 0.0f, 1.0f]; size = 0.01f; }
+  if(tile.type == TileType.Air){ up = 25.0f; color = [1.0f, 1.0f, 1.0f, 0.0f]; size = uniform(0.1f, 0.7f); }
+  if(tile.type == TileType.None){ color = [0.0f, 0.0f, 0.0f, 1.0f]; size = 0.00f; }
 
   auto square = Square(
     [ [cx-size, cy-size, z+up], [cx+size, cy-size, z+up], [cx+size, cy+size, z+up], [cx-size, cy+size, z+up]],

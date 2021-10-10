@@ -11,11 +11,11 @@ void drawFrame(ref App app) {
   vkWaitForFences(app.device, 1, &app.synchronization.inFlightFences[app.currentFrame], VK_TRUE, uint.max);
   //toStdout("vkWaitForFences: inFlight Fence[%d]", currentFrame);
 
-  if(uniform(0.0f, 1.0f) < 0.02f){
+  if(uniform(0.0f, 1.0f) < 0.05f){
     int xp = uniform(-15, 15);
-    int xw = uniform(1, 10);
+    int xw = uniform(1, 25);
     int yp = uniform(-15, 15);
-    int yw = uniform(1, 10);
+    int yw = uniform(1, 25);
     app.updateColumn(app.map, [xp, min(xw, 25)], [yp, min(yw, 25)], app.map.tilesize);
     //app.createGeometry(app.map);
     app.geometry[2].vertices = app.map.vertices;

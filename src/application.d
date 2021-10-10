@@ -6,7 +6,8 @@ import std.exception;
 import std.conv;
 import std.datetime : MonoTime;
 
-import calderad, camera, depthbuffer, descriptorset, geometry, map, glyphatlas, pipeline, sync, surface, swapchain, texture, tileatlas, uniformbuffer, vkdebug, wavefront;
+import calderad, camera, depthbuffer, descriptorset, geometry, map, glyphatlas, pipeline;
+import sound, sync, surface, swapchain, texture, tileatlas, uniformbuffer, vkdebug, wavefront;
 
 void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string); }
 SDL_bool enforceSDL(SDL_bool res) { enforce(res == SDL_bool.SDL_TRUE, to!string(SDL_GetError())); return(res); }
@@ -74,6 +75,8 @@ struct App {
   GlyphAtlas glyphatlas;
 
   Camera camera;
+  WavFMT[] soundfx;
+  float soundEffectGain = 0.8;
 
   uint frame = 1;
   uint currentFrame = 0;

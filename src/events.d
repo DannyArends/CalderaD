@@ -85,8 +85,8 @@ void handleTouch(ref App app, const SDL_Event event) {
     toStdout("TouchMotion: %f %f [%f %f] by %.1f [%d]\n", e.x, e.y, e.dx * app.width, e.dy * app.height, e.pressure, e.fingerId);
     if(e.fingerId == 0) app.camera.drag(e.dx * app.width, e.dy * app.height);
     if(e.fingerId == 1) {
-      if (e.dy < 0 && app.camera.distance  >= -40.0f) app.camera.distance -= 0.5f;
-      if (e.dy > 0 && app.camera.distance  <= -2.0f) app.camera.distance += 0.5f;
+      if (e.dy < 0 && app.camera.distance  >= -30.0f) app.camera.distance -= 0.1f;
+      if (e.dy > 0 && app.camera.distance  <= -1.0f) app.camera.distance += 0.1f;
       app.camera.move([ 0.0f,  0.0f,  0.0f]);
     }
   }
