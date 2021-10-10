@@ -25,8 +25,8 @@ extern(C) int sdlEventsFilter(void* userdata, SDL_Event* event) nothrow {
       case SDL_APP_TERMINATING: case SDL_QUIT: 
       (*app).cleanup(); exit(0); // Run cleanup and exit
 
-      case SDL_APP_LOWMEMORY:      // Android application events
-      case SDL_APP_WILLENTERBACKGROUND: case SDL_APP_DIDENTERBACKGROUND:
+      case SDL_APP_LOWMEMORY: // Android immediate application events, fallthrough switch
+      case SDL_APP_WILLENTERBACKGROUND: case SDL_APP_DIDENTERBACKGROUND: 
       case SDL_APP_WILLENTERFOREGROUND: case SDL_APP_DIDENTERFOREGROUND:
       toStdout("Android SDL immediate event hook: %s", toStringz(format("%s", event.type)));
       (*app).handleApp(*event); return(0);
@@ -83,13 +83,18 @@ void handleTouch(ref App app, const SDL_Event event) {
   }
   if(event.type == SDL_FINGERMOTION) {
     toStdout("TouchMotion: %f %f [%f %f] by %.1f [%d]\n", e.x, e.y, e.dx * app.width, e.dy * app.height, e.pressure, e.fingerId);
-
+    if(e.fingerId == 0) app.camera.drag(e.dx * app.width, e.dy * app.height);
+    if(e.fingerId == 1) {
+      if (e.dy < 0 && app.camera.distance  >= -40.0f) app.camera.distance -= 0.5f;
+      if (e.dy > 0 && app.camera.distance  <= -2.0f) app.camera.distance += 0.5f;
+      app.camera.move([ 0.0f,  0.0f,  0.0f]);
+    }
   }
 }
 
 void handleAudio(ref App app, const SDL_Event e) { }
 void handleWindow(ref App app, const SDL_Event e) {
-  toStdout("WindowEvent: %s", toStringz(format("%s", e.window.event)));
+  //toStdout("WindowEvent: %s", toStringz(format("%s", e.window.event)));
   if(e.window.event == SDL_WINDOWEVENT_RESIZED) app.resize(e.window.data1, e.window.data2);
   if(e.window.event == SDL_WINDOWEVENT_RESTORED){ app.isMinimized = false; }
   if(e.window.event == SDL_WINDOWEVENT_MINIMIZED){ app.isMinimized = true; }
