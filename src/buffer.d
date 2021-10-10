@@ -47,5 +47,5 @@ void createBuffer(ref App app,
 
   enforceVK(vkAllocateMemory(app.device, &allocInfo, null, bufferMemory));
   vkBindBufferMemory(app.device, (*buffer), (*bufferMemory), 0);
-  toStdout("Buffer [size=%d] created, allocated, and bound", size);
+  //toStdout("Buffer [size=%d] created, allocated, and bound", size);
 }

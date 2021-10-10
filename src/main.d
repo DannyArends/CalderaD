@@ -37,9 +37,8 @@ void run (ref App app, string[] args) {
   while (app.running) {
     SDL_Event ev;
     while (SDL_PollEvent(&ev)) {
-      toStdout("SDL event: %s", toStringz(format("%s", ev.type)));
+      //toStdout("SDL event: %s", toStringz(format("%s", ev.type)));
       switch (ev.type) {
-
         case SDL_KEYDOWN: case SDL_KEYUP: case SDL_TEXTINPUT: case SDL_TEXTEDITING:
         app.handleKeyboard(ev); break; // Keyboard and text input
 
