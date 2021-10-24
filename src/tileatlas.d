@@ -97,7 +97,7 @@ TileAtlas createTileAtlas(ref App app, string folder = "", int width = 512, int 
     SDL_FreeSurface(surfaces[tname]); // Free the SDL_Surface
   }
   surface.toRGBA();
-  auto texture = app.createTextureImage(surface);
+  auto texture = app.createTextureImage(surface, "[TILES]");
   tileAtlas.id = texture.id;
   app.tileAtlas = tileAtlas;
   toStdout("TileAtlas created with %d elements", tileAtlas.names.length);
