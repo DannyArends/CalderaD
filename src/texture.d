@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import core.stdc.string : memcpy;
-import calderad, buffer, glyphatlas, images, log;
+import calderad, buffer, glyphatlas, images, io, log;
 
 /*
   Texture application structure, aliasses the SDL_Surface
@@ -22,16 +22,25 @@ struct Texture {
   alias surface this;
 }
 
-void createTextureImage(ref App app, ref GlyphAtlas glyphatlas) {
-  app.glyphatlas.texture = app.createTextureImage(glyphatlas.surface);
+// Load all texture files matching pattern in folder
+void loadTextures(ref App app, string folder, string pattern = "*.{png,jpg}") {
+  string[] files = dir(folder, pattern);
+  foreach(file; files){ app.createTextureImage(file); }
 }
 
+// Create the TextureImage from GlyphAtlas surface
+void createTextureImage(ref App app, ref GlyphAtlas glyphatlas) {
+  app.glyphatlas.texture = app.createTextureImage(glyphatlas.surface, "[FONT]");
+}
+
+// Create the TextureImage from a file using IMG_Load
 Texture createTextureImage(ref App app, string filename) {
   auto surface = IMG_Load(toStringz(filename));
-  return(app.createTextureImage(surface));
+  return(app.createTextureImage(surface, filename));
 }
 
-void toRGBA(ref SDL_Surface* surface){
+// Convert an SDL-Surface to RGBA32 format
+void toRGBA(ref SDL_Surface* surface) {
   SDL_PixelFormat *fmt = SDL_AllocFormat(SDL_PIXELFORMAT_RGBA32);
   fmt.BitsPerPixel = 32;
   SDL_Surface* adapted = SDL_ConvertSurface(surface, fmt, 0);
@@ -43,14 +52,13 @@ void toRGBA(ref SDL_Surface* surface){
   }
 }
 
-Texture createTextureImage(ref App app, SDL_Surface* surface) {
+// Create a TextureImage layout and view from the SDL_Surface and adds it to the App.textureArray
+Texture createTextureImage(ref App app, SDL_Surface* surface, string name = "DEFAULT") {
   toStdout("surface obtained: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
 
   if (surface.format.BitsPerPixel != 32) {
     surface.toRGBA();
-  }else{
-    toStdout("Surface not adapted");
-  }
+  } else { toStdout("surface was 32 bits not adapted"); }
 
   Texture texture = { width: surface.w, height: surface.h, surface: surface };
   VkBuffer stagingBuffer;
@@ -78,15 +86,18 @@ Texture createTextureImage(ref App app, SDL_Surface* surface) {
 
   texture.textureImageView = app.createImageView(texture.textureImage, VK_FORMAT_R8G8B8A8_SRGB);
 
-  toStdout("Freeing surface: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
-  //SDL_FreeSurface(surface);
-  vkDestroyBuffer(app.device, stagingBuffer, null);
-  vkFreeMemory(app.device, stagingBufferMemory, null);
+  toStdout("Adding texture %s at [%d]", toStringz(name), to!int(app.textureArray.length));
   texture.id = to!int(app.textureArray.length);
   app.textureArray ~= texture;
+
+  toStdout("Freeing surface: %p [%dx%d:%d]", surface, surface.w, surface.h, (surface.format.BitsPerPixel / 8));
+  SDL_FreeSurface(surface);
+  vkDestroyBuffer(app.device, stagingBuffer, null);
+  vkFreeMemory(app.device, stagingBufferMemory, null);
   return(app.textureArray[($-1)]);
 }
 
+// Create a TextureSampler for sampling from a texture
 void createTextureSampler(ref App app) {
   VkPhysicalDeviceProperties properties = {};
   VkPhysicalDeviceFeatures supportedFeatures = {};
