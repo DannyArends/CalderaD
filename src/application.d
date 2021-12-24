@@ -40,7 +40,7 @@ struct App {
     applicationVersion: 0, 
     pEngineName: "CalderaD", 
     engineVersion: 0,
-    apiVersion: VK_API_VERSION_1_2
+    apiVersion: VK_MAKE_API_VERSION( 1, 2, 0, 0 )
   };
 
   bool isRotating = true;

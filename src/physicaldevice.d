@@ -16,7 +16,7 @@ void pickPhysicalDevice(ref App app, uint select = 0) {
     VkPhysicalDeviceProperties properties;
     vkGetPhysicalDeviceProperties(physDevice, &properties);
     toStdout("-Physical device %d: %s", i, properties.deviceName.ptr);
-    toStdout("|- API Version: %d.%d.%d", VK_VERSION_MAJOR(properties.apiVersion), VK_VERSION_MINOR(properties.apiVersion), VK_VERSION_PATCH(properties.apiVersion));
+    toStdout("|- API Version: %d.%d.%d", VK_API_VERSION_MAJOR(properties.apiVersion), VK_API_VERSION_MINOR(properties.apiVersion), VK_API_VERSION_PATCH(properties.apiVersion));
     toStdout("|- Image sizes: (1D/2D/3D) %d %d %d", properties.limits.maxImageDimension1D, properties.limits.maxImageDimension2D, properties.limits.maxImageDimension3D);
     toStdout("|- Max PushConstantSize: %d", properties.limits.maxPushConstantsSize);
     toStdout("|- Max MemoryAllocationCount: %d", properties.limits.maxMemoryAllocationCount);
