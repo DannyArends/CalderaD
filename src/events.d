@@ -24,7 +24,7 @@ extern(C) int sdlEventsFilter(void* userdata, SDL_Event* event) nothrow {
     switch (event.type) {
       case SDL_APP_TERMINATING: case SDL_QUIT: 
       (*app).cleanup(); exit(0); // Run cleanup and exit
-      break;
+      //break;
       case SDL_APP_LOWMEMORY: // Android immediate application events, fallthrough switch
       case SDL_APP_WILLENTERBACKGROUND: case SDL_APP_DIDENTERBACKGROUND:
       case SDL_APP_WILLENTERFOREGROUND: case SDL_APP_DIDENTERFOREGROUND:
