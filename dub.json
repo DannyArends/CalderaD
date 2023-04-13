@@ -9,11 +9,11 @@
 	"importPaths": ["src"],
 	"sourcePaths": ["src"],
 	"dependencies": {
-		"bindbc-loader": "~>0.3.0",
-		"bindbc-sdl": "~>0.21.4",
-		"erupted": "~>2.1.24+v1.2.174",
+		"bindbc-loader": "~>1.0.3",
+		"bindbc-sdl": "~>1.3.5",
+		"erupted": "~>2.1.87+v1.3.237",
 	},
-	"versions": [ "SDL_2014", "BindSDL_Image", "BindSDL_TTF", "BindSDL_Mixer", "BindSDL_Net" ],
+	"versions": [ "SDL_206", "SDL_TTF_2014", "SDL_Image_200", "SDL_Mixer_200", "SDL_Net_200" ],
 	"subConfigurations": {"bindbc-sdl": "dynamicBC"},
 	"preBuildCommands-windows": [
 		"glslc.exe app/src/main/assets/data/shaders/wavefront.vert -o app/src/main/assets/data/shaders/vert.spv",

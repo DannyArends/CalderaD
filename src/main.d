@@ -3,7 +3,7 @@
 // See accompanying file LICENSE.txt or copy at https://www.gnu.org/licenses/gpl-3.0.en.html
 
 import std.datetime : MonoTime;
-import calderad, application, events, map, render, sdl, sound, search, rnjesus, vulkan;
+import calderad, application, events, map, render, initsdl, sound, search, rnjesus, vulkan;
 
 /* Main entry point to the program */
 version (Android) {

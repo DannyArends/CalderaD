@@ -25,7 +25,7 @@ struct WavFMT {
   for(int i = 0; i < nMusic; ++i){ toStdout(" %s", Mix_GetMusicDecoder(i)); }
 
   int bits, sample_size, rate, audio_rate,audio_channels;
-  Uint16 audio_format;
+  ushort audio_format;
   Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
   bits = audio_format & 0xFF;
   sample_size = bits/8+audio_channels;

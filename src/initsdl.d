@@ -6,22 +6,27 @@ import calderad;
 
 void initSDL(ref App app) {
   loadSDL();
-  toStdout("SDL loaded %d", loadedSDLVersion);
+  SDL_version v;
+  SDL_GetVersion(&v);
+  toStdout("SDL loaded v%d.%d.%d", v.major, v.minor, v.patch);
   auto initSDL = SDL_Init(SDL_INIT_EVERYTHING);
   toStdout("SDL initialized: %d", initSDL);
 
   auto loadTTF = loadSDLTTF();
-  toStdout("TTF loaded: %d", loadTTF);
+  SDL_TTF_VERSION(&v);
+  toStdout("TTF loaded: v%d.%d.%d", v.major, v.minor, v.patch);
   auto initTTF = TTF_Init();
   toStdout("TTF init: %d", initTTF);
 
   auto loadImage = loadSDLImage();
-  toStdout("IMAGE loaded %d", loadImage);
+  SDL_IMAGE_VERSION(&v);
+  toStdout("IMAGE loaded v%d.%d.%d", v.major, v.minor, v.patch);
   auto initImage = IMG_Init(app.imageflags);
   toStdout("IMAGE init: %d", initImage);
 
   auto loadMixer = loadSDLMixer();
-  toStdout("MIXER loaded %d", loadMixer);
+  SDL_MIXER_VERSION(&v);
+  toStdout("MIXER loaded v%d.%d.%d", v.major, v.minor, v.patch);
   auto initMixer = Mix_Init(0);
   toStdout("MIXER init: %d", initMixer);
   auto openAudio = Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);

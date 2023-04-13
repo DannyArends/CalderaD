@@ -10,7 +10,7 @@ import calderad, camera, depthbuffer, descriptorset, geometry, map, glyphatlas, 
 import sound, sync, surface, swapchain, texture, tileatlas, uniformbuffer, vkdebug, wavefront;
 
 void enforceVK(VkResult res) { enforce(res == VkResult.VK_SUCCESS, res.to!string); }
-SDL_bool enforceSDL(SDL_bool res) { enforce(res == SDL_bool.SDL_TRUE, to!string(SDL_GetError())); return(res); }
+SDL_bool enforceSDL(SDL_bool res) { enforce(res == SDL_TRUE, to!string(SDL_GetError())); return(res); }
 
 /*
   Main application structure, aliasses the SDL_Window
