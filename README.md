@@ -85,7 +85,7 @@ To get CalderaD working on an android device, follow the following step:
 ```
 
 ###  Install Android studio and install the android NDK
-Download [Andriod Studio](https://developer.android.com/studio), and install it. 
+Download [Android Studio](https://developer.android.com/studio), and install it. 
 Follow [these steps](https://developer.android.com/studio/projects/install-ndk) 
 to install the NDK (CMake is not required).
 
@@ -94,7 +94,9 @@ to install the NDK (CMake is not required).
 1) Install the [LDC compiler](https://dlang.org/download.html) for your OS
 
 2) Download the LDC aarch64 library for Android file "ldc2-X.XX.X-android-aarch64.tar.xz" from 
-https://github.com/ldc-developers/ldc/releases/ where X.XX.X is your LDC version and extract it
+https://github.com/ldc-developers/ldc/releases/ where X.XX.X is your LDC version and extract it.
+
+3) Copy the contents of the android aarch64/lib folder into a new folder called "lib-android-aarch64" in your LDC directory
 
 Open the file PATHTOLDC/ldc2-X.XX.X/etc/ldc2.conf, where PATHTOLDC is where you installed LDC in step 1. 
 
@@ -107,7 +109,7 @@ change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
     switches = [
         "-defaultlib=phobos2-ldc,druntime-ldc",
         "-link-defaultlib-shared=false",
-        "-gcc=PATHTOSDK/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang",
+        "-gcc=PATHTOSDK/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang",
     ];
     lib-dirs = [
         "<PATHTOLDCLIB>/ldc2-X.XX.X-android-aarch64/lib",
