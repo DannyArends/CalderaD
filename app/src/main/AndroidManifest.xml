@@ -14,8 +14,6 @@
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
     <!-- External mouse input events -->
     <uses-feature android:name="android.hardware.type.pc" android:required="false" />
-    <!-- Allow writing to external storage -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- Allow access to Bluetooth devices -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- Allow access to the vibrator -->
@@ -28,7 +26,6 @@
         android:hardwareAccelerated="true" >
 
         <activity android:name="SDLActivity"
-            android:label="CalderaD"
             android:alwaysRetainTaskState="true"
             android:launchMode="singleInstance"
             android:configChanges="layoutDirection|locale|orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
