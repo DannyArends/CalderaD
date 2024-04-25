@@ -107,7 +107,8 @@ change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
     switches = [
         "-defaultlib=phobos2-ldc,druntime-ldc",
         "-link-defaultlib-shared=false",
-        "-gcc=PATHTOSDK/Android/Sdk/ndk/21.3.6528147/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang",
+        "-linker=PATHTOSDK/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/ld",
+        "-gcc=PATHTOSDK/Android/Sdk/ndk/25.1.8937393/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang",
     ];
     lib-dirs = [
         "<PATHTOLDCLIB>/ldc2-X.XX.X-android-aarch64/lib",
@@ -116,7 +117,7 @@ change the PATHTOLDCLIB to the path of the LDC aarch64 library (step 2):
 };
 ```
 
-A tip: make sure API versions match, sometimes misadjusted versions can cause hour long headaches
+A tip: make sure API versions (e.g. 25.1.8937393) match between LDC and Android Studio, mis-adjusted versions can cause hour long headaches
 
 ###  Download the SDL Source zip files and link SDL into app/jni
 Download and extract the SDL2 source zip-files:

@@ -77,19 +77,6 @@
 				"path": "../arsd"
 			}
 		},
-		"libs": ["android"],
-	},
-	{
-		"name": "android-32",
-		"targetType": "dynamicLibrary",
-		"targetPath": "app/src/main/jniLibs/armeabi-v7a",
-		"targetName": "main",
-		"dependencies": {
-			"arsd-official:jni": {
-				"version": "~master",
-				"path": "../arsd"
-			}
-		},
-		"libs": ["android"],
+		"libs": ["android"]
 	}]
 }
